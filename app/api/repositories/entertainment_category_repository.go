@@ -22,7 +22,7 @@ func (p EntertainmentCategoryRepository) Save(entertainmentCategory models.Enter
     return p.db.DB.Create(&entertainmentCategory).Error
 }
 
-//FindAll -> Method for fetching all entertainmentCategoryes from database
+//FindAll -> Method for fetching all Entertainment Category from database
 func (p EntertainmentCategoryRepository) FindAll(entertainmentCategory models.EntertainmentCategory, search string) (*[]models.EntertainmentCategory, int64, error) {
     var entertainment_categories []models.EntertainmentCategory
     var totalRows int64 = 0
@@ -59,7 +59,7 @@ func (p EntertainmentCategoryRepository) Find(entertainmentCategory models.Enter
     return entertainment_categories, err
 }
 
-//Delete Deletes bus
+//Delete -> Method for deleting Entertainment Category
 func (p EntertainmentCategoryRepository) Delete(bus models.EntertainmentCategory) error {
     return p.db.DB.Delete(&bus).Error
 }
