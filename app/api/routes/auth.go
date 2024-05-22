@@ -32,6 +32,6 @@ func (p AuthRoute) Setup() {
 	auth := p.Handler.Gin.Group(apiPrefix + "/auth") //Router group
 	{
 		auth.POST("/register", p.Controller.RegisterUser)
-		// auth.POST("/login", p.Controller.Login)
+		auth.POST("/login", p.Controller.Login)
 	}
 }
