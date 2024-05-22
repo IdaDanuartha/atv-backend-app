@@ -32,14 +32,14 @@ func (p EntertainmentCategoryService) Update(entertainmentCategory models.Entert
     return p.repository.Update(entertainmentCategory)
 }
 
-// Delete -> calls bus repo delete method
+// Delete -> calls Entertainment Category repo delete method
 func (p EntertainmentCategoryService) Delete(id string) error {
     var entertainmentCategory models.EntertainmentCategory
     entertainmentCategory.ID = id
     return p.repository.Delete(entertainmentCategory)
 }
 
-// Find -> calls bus repo find method
+// Find -> calls Entertainment Category repo find method
 func (p EntertainmentCategoryService) Find(entertainmentCategory models.EntertainmentCategory) (models.EntertainmentCategory, error) {
     return p.repository.Find(entertainmentCategory)
 }
