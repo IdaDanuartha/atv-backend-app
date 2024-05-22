@@ -23,8 +23,8 @@ func (p EntertainmentCategoryService) Save(entertainmentCategory models.Entertai
 }
 
 //FindAll -> calls Entertainment Category repo find all method
-func (p EntertainmentCategoryService) FindAll(entertainmentCategory models.EntertainmentCategory, keyword string) (*[]models.EntertainmentCategory, int64, error) {
-    return p.repository.FindAll(entertainmentCategory, keyword)
+func (p EntertainmentCategoryService) FindAll(entertainmentCategory models.EntertainmentCategory, search string) (*[]models.EntertainmentCategory, int64, error) {
+    return p.repository.FindAll(entertainmentCategory, search)
 }
 
 // Update -> calls Entertainment Category repo update method

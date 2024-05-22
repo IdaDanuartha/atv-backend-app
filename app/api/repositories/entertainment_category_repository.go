@@ -23,17 +23,17 @@ func (p EntertainmentCategoryRepository) Save(entertainmentCategory models.Enter
 }
 
 //FindAll -> Method for fetching all entertainmentCategoryes from database
-func (p EntertainmentCategoryRepository) FindAll(entertainmentCategory models.EntertainmentCategory, keyword string) (*[]models.EntertainmentCategory, int64, error) {
+func (p EntertainmentCategoryRepository) FindAll(entertainmentCategory models.EntertainmentCategory, search string) (*[]models.EntertainmentCategory, int64, error) {
     var entertainment_categories []models.EntertainmentCategory
     var totalRows int64 = 0
 
     queryBuider := p.db.DB.Order("created_at desc").Model(&models.EntertainmentCategory{})
 
     // Search parameter
-    if keyword != "" {
-        queryKeyword := "%" + keyword + "%"
+    if search != "" {
+        querySearch := "%" + search + "%"
         queryBuider = queryBuider.Where(
-            p.db.DB.Where("entertainment_categories.name LIKE ? ", queryKeyword))
+            p.db.DB.Where("entertainment_categories.name LIKE ? ", querySearch))
     }
 
     err := queryBuider.

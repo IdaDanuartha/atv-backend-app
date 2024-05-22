@@ -25,9 +25,9 @@ func NewEntertainmentCategoryController(s services.EntertainmentCategoryService)
 func (p EntertainmentCategoryController) GetEntertainmentCategories(ctx *gin.Context) {
     var buses models.EntertainmentCategory
 
-    keyword := ctx.Query("keyword")
+    search := ctx.Query("search")
 
-    data, _, err := p.service.FindAll(buses, keyword)
+    data, _, err := p.service.FindAll(buses, search)
 
     if err != nil {
         utils.ErrorJSON(ctx, http.StatusBadRequest, "Failed to find entertainment category")
