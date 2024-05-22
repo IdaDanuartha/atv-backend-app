@@ -88,7 +88,20 @@ func (s *AuthService) Login(input inputs.LoginInput) (models.User, error) {
 		return user, err
 	}
 
+	// if user.ID == 0 {
+	// 	return models.User, errors.New("No user found on that email")
+	// }
+
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (s *AuthService) GetUserByID(ID string) (models.User, error) {
+	user, err := s.repository.FindByID(ID)
 	if err != nil {
 		return user, err
 	}

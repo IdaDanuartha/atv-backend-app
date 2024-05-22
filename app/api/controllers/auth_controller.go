@@ -16,14 +16,34 @@ type AuthController struct {
 	service services.AuthService
 }
 
-type RegisterFormatter struct {
-	ID    string      `json:"id"`
-	Name  string      `json:"name"`
-	Token string      `json:"token"`
-	User  models.User `json:"user"`
-}
+// type AdminFormatter struct {
+// 	ID    string      `json:"id"`
+// 	Name  string      `json:"name"`
+// }
 
-type LoginFormatter struct {
+// type StaffFormatter struct {
+// 	ID    string      `json:"id"`
+// 	Name  string      `json:"name"`
+// }
+
+// type InstructorFormatter struct {
+// 	ID    string      `json:"id"`
+// 	Name  string      `json:"name"`
+// }
+
+// type CustomerFormatter struct {
+// 	ID    string      `json:"id"`
+// 	Name  string      `json:"name"`
+// }
+
+// type RegisterFormatter struct {
+// 	ID    string      `json:"id"`
+// 	Name  string      `json:"name"`
+// 	Token string      `json:"token"`
+// 	User  models.User `json:"user"`
+// }
+
+type UserFormatter struct {
 	ID       string `json:"id"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
@@ -31,19 +51,31 @@ type LoginFormatter struct {
 	Token    string `json:"token"`
 }
 
-func FormatRegister(customer models.Customer, token string) RegisterFormatter {
-	formatter := RegisterFormatter{
-		ID:    customer.ID,
-		Name:  customer.Name,
+// func FormatRegister(customer models.Customer, token string) RegisterFormatter {
+// 	formatter := RegisterFormatter{
+// 		ID:    customer.ID,
+// 		Name:  customer.Name,
+// 		Token: token,
+// 		User:  customer.User,
+// 	}
+
+// 	return formatter
+// }
+
+func FormatRegister(user models.Customer, token string) UserFormatter {
+	formatter := UserFormatter{
+		ID:    user.User.ID,
 		Token: token,
-		User:  customer.User,
+		Username: user.User.Username,
+		Email: user.User.Email,
+		Role: user.User.Role,
 	}
 
 	return formatter
 }
 
-func FormatLogin(user models.User, token string) LoginFormatter {
-	formatter := LoginFormatter{
+func FormatLogin(user models.User, token string) UserFormatter {
+	formatter := UserFormatter{
 		ID:    user.ID,
 		Token: token,
 		Username: user.Username,
@@ -53,6 +85,7 @@ func FormatLogin(user models.User, token string) LoginFormatter {
 
 	return formatter
 }
+
 
 // NewAuthController : NewAuthController
 func NewAuthController(s services.AuthService) AuthController {

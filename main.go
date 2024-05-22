@@ -24,7 +24,7 @@ func main() {
 	entertainmentCategoryService := services.NewEntertainmentCategoryService(entertainmentCategoryRepository)
 	entertainmentCategoryController := controllers.NewEntertainmentCategoryController(entertainmentCategoryService)
 	entertainmentCategoryRoute := routes.NewEntertainmentCategoryRoute(entertainmentCategoryController, router)
-	entertainmentCategoryRoute.Setup()
+	entertainmentCategoryRoute.Setup(&services.AuthService{})
 	db.DB.AutoMigrate(&models.EntertainmentCategory{})
 
 	entertainmentPackageRepository := repositories.NewEntertainmentPackageRepository(db)

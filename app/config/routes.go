@@ -1,9 +1,14 @@
 package config
 
 import (
-    // "net/http"
+	// "net/http"
 
-    "github.com/gin-gonic/gin"
+	"os"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-gonic/gin"
 )
 
 //GinRouter -> Gin Router
@@ -15,6 +20,10 @@ type GinRouter struct {
 func NewGinRouter() GinRouter {
 
     httpRouter := gin.Default()
+    httpRouter.Use(cors.Default())
+
+	cookieStore := cookie.NewStore([]byte(os.Getenv("SECRET_KEY")))
+	httpRouter.Use(sessions.Sessions("atv_system", cookieStore))
 
     httpRouter.ForwardedByClientIP = true
     httpRouter.SetTrustedProxies([]string{"127.0.0.1"})

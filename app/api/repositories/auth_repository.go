@@ -37,7 +37,7 @@ func (r *AuthRepository) FindByEmail(email string) (models.User, error) {
 	return user, nil
 }
 
-func (r *AuthRepository) FindByID(ID int) (models.User, error) {
+func (r *AuthRepository) FindByID(ID string) (models.User, error) {
 	var user models.User
 
 	err := r.db.DB.Where("id = ?", ID).Find(&user).Error
