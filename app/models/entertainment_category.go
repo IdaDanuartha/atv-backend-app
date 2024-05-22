@@ -1,6 +1,6 @@
 package models
 
-// Entertainment Catetgory Model
+// Entertainment Category Model
 type EntertainmentCategory struct {
 	Base
 	Name         string    `gorm:"size:100" json:"name"`
