@@ -23,7 +23,7 @@ func NewAuthService(r repositories.AuthRepository) AuthService {
 	}
 }
 
-var SECRET_KEY = []byte("BWASTARTUP_s3cr3T_k3Y")
+var SECRET_KEY = []byte("atv_system_s3cr3T_k3Y")
 
 func (s *AuthService) GenerateToken(userID string) (string, error) {
 	claim := jwt.MapClaims{}
@@ -79,23 +79,25 @@ func (s *AuthService) RegisterUser(input inputs.RegisterInput) (models.Customer,
 	return newUser, nil
 }
 
-// func (s *AuthService) Login(input LoginInput) (models.User, error) {
-// 	email := input.Email
-// 	password := input.Password
+func (s *AuthService) Login(input inputs.LoginInput) (models.User, error) {
+	email := input.Email
+	password := input.Password
 
-// 	user, err := s.repository.FindByEmail(email)
-// 	if err != nil {
-// 		return user, err
-// 	}
+	user, err := s.repository.FindByEmail(email)
+	if err != nil {
+		return user, err
+	}
 
-// 	if user.ID == 0 {
-// 		return models.User, errors.New("No user found on that email")
-// 	}
+	print(user.ID)
 
-// 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
-// 	if err != nil {
-// 		return user, err
-// 	}
+	// if user.ID == 0 {
+	// 	return models.User, errors.New("No user found on that email")
+	// }
 
-// 	return user, nil
-// }
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
