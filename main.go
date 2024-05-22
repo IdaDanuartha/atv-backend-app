@@ -48,6 +48,17 @@ func main() {
 	MandatoryLuggageRoute.Setup()
 	db.DB.AutoMigrate(&models.MandatoryLuggage{})
 
+	AuthRepository := repositories.NewAuthRepository(db)
+	AuthService := services.NewAuthService(AuthRepository)
+	AuthController := controllers.NewAuthController(AuthService)
+	AuthRoute := routes.NewAuthRoute(AuthController, router)
+	AuthRoute.Setup()
+	db.DB.AutoMigrate(&models.User{})
+	db.DB.AutoMigrate(&models.Admin{})
+	db.DB.AutoMigrate(&models.Staff{})
+	db.DB.AutoMigrate(&models.Instructor{})
+	db.DB.AutoMigrate(&models.Customer{})
+
 	router.Gin.Run(":" + os.Getenv("APP_PORT"))
 
 	fmt.Println("App running in port: ", os.Getenv("APP_PORT"))

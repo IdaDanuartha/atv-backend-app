@@ -22,7 +22,7 @@ func NewEntertainmentCategoryController(s services.EntertainmentCategoryService)
 }
 
 // GetEntertainmentCategories : GetEntertainmentCategories controller
-func (p EntertainmentCategoryController) GetEntertainmentCategories(ctx *gin.Context) {
+func (p *EntertainmentCategoryController) GetEntertainmentCategories(ctx *gin.Context) {
     var entertainment_categories models.EntertainmentCategory
 
     search := ctx.Query("search")
@@ -87,7 +87,7 @@ func (p *EntertainmentCategoryController) GetEntertainmentCategory(c *gin.Contex
 }
 
 //UpdateEntertainmentCategory : get update by id
-func (p EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.Context) {
+func (p *EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.Context) {
     idParam := ctx.Param("id")
 
     var entertainmentCategory models.EntertainmentCategory

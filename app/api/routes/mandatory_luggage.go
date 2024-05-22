@@ -29,12 +29,12 @@ func NewMandatoryLuggageRoute(
 func (p MandatoryLuggageRoute) Setup() {
 	apiPrefix := os.Getenv("APP_PREFIX")
 
-	bus := p.Handler.Gin.Group(apiPrefix + "/mandatory/luggages") //Router group
+	MandatoryLuggage := p.Handler.Gin.Group(apiPrefix + "/mandatory/luggages") //Router group
 	{
-		bus.GET("/", p.Controller.GetMandatoryLuggages)
-		bus.GET("/:id", p.Controller.GetMandatoryLuggage)
-		bus.POST("/", p.Controller.AddMandatoryLuggage)
-		bus.PATCH("/:id", p.Controller.UpdateMandatoryLuggage)
-		bus.DELETE("/:id", p.Controller.DeleteMandatoryLuggage)
+		MandatoryLuggage.GET("/", p.Controller.GetMandatoryLuggages)
+		MandatoryLuggage.GET("/:id", p.Controller.GetMandatoryLuggage)
+		MandatoryLuggage.POST("/", p.Controller.AddMandatoryLuggage)
+		MandatoryLuggage.PATCH("/:id", p.Controller.UpdateMandatoryLuggage)
+		MandatoryLuggage.DELETE("/:id", p.Controller.DeleteMandatoryLuggage)
 	}
 }

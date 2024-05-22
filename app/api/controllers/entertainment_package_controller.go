@@ -22,7 +22,7 @@ func NewEntertainmentPackageController(s services.EntertainmentPackageService) E
 }
 
 // GetEntertainmentPackages : GetEntertainmentPackages controller
-func (p EntertainmentPackageController) GetEntertainmentPackages(ctx *gin.Context) {
+func (p *EntertainmentPackageController) GetEntertainmentPackages(ctx *gin.Context) {
 	var entertainment_packages models.EntertainmentPackage
 
 	search := ctx.Query("search")
@@ -87,7 +87,7 @@ func (p *EntertainmentPackageController) GetEntertainmentPackage(c *gin.Context)
 }
 
 // UpdateEntertainmentPackage : get update by id
-func (p EntertainmentPackageController) UpdateEntertainmentPackage(ctx *gin.Context) {
+func (p *EntertainmentPackageController) UpdateEntertainmentPackage(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 
 	var entertainmentPackage models.EntertainmentPackage

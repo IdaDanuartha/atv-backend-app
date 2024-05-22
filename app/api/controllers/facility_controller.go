@@ -22,7 +22,7 @@ func NewFacilityController(s services.FacilityService) FacilityController {
 }
 
 // GetFacilities : GetFacilities controller
-func (p FacilityController) GetFacilities(ctx *gin.Context) {
+func (p *FacilityController) GetFacilities(ctx *gin.Context) {
 	var facilities models.Facility
 
 	search := ctx.Query("search")
@@ -87,7 +87,7 @@ func (p *FacilityController) GetFacility(c *gin.Context) {
 }
 
 // UpdateFacility : get update by id
-func (p FacilityController) UpdateFacility(ctx *gin.Context) {
+func (p *FacilityController) UpdateFacility(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 
 	var entertainmentCategory models.Facility

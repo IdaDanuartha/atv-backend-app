@@ -15,6 +15,7 @@ type Base struct {
 	DeletedAt    gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
 }
 
+
 // BeforeCreate will set a UUID rather than numeric ID.
 func (b *EntertainmentCategory) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = uuid.New().String()
@@ -29,6 +30,26 @@ func (b *Facility) BeforeCreate(tx *gorm.DB) (err error) {
 	return
 }
 func (b *MandatoryLuggage) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}
+func (b *User) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}
+func (b *Admin) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}
+func (b *Staff) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}
+func (b *Instructor) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}
+func (b *Customer) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = uuid.New().String()
 	return
 }

@@ -29,12 +29,12 @@ func NewEntertainmentPackageRoute(
 func (p EntertainmentPackageRoute) Setup() {
 	apiPrefix := os.Getenv("APP_PREFIX")
 
-	bus := p.Handler.Gin.Group(apiPrefix + "/entertainment/packages") //Router group
+	entertainmentPackage := p.Handler.Gin.Group(apiPrefix + "/entertainment/packages") //Router group
 	{
-		bus.GET("/", p.Controller.GetEntertainmentPackages)
-		bus.GET("/:id", p.Controller.GetEntertainmentPackage)
-		bus.POST("/", p.Controller.AddEntertainmentPackage)
-		bus.PATCH("/:id", p.Controller.UpdateEntertainmentPackage)
-		bus.DELETE("/:id", p.Controller.DeleteEntertainmentPackage)
+		entertainmentPackage.GET("/", p.Controller.GetEntertainmentPackages)
+		entertainmentPackage.GET("/:id", p.Controller.GetEntertainmentPackage)
+		entertainmentPackage.POST("/", p.Controller.AddEntertainmentPackage)
+		entertainmentPackage.PATCH("/:id", p.Controller.UpdateEntertainmentPackage)
+		entertainmentPackage.DELETE("/:id", p.Controller.DeleteEntertainmentPackage)
 	}
 }

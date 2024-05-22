@@ -22,7 +22,7 @@ func NewMandatoryLuggageController(s services.MandatoryLuggageService) Mandatory
 }
 
 // GetMandatoryLuggages : GetMandatoryLuggages controller
-func (p MandatoryLuggageController) GetMandatoryLuggages(ctx *gin.Context) {
+func (p *MandatoryLuggageController) GetMandatoryLuggages(ctx *gin.Context) {
 	var mandatory_luggages models.MandatoryLuggage
 
 	search := ctx.Query("search")
@@ -87,7 +87,7 @@ func (p *MandatoryLuggageController) GetMandatoryLuggage(c *gin.Context) {
 }
 
 // UpdateMandatoryLuggage : get update by id
-func (p MandatoryLuggageController) UpdateMandatoryLuggage(ctx *gin.Context) {
+func (p *MandatoryLuggageController) UpdateMandatoryLuggage(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 
 	var entertainmentCategory models.MandatoryLuggage

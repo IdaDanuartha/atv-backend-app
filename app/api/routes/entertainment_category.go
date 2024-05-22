@@ -29,12 +29,12 @@ func NewEntertainmentCategoryRoute(
 func (p EntertainmentCategoryRoute) Setup() {
     apiPrefix := os.Getenv("APP_PREFIX")
 
-    bus := p.Handler.Gin.Group(apiPrefix + "/entertainment/categories") //Router group
+    entertainmentCategory := p.Handler.Gin.Group(apiPrefix + "/entertainment/categories") //Router group
     {
-        bus.GET("/", p.Controller.GetEntertainmentCategories)
-        bus.GET("/:id", p.Controller.GetEntertainmentCategory)
-        bus.POST("/", p.Controller.AddEntertainmentCategory)
-        bus.PATCH("/:id", p.Controller.UpdateEntertainmentCategory)
-        bus.DELETE("/:id", p.Controller.DeleteEntertainmentCategory)
+        entertainmentCategory.GET("/", p.Controller.GetEntertainmentCategories)
+        entertainmentCategory.GET("/:id", p.Controller.GetEntertainmentCategory)
+        entertainmentCategory.POST("/", p.Controller.AddEntertainmentCategory)
+        entertainmentCategory.PATCH("/:id", p.Controller.UpdateEntertainmentCategory)
+        entertainmentCategory.DELETE("/:id", p.Controller.DeleteEntertainmentCategory)
     }
 }
