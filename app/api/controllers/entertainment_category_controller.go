@@ -23,11 +23,11 @@ func NewEntertainmentCategoryController(s services.EntertainmentCategoryService)
 
 // GetEntertainmentCategories : GetEntertainmentCategories controller
 func (p EntertainmentCategoryController) GetEntertainmentCategories(ctx *gin.Context) {
-    var buses models.EntertainmentCategory
+    var entertainment_categories models.EntertainmentCategory
 
     search := ctx.Query("search")
 
-    data, _, err := p.service.FindAll(buses, search)
+    data, _, err := p.service.FindAll(entertainment_categories, search)
 
     if err != nil {
         utils.ErrorJSON(ctx, http.StatusBadRequest, "Failed to find entertainment category")
@@ -119,7 +119,7 @@ func (p EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.Co
     })
 }
 
-//DeleteEntertainmentCategory : Deletes Bus
+//DeleteEntertainmentCategory : Deletes Entertainment Category
 func (p *EntertainmentCategoryController) DeleteEntertainmentCategory(c *gin.Context) {
     idParam := c.Param("id")
     
