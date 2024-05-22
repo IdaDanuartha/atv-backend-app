@@ -16,6 +16,9 @@ func NewGinRouter() GinRouter {
 
     httpRouter := gin.Default()
 
+    httpRouter.ForwardedByClientIP = true
+    httpRouter.SetTrustedProxies([]string{"127.0.0.1"})
+
     // httpRouter.GET("/", func(c *gin.Context) {
     //     c.JSON(http.StatusOK, gin.H{"data": "Up and Running..."})
     // })

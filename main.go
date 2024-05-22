@@ -19,13 +19,34 @@ func init() {
 func main() {
 	router := config.NewGinRouter()
 	db := config.NewDatabase()
+
 	entertainmentCategoryRepository := repositories.NewEntertainmentCategoryRepository(db)
 	entertainmentCategoryService := services.NewEntertainmentCategoryService(entertainmentCategoryRepository)
 	entertainmentCategoryController := controllers.NewEntertainmentCategoryController(entertainmentCategoryService)
 	entertainmentCategoryRoute := routes.NewEntertainmentCategoryRoute(entertainmentCategoryController, router)
 	entertainmentCategoryRoute.Setup()
-
 	db.DB.AutoMigrate(&models.EntertainmentCategory{})
+
+	entertainmentPackageRepository := repositories.NewEntertainmentPackageRepository(db)
+	entertainmentPackageService := services.NewEntertainmentPackageService(entertainmentPackageRepository)
+	entertainmentPackageController := controllers.NewEntertainmentPackageController(entertainmentPackageService)
+	entertainmentPackageRoute := routes.NewEntertainmentPackageRoute(entertainmentPackageController, router)
+	entertainmentPackageRoute.Setup()
+	db.DB.AutoMigrate(&models.EntertainmentPackage{})
+
+	facilityRepository := repositories.NewFacilityRepository(db)
+	facilityService := services.NewFacilityService(facilityRepository)
+	facilityController := controllers.NewFacilityController(facilityService)
+	facilityRoute := routes.NewFacilityRoute(facilityController, router)
+	facilityRoute.Setup()
+	db.DB.AutoMigrate(&models.Facility{})
+
+	MandatoryLuggageRepository := repositories.NewMandatoryLuggageRepository(db)
+	MandatoryLuggageService := services.NewMandatoryLuggageService(MandatoryLuggageRepository)
+	MandatoryLuggageController := controllers.NewMandatoryLuggageController(MandatoryLuggageService)
+	MandatoryLuggageRoute := routes.NewMandatoryLuggageRoute(MandatoryLuggageController, router)
+	MandatoryLuggageRoute.Setup()
+	db.DB.AutoMigrate(&models.MandatoryLuggage{})
 
 	router.Gin.Run(":" + os.Getenv("APP_PORT"))
 
