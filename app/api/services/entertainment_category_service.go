@@ -33,7 +33,7 @@ func (p EntertainmentCategoryService) Update(entertainmentCategory models.Entert
 }
 
 // Delete -> calls bus repo delete method
-func (p EntertainmentCategoryService) Delete(id int64) error {
+func (p EntertainmentCategoryService) Delete(id string) error {
     var entertainmentCategory models.EntertainmentCategory
     entertainmentCategory.ID = id
     return p.repository.Delete(entertainmentCategory)

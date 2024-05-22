@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/services"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
@@ -50,36 +49,39 @@ func (p EntertainmentCategoryController) GetEntertainmentCategories(ctx *gin.Con
 
 // AddEntertainmentCategory : AddEntertainmentCategory controller
 func (p *EntertainmentCategoryController) AddEntertainmentCategory(ctx *gin.Context) {
-    var bus models.EntertainmentCategory
-    ctx.ShouldBindJSON(&bus)
+    var entertainmentCategory models.EntertainmentCategory
+    ctx.ShouldBindJSON(&entertainmentCategory)
 
-    if bus.Name == "" {
+    if entertainmentCategory.Name == "" {
         utils.ErrorJSON(ctx, http.StatusBadRequest, "Name is required")
         return
     }
-    utils.SuccessJSON(ctx, http.StatusCreated, "Successfully Created Entertainment Category")
+
+    err := p.service.Save(entertainmentCategory)
+    if err != nil {
+        utils.ErrorJSON(ctx, http.StatusBadRequest, "Failed to create entertainment category")
+        return
+    }
+
+    utils.SuccessJSON(ctx, http.StatusCreated, "Successfully created entertainment category")
 }
 
 //GetEntertainmentCategory : get entertainment category by id
 func (p *EntertainmentCategoryController) GetEntertainmentCategory(c *gin.Context) {
     idParam := c.Param("id")
-    id, err := strconv.ParseInt(idParam, 10, 64) //type conversion string to int64
-    if err != nil {
-        utils.ErrorJSON(c, http.StatusBadRequest, "id invalid")
-        return
-    }
+    
     var bus models.EntertainmentCategory
-    bus.ID = id
+    bus.ID = idParam
     foundBus, err := p.service.Find(bus)
     if err != nil {
-        utils.ErrorJSON(c, http.StatusBadRequest, "Error Finding Entertainment Category")
+        utils.ErrorJSON(c, http.StatusBadRequest, "Error finding entertainment category")
         return 
     }
     response := foundBus.ResponseMap()
 
     c.JSON(http.StatusOK, &utils.Response{
         Success: true,
-        Message: "Result set of Entertainment Category",
+        Message: "Result set of entertainment category",
         Data:    &response})
 
 }
@@ -88,14 +90,8 @@ func (p *EntertainmentCategoryController) GetEntertainmentCategory(c *gin.Contex
 func (p EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.Context) {
     idParam := ctx.Param("id")
 
-    id, err := strconv.ParseInt(idParam, 10, 64)
-
-    if err != nil {
-        utils.ErrorJSON(ctx, http.StatusBadRequest, "id invalid")
-        return
-    }
     var entertainmentCategory models.EntertainmentCategory
-    entertainmentCategory.ID = id
+    entertainmentCategory.ID = idParam
 
     entertainmentCategoryRecord, err := p.service.Find(entertainmentCategory)
 
@@ -111,14 +107,14 @@ func (p EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.Co
     }
 
     if err := p.service.Update(entertainmentCategoryRecord); err != nil {
-        utils.ErrorJSON(ctx, http.StatusBadRequest, "Failed to store entertainment category")
+        utils.ErrorJSON(ctx, http.StatusBadRequest, "Failed to update entertainment category")
         return
     }
     response := entertainmentCategoryRecord.ResponseMap()
 
     ctx.JSON(http.StatusOK, &utils.Response{
         Success: true,
-        Message: "Successfully Updated Entertainment Category",
+        Message: "Successfully updated entertainment category",
         Data:    response,
     })
 }
@@ -126,12 +122,8 @@ func (p EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.Co
 //DeleteEntertainmentCategory : Deletes Bus
 func (p *EntertainmentCategoryController) DeleteEntertainmentCategory(c *gin.Context) {
     idParam := c.Param("id")
-    id, err := strconv.ParseInt(idParam, 10, 64) //type conversion string to uint64
-    if err != nil {
-        utils.ErrorJSON(c, http.StatusBadRequest, "id invalid")
-        return
-    }
-    err = p.service.Delete(id)
+    
+    err := p.service.Delete(idParam)
 
     if err != nil {
         utils.ErrorJSON(c, http.StatusBadRequest, "Failed to delete entertainment category")
@@ -139,6 +131,6 @@ func (p *EntertainmentCategoryController) DeleteEntertainmentCategory(c *gin.Con
     }
     response := &utils.Response{
         Success: true,
-        Message: "Deleted Sucessfully"}
+        Message: "Deleted sucessfully"}
     c.JSON(http.StatusOK, response)
 }

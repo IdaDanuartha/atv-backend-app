@@ -1,17 +1,9 @@
 package models
 
-import (
-	"time"
-	"gorm.io/gorm"
-)
-
 // Entertainment Catetgory Model
 type EntertainmentCategory struct {
-	ID           int64     `gorm:"primary_key;auto_increment" json:"id"`
+	Base
 	Name         string    `gorm:"size:100" json:"name"`
-	CreatedAt    time.Time `json:"created_at,omitempty"`
-	UpdatedAt    time.Time `json:"updated_at,omitempty"`
-	DeletedAt    gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
 }
 
 // TableName method sets table name for Bus model
