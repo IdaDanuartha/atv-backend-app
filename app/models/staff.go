@@ -3,7 +3,9 @@ package models
 // Staff Model
 type Staff struct {
 	Base
-	Name string `gorm:"size:100" json:"name"`
+	Name 	string `gorm:"size:100" json:"name"`
+	UserID  string    `gorm:"primaryKey;foreignKey:UserID"`
+  	User    User   `gorm:"foreignKey:UserID"`
 }
 
 // TableName method sets table name for Staff model

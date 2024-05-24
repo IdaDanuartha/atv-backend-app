@@ -3,9 +3,9 @@ package models
 // Customer Model
 type Customer struct {
 	Base
-	UserID  string `gorm:"size:100" json:"user_id"`
 	Name 	string `gorm:"size:100" json:"name"`
-	User    User `gorm:"foreignKey:UserID"`
+	UserID  string    `gorm:"primaryKey;foreignKey:UserID"`
+  	User    User   `gorm:"foreignKey:UserID"`
 }
 
 // TableName method sets table name for Customer model

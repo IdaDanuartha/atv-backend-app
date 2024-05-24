@@ -33,5 +33,6 @@ func (p UserRoute) Setup() {
 	{
 		auth.POST("/register", p.Controller.RegisterUser)
 		auth.POST("/login", p.Controller.Login)
+		auth.PATCH("/update", p.Controller.UpdateProfile)
 	}
 }

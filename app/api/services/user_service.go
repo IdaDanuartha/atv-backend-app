@@ -7,14 +7,15 @@ import (
 	"github.com/IdaDanuartha/atv-backend-app/app/api/repositories"
 	"github.com/IdaDanuartha/atv-backend-app/app/enums"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
+	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService interface {
-	RegisterUser(input inputs.RegisterInput) (models.User, error)
+	RegisterUser(input inputs.RegisterInput) (models.Customer, error)
 	Login(input inputs.LoginInput) (models.User, error)
 	GetUserByID(ID string) (models.User, error)
-	UpdateUser(input inputs.UpdateProfileInput) (models.User, error)
+	UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Context) (models.User, error)
 }
 
 type userService struct {
@@ -25,20 +26,21 @@ func NewUserService(repository repositories.UserRepository) *userService {
 	return &userService{repository}
 }
 
-func (s *userService) RegisterUser(input inputs.RegisterInput) (models.User, error) {
-	user := models.User{}
-	user.Username = input.Username
-	user.Email = input.Email
+func (s *userService) RegisterUser(input inputs.RegisterInput) (models.Customer, error) {
+	customer := models.Customer{}
+	customer.Name = input.Name
+	customer.User.Username = input.Username
+	customer.User.Email = input.Email
+	customer.User.Role = enums.Role(enums.Customer)
 
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
 	if err != nil {
-		return user, err
+		return customer, err
 	}
 
-	user.Password = string(passwordHash)
-	user.Role = enums.Role(enums.Customer)
+	customer.User.Password = string(passwordHash)
 
-	newUser, err := s.repository.Save(user)
+	newUser, err := s.repository.Save(customer)
 	if err != nil {
 		return newUser, err
 	}
@@ -80,7 +82,7 @@ func (s *userService) GetUserByID(ID string) (models.User, error) {
 	return user, nil
 }
 
-func (s *userService) UpdateUser(input inputs.UpdateProfileInput) (models.User, error) {
+func (s *userService) UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Context) (models.User, error) {
 	user, err := s.repository.FindByID(input.ID)
 	if err != nil {
 		return user, err
@@ -88,6 +90,7 @@ func (s *userService) UpdateUser(input inputs.UpdateProfileInput) (models.User, 
 
 	user.Username = input.Username
 	user.Email = input.Email
+	user.Role = input.Role
 
 	updatedUser, err := s.repository.Update(user)
 	if err != nil {
