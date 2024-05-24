@@ -12,6 +12,12 @@ import (
 )
 
 // AuthService AuthService struct
+type ServiceInterface interface {
+	GenerateToken(userID string) (string, error)
+	ValidateToken(token string) (*jwt.Token, error)
+	GetUserByID(ID string) (models.User, error)
+}
+
 type AuthService struct {
 	repository repositories.AuthRepository
 }

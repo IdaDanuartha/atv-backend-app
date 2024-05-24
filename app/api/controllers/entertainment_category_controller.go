@@ -3,9 +3,11 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/IdaDanuartha/atv-backend-app/app/api/formatters"
+	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/services"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
-	"github.com/IdaDanuartha/atv-backend-app/utils"
+	"github.com/IdaDanuartha/atv-backend-app/app/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,122 +17,128 @@ type EntertainmentCategoryController struct {
 }
 
 //NewEntertainmentCategoryController : NewEntertainmentCategoryController
-func NewEntertainmentCategoryController(s services.EntertainmentCategoryService) EntertainmentCategoryController {
-    return EntertainmentCategoryController{
-        service: s,
-    }
+func NewEntertainmentCategoryController(service services.EntertainmentCategoryService) *EntertainmentCategoryController {
+    return &EntertainmentCategoryController{service}
 }
 
 // GetEntertainmentCategories : GetEntertainmentCategories controller
-func (p *EntertainmentCategoryController) GetEntertainmentCategories(ctx *gin.Context) {
+func (h *EntertainmentCategoryController) GetEntertainmentCategories(ctx *gin.Context) {
     var entertainment_categories models.EntertainmentCategory
 
     search := ctx.Query("search")
 
-    data, _, err := p.service.FindAll(entertainment_categories, search)
+    entertainmentCategories, _, err := h.service.FindAll(entertainment_categories, search)
 
     if err != nil {
-        utils.ErrorJSON(ctx, http.StatusBadRequest, "Failed to find entertainment category")
+        response := utils.APIResponse("Failed to find entertainment category", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
         return
     }
-    respArr := make([]map[string]interface{}, 0, 0)
-
-    for _, n := range *data {
-        resp := n.ResponseMap()
-        respArr = append(respArr, resp)
-    }
-
-    ctx.JSON(http.StatusOK, &utils.Response{
-        Success: true,
-        Message: "Entertainment category result set",
-        Data: respArr,
-    })
-}
-
-// AddEntertainmentCategory : AddEntertainmentCategory controller
-func (p *EntertainmentCategoryController) AddEntertainmentCategory(ctx *gin.Context) {
-    var entertainmentCategory models.EntertainmentCategory
-    ctx.ShouldBindJSON(&entertainmentCategory)
-
-    if entertainmentCategory.Name == "" {
-        utils.ErrorJSON(ctx, http.StatusBadRequest, "Name is required")
-        return
-    }
-
-    err := p.service.Save(entertainmentCategory)
-    if err != nil {
-        utils.ErrorJSON(ctx, http.StatusBadRequest, "Failed to create entertainment category")
-        return
-    }
-
-    utils.SuccessJSON(ctx, http.StatusCreated, "Successfully created entertainment category")
+    
+    response := utils.APIResponse("Entertainment category result set", http.StatusOK, "success", formatters.FormatEntertainmentCategories(entertainmentCategories))
+	ctx.JSON(http.StatusOK, response)
 }
 
 //GetEntertainmentCategory : get entertainment category by id
-func (p *EntertainmentCategoryController) GetEntertainmentCategory(c *gin.Context) {
-    idParam := c.Param("id")
-    
-    var bus models.EntertainmentCategory
-    bus.ID = idParam
-    foundBus, err := p.service.Find(bus)
-    if err != nil {
-        utils.ErrorJSON(c, http.StatusBadRequest, "Error finding entertainment category")
-        return 
-    }
-    response := foundBus.ResponseMap()
+func (h *EntertainmentCategoryController) GetEntertainmentCategory(c *gin.Context) {
+    var input inputs.GetEntertainmentCategoryDetailInput
 
-    c.JSON(http.StatusOK, &utils.Response{
-        Success: true,
-        Message: "Result set of entertainment category",
-        Data:    &response})
+	err := c.ShouldBindUri(&input)
+	if err != nil {
+		response := utils.APIResponse("Failed to get detail of entertainment category", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
 
+	entertainmentCategory, err := h.service.Find(input)
+	if err != nil {
+		response := utils.APIResponse("Failed to get detail of entertainment category", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := utils.APIResponse("Entertainment category detail", http.StatusOK, "success", formatters.FormatEntertainmentCategory(entertainmentCategory))
+	c.JSON(http.StatusOK, response)
+
+}
+
+// AddEntertainmentCategory : AddEntertainmentCategory controller
+func (h *EntertainmentCategoryController) AddEntertainmentCategory(ctx *gin.Context) {
+    var input inputs.EntertainmentCategoryInput
+
+	err := ctx.ShouldBindJSON(&input)
+	if err != nil {
+		errors := utils.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := utils.APIResponse("Failed to store entertainment category", http.StatusUnprocessableEntity, "error", errorMessage)
+		ctx.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	newEntertainmentCategory, err := h.service.Save(input)
+	if err != nil {
+		response := utils.APIResponse("Failed to store entertainment category", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := utils.APIResponse("Success to store entertainment category", http.StatusOK, "success", formatters.FormatEntertainmentCategory(newEntertainmentCategory))
+	ctx.JSON(http.StatusOK, response)
 }
 
 //UpdateEntertainmentCategory : get update by id
-func (p *EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.Context) {
-    idParam := ctx.Param("id")
+func (h *EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.Context) {
+    var inputID inputs.GetEntertainmentCategoryDetailInput
 
-    var entertainmentCategory models.EntertainmentCategory
-    entertainmentCategory.ID = idParam
+	err := ctx.ShouldBindUri(&inputID)
+	if err != nil {
+		response := utils.APIResponse("Failed to update campaign", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
 
-    entertainmentCategoryRecord, err := p.service.Find(entertainmentCategory)
+	var inputData inputs.EntertainmentCategoryInput
 
-    if err != nil {
-        utils.ErrorJSON(ctx, http.StatusBadRequest, "Entertainment category with given id not found")
-        return
-    }
-    ctx.ShouldBindJSON(&entertainmentCategoryRecord)
+	err = ctx.ShouldBindJSON(&inputData)
+	if err != nil {
+		errors := utils.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
 
-    if entertainmentCategoryRecord.Name == "" {
-        utils.ErrorJSON(ctx, http.StatusBadRequest, "Name is required")
-        return
-    }
+		response := utils.APIResponse("Failed to update entertainment category", http.StatusUnprocessableEntity, "error", errorMessage)
+		ctx.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
 
-    if err := p.service.Update(entertainmentCategoryRecord); err != nil {
-        utils.ErrorJSON(ctx, http.StatusBadRequest, "Failed to update entertainment category")
-        return
-    }
-    response := entertainmentCategoryRecord.ResponseMap()
+	updatedCampaign, err := h.service.Update(inputID, inputData)
+	if err != nil {
+		response := utils.APIResponse("Failed to update entertainment category", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
 
-    ctx.JSON(http.StatusOK, &utils.Response{
-        Success: true,
-        Message: "Successfully updated entertainment category",
-        Data:    response,
-    })
+	response := utils.APIResponse("Success to update entertainment category", http.StatusOK, "success", formatters.FormatEntertainmentCategory(updatedCampaign))
+	ctx.JSON(http.StatusOK, response)
 }
 
 //DeleteEntertainmentCategory : Deletes Entertainment Category
-func (p *EntertainmentCategoryController) DeleteEntertainmentCategory(c *gin.Context) {
-    idParam := c.Param("id")
-    
-    err := p.service.Delete(idParam)
+func (h *EntertainmentCategoryController) DeleteEntertainmentCategory(ctx *gin.Context) {
+    var inputID inputs.GetEntertainmentCategoryDetailInput
 
-    if err != nil {
-        utils.ErrorJSON(c, http.StatusBadRequest, "Failed to delete entertainment category")
-        return
-    }
-    response := &utils.Response{
-        Success: true,
-        Message: "Deleted sucessfully"}
-    c.JSON(http.StatusOK, response)
+	err := ctx.ShouldBindUri(&inputID)
+	if err != nil {
+		response := utils.APIResponse("Failed to delete campaign", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	deletedCampaign, err := h.service.Delete(inputID)
+	if err != nil {
+		response := utils.APIResponse("Failed to delete entertainment category", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := utils.APIResponse("Success to delete entertainment category", http.StatusOK, "success", formatters.FormatEntertainmentCategory(deletedCampaign))
+	ctx.JSON(http.StatusOK, response)
 }

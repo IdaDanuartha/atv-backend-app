@@ -5,61 +5,83 @@ import (
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
 )
 
-//EntertainmentCategoryRepository -> EntertainmentCategoryRepository
-type EntertainmentCategoryRepository struct {
+type EntertainmentCategoryRepository interface {
+    FindAll(entertainmentCategory models.EntertainmentCategory, search string) ([]models.EntertainmentCategory, int64, error)
+    Find(ID string) (models.EntertainmentCategory, error)
+    Save(entertainmentCategory models.EntertainmentCategory) (models.EntertainmentCategory, error)
+    Update(entertainmentCategory models.EntertainmentCategory) (models.EntertainmentCategory, error)
+    Delete(entertainmentCategory models.EntertainmentCategory) (models.EntertainmentCategory, error)
+}
+
+type entertainmentCategoryRepository struct {
     db config.Database
 }
 
 // NewEntertainmentCategoryRepository : fetching database
-func NewEntertainmentCategoryRepository(db config.Database) EntertainmentCategoryRepository {
-    return EntertainmentCategoryRepository{
-        db: db,
-    }
-}
-
-//Save -> Method for saving Entertainment Category to database
-func (p EntertainmentCategoryRepository) Save(entertainmentCategory models.EntertainmentCategory) error {
-    return p.db.DB.Create(&entertainmentCategory).Error
+func NewEntertainmentCategoryRepository(db config.Database) entertainmentCategoryRepository {
+    return entertainmentCategoryRepository{db}
 }
 
 //FindAll -> Method for fetching all Entertainment Category from database
-func (p EntertainmentCategoryRepository) FindAll(entertainmentCategory models.EntertainmentCategory, search string) (*[]models.EntertainmentCategory, int64, error) {
+func (r entertainmentCategoryRepository) FindAll(entertainmentCategory models.EntertainmentCategory, search string) ([]models.EntertainmentCategory, int64, error) {
     var entertainment_categories []models.EntertainmentCategory
     var totalRows int64 = 0
 
-    queryBuider := p.db.DB.Order("created_at desc").Model(&models.EntertainmentCategory{})
+    queryBuider := r.db.DB.Order("created_at desc").Model(&models.EntertainmentCategory{})
 
     // Search parameter
     if search != "" {
         querySearch := "%" + search + "%"
         queryBuider = queryBuider.Where(
-            p.db.DB.Where("entertainment_categories.name LIKE ? ", querySearch))
+            r.db.DB.Where("entertainment_categories.name LIKE ? ", querySearch))
     }
 
     err := queryBuider.
         Where(entertainmentCategory).
         Find(&entertainment_categories).
         Count(&totalRows).Error
-    return &entertainment_categories, totalRows, err
-}
-
-//Update -> Method for updating Entertainment Category
-func (p EntertainmentCategoryRepository) Update(entertainmentCategory models.EntertainmentCategory) error {
-    return p.db.DB.Save(&entertainmentCategory).Error
+    return entertainment_categories, totalRows, err
 }
 
 //Find -> Method for fetching Entertainment Category by id
-func (p EntertainmentCategoryRepository) Find(entertainmentCategory models.EntertainmentCategory) (models.EntertainmentCategory, error) {
+func (r entertainmentCategoryRepository) Find(ID string) (models.EntertainmentCategory, error) {
     var entertainment_categories models.EntertainmentCategory
-    err := p.db.DB.
+    err := r.db.DB.
         Debug().
         Model(&models.EntertainmentCategory{}).
-        Where(&entertainmentCategory).
-        Take(&entertainment_categories).Error
+        Where("id = ?", ID).
+        Find(&entertainment_categories).Error
     return entertainment_categories, err
 }
 
+//Save -> Method for saving Entertainment Category to database
+func (r entertainmentCategoryRepository) Save(entertainmentCategory models.EntertainmentCategory) (models.EntertainmentCategory, error) {
+    err := r.db.DB.Create(&entertainmentCategory).Error
+	if err != nil {
+		return entertainmentCategory, err
+	}
+
+	return entertainmentCategory, nil
+}
+
+//Update -> Method for updating Entertainment Category
+func (r *entertainmentCategoryRepository) Update(entertainmentCategory models.EntertainmentCategory) (models.EntertainmentCategory, error) {
+	err := r.db.DB.Save(&entertainmentCategory).Error
+
+	if err != nil {
+		return entertainmentCategory, err
+	}
+
+	return entertainmentCategory, nil
+}
+
 //Delete -> Method for deleting Entertainment Category
-func (p EntertainmentCategoryRepository) Delete(bus models.EntertainmentCategory) error {
-    return p.db.DB.Delete(&bus).Error
+func (r entertainmentCategoryRepository) Delete(entertainmentCategory models.EntertainmentCategory) (models.EntertainmentCategory, error) {
+    err := r.db.DB.Delete(&entertainmentCategory).Error
+
+	if err != nil {
+		return entertainmentCategory, err
+	}
+
+	return entertainmentCategory, nil
 }
