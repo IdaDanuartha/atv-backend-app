@@ -1,10 +1,12 @@
 package config
 
 import (
-    "fmt"
-    "os"
-    "gorm.io/driver/mysql"
-    "gorm.io/gorm"
+	"fmt"
+	"os"
+
+	"github.com/IdaDanuartha/atv-backend-app/app/models"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 //Database struct
@@ -30,6 +32,17 @@ func NewDatabase() Database {
         panic("Failed to connect to database!")
 
     }
+
+    db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.Admin{})
+	db.AutoMigrate(&models.Staff{})
+	db.AutoMigrate(&models.Instructor{})
+	db.AutoMigrate(&models.Customer{})
+	db.AutoMigrate(&models.EntertainmentCategory{})
+    db.AutoMigrate(&models.EntertainmentPackage{})
+    db.AutoMigrate(&models.Facility{})
+    db.AutoMigrate(&models.MandatoryLuggage{})
+
     fmt.Println("Database connection established")
     return Database{
         DB: db,
