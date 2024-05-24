@@ -101,7 +101,7 @@ func (h *FacilityController) UpdateFacility(ctx *gin.Context) {
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to update campaign", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update facility", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -118,14 +118,14 @@ func (h *FacilityController) UpdateFacility(ctx *gin.Context) {
 		return
 	}
 
-	updatedCampaign, err := h.service.Update(inputID, inputData)
+	updatedFacility, err := h.service.Update(inputID, inputData)
 	if err != nil {
 		response := utils.APIResponse("Failed to update facility", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	response := utils.APIResponse("Success to update facility", http.StatusOK, "success", formatters.FormatFacility(updatedCampaign))
+	response := utils.APIResponse("Success to update facility", http.StatusOK, "success", formatters.FormatFacility(updatedFacility))
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -135,18 +135,18 @@ func (h *FacilityController) DeleteFacility(ctx *gin.Context) {
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete campaign", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete facility", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	deletedCampaign, err := h.service.Delete(inputID)
+	deletedFacility, err := h.service.Delete(inputID)
 	if err != nil {
 		response := utils.APIResponse("Failed to delete facility", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	response := utils.APIResponse("Success to delete facility", http.StatusOK, "success", formatters.FormatFacility(deletedCampaign))
+	response := utils.APIResponse("Success to delete facility", http.StatusOK, "success", formatters.FormatFacility(deletedFacility))
 	ctx.JSON(http.StatusOK, response)
 }

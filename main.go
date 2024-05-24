@@ -49,6 +49,12 @@ func main() {
 	facilityController := controllers.NewFacilityController(facilityService)
 	facilityRoute := routes.NewFacilityRoute(*facilityController, router)
 	facilityRoute.Setup(authMiddleware)
+
+	mandatoryLuggageRepository := repositories.NewMandatoryLuggageRepository(db)
+	mandatoryLuggageService := services.NewMandatoryLuggageService(&mandatoryLuggageRepository)
+	mandatoryLuggageController := controllers.NewMandatoryLuggageController(mandatoryLuggageService)
+	mandatoryLuggageRoute := routes.NewMandatoryLuggageRoute(*mandatoryLuggageController, router)
+	mandatoryLuggageRoute.Setup(authMiddleware)
 	
 
 	router.Gin.Run(":" + os.Getenv("APP_PORT"))

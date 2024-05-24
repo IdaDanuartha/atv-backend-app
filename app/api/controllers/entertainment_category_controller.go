@@ -101,7 +101,7 @@ func (h *EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.C
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to update campaign", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update entertainment category", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -118,14 +118,14 @@ func (h *EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.C
 		return
 	}
 
-	updatedCampaign, err := h.service.Update(inputID, inputData)
+	updatedEntertainmentCategory, err := h.service.Update(inputID, inputData)
 	if err != nil {
 		response := utils.APIResponse("Failed to update entertainment category", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	response := utils.APIResponse("Success to update entertainment category", http.StatusOK, "success", formatters.FormatEntertainmentCategory(updatedCampaign))
+	response := utils.APIResponse("Success to update entertainment category", http.StatusOK, "success", formatters.FormatEntertainmentCategory(updatedEntertainmentCategory))
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -135,18 +135,18 @@ func (h *EntertainmentCategoryController) DeleteEntertainmentCategory(ctx *gin.C
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete campaign", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete entertainment category", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	deletedCampaign, err := h.service.Delete(inputID)
+	deletedEntertainmentCategory, err := h.service.Delete(inputID)
 	if err != nil {
 		response := utils.APIResponse("Failed to delete entertainment category", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	response := utils.APIResponse("Success to delete entertainment category", http.StatusOK, "success", formatters.FormatEntertainmentCategory(deletedCampaign))
+	response := utils.APIResponse("Success to delete entertainment category", http.StatusOK, "success", formatters.FormatEntertainmentCategory(deletedEntertainmentCategory))
 	ctx.JSON(http.StatusOK, response)
 }

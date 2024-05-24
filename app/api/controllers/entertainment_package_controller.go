@@ -101,7 +101,7 @@ func (h *EntertainmentPackageController) UpdateEntertainmentPackage(ctx *gin.Con
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to update campaign", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update entertainment package", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -118,14 +118,14 @@ func (h *EntertainmentPackageController) UpdateEntertainmentPackage(ctx *gin.Con
 		return
 	}
 
-	updatedCampaign, err := h.service.Update(inputID, inputData)
+	updatedEntertainmentPackage, err := h.service.Update(inputID, inputData)
 	if err != nil {
 		response := utils.APIResponse("Failed to update entertainment package", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	response := utils.APIResponse("Success to update entertainment package", http.StatusOK, "success", formatters.FormatEntertainmentPackage(updatedCampaign))
+	response := utils.APIResponse("Success to update entertainment package", http.StatusOK, "success", formatters.FormatEntertainmentPackage(updatedEntertainmentPackage))
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -135,18 +135,18 @@ func (h *EntertainmentPackageController) DeleteEntertainmentPackage(ctx *gin.Con
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete campaign", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete entertainment package", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	deletedCampaign, err := h.service.Delete(inputID)
+	deletedEntertainmentPackage, err := h.service.Delete(inputID)
 	if err != nil {
 		response := utils.APIResponse("Failed to delete entertainment package", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	response := utils.APIResponse("Success to delete entertainment package", http.StatusOK, "success", formatters.FormatEntertainmentPackage(deletedCampaign))
+	response := utils.APIResponse("Success to delete entertainment package", http.StatusOK, "success", formatters.FormatEntertainmentPackage(deletedEntertainmentPackage))
 	ctx.JSON(http.StatusOK, response)
 }
