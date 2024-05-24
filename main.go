@@ -20,6 +20,7 @@ func main() {
 	router := config.NewGinRouter()
 	db := config.NewDatabase()
 
+	// User API
 	authService := services.NewAuthService()
 
 	userRepository := repositories.NewUserRepository(db)
@@ -30,6 +31,7 @@ func main() {
 
 	authMiddleware := middlewares.AuthMiddleware(authService, userService)
 
+	// Master Data API
 	entertainmentCategoryRepository := repositories.NewEntertainmentCategoryRepository(db)
 	entertainmentCategoryService := services.NewEntertainmentCategoryService(&entertainmentCategoryRepository)
 	entertainmentCategoryController := controllers.NewEntertainmentCategoryController(entertainmentCategoryService)
@@ -41,6 +43,12 @@ func main() {
 	entertainmentPackageController := controllers.NewEntertainmentPackageController(entertainmentPackageService)
 	entertainmentPackageRoute := routes.NewEntertainmentPackageRoute(*entertainmentPackageController, router)
 	entertainmentPackageRoute.Setup(authMiddleware)
+	
+	facilityRepository := repositories.NewFacilityRepository(db)
+	facilityService := services.NewFacilityService(&facilityRepository)
+	facilityController := controllers.NewFacilityController(facilityService)
+	facilityRoute := routes.NewFacilityRoute(*facilityController, router)
+	facilityRoute.Setup(authMiddleware)
 	
 
 	router.Gin.Run(":" + os.Getenv("APP_PORT"))
