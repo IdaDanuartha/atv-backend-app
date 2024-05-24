@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/controllers"
+	"github.com/IdaDanuartha/atv-backend-app/app/api/middlewares"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/repositories"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/routes"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/services"
@@ -20,23 +21,25 @@ func main() {
 	router := config.NewGinRouter()
 	db := config.NewDatabase()
 
-	entertainmentCategoryRepository := repositories.NewEntertainmentCategoryRepository(db)
-	entertainmentCategoryService := services.NewEntertainmentCategoryService(&entertainmentCategoryRepository)
-	entertainmentCategoryController := controllers.NewEntertainmentCategoryController(entertainmentCategoryService)
-	entertainmentCategoryRoute := routes.NewEntertainmentCategoryRoute(*entertainmentCategoryController, router)
-	entertainmentCategoryRoute.Setup()
-	db.DB.AutoMigrate(&models.EntertainmentCategory{})
-
-	// AuthRepository := repositories.NewAuthRepository(db)
-	// AuthService := services.NewAuthService(AuthRepository)
-	// AuthController := controllers.NewAuthController(AuthService)
-	// AuthRoute := routes.NewAuthRoute(AuthController, router)
-	// AuthRoute.Setup()
+	userRepository := repositories.NewUserRepository(db)
+	userService := services.NewUserService(userRepository)
+	authService := services.NewAuthService()
+	userController := controllers.NewUserController(userService, authService)
+	userRoute := routes.NewUserRoute(userController, router)
+	userRoute.Setup()
 	db.DB.AutoMigrate(&models.User{})
 	db.DB.AutoMigrate(&models.Admin{})
 	db.DB.AutoMigrate(&models.Staff{})
 	db.DB.AutoMigrate(&models.Instructor{})
 	db.DB.AutoMigrate(&models.Customer{})
+
+	authMiddleware := middlewares.AuthMiddleware(authService, userService)
+	entertainmentCategoryRepository := repositories.NewEntertainmentCategoryRepository(db)
+	entertainmentCategoryService := services.NewEntertainmentCategoryService(&entertainmentCategoryRepository)
+	entertainmentCategoryController := controllers.NewEntertainmentCategoryController(entertainmentCategoryService)
+	entertainmentCategoryRoute := routes.NewEntertainmentCategoryRoute(*entertainmentCategoryController, router)
+	entertainmentCategoryRoute.Setup(authMiddleware)
+	db.DB.AutoMigrate(&models.EntertainmentCategory{})
 
 	router.Gin.Run(":" + os.Getenv("APP_PORT"))
 

@@ -3,30 +3,32 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/IdaDanuartha/atv-backend-app/app/api/auth"
-	"github.com/IdaDanuartha/atv-backend-app/app/api/user"
-	"github.com/IdaDanuartha/atv-backend-app/app/helper"
+	"github.com/IdaDanuartha/atv-backend-app/app/api/formatters"
+	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
+	"github.com/IdaDanuartha/atv-backend-app/app/api/services"
+	"github.com/IdaDanuartha/atv-backend-app/app/models"
+	"github.com/IdaDanuartha/atv-backend-app/app/utils"
 	"github.com/gin-gonic/gin"
 )
 
-type userController struct {
-	userService user.Service
-	authService auth.Service
+type UserController struct {
+	userService services.UserService
+	authService services.AuthService
 }
 
-func NewUserController(userService user.Service, authService auth.Service) *userController {
-	return &userController{userService, authService}
+func NewUserController(userService services.UserService, authService services.AuthService) *UserController {
+	return &UserController{userService, authService}
 }
 
-func (h *userController) RegisterUser(c *gin.Context) {
-	var input user.RegisterUserInput
+func (h *UserController) RegisterUser(c *gin.Context) {
+	var input inputs.RegisterInput
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
-		errors := helper.FormatValidationError(err)
+		errors := utils.FormatValidationError(err)
 		errorMessage := gin.H{"errors": errors}
 
-		response := helper.APIResponse("Register account failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		response := utils.APIResponse("Register account failed", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
@@ -34,34 +36,34 @@ func (h *userController) RegisterUser(c *gin.Context) {
 	newUser, err := h.userService.RegisterUser(input)
 
 	if err != nil {
-		response := helper.APIResponse("Register account failed", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Register account failed", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	token, err := h.authService.GenerateToken(newUser.ID)
 	if err != nil {
-		response := helper.APIResponse("Register account failed", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Register account failed", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	formatter := user.FormatUser(newUser, token)
+	formatter := formatters.FormatUser(newUser, token)
 
-	response := helper.APIResponse("Account has been registered", http.StatusOK, "success", formatter)
+	response := utils.APIResponse("Account registered successfully", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusOK, response)
 }
 
-func (h *userController) Login(c *gin.Context) {
-	var input user.LoginInput
+func (h *UserController) Login(c *gin.Context) {
+	var input inputs.LoginInput
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
-		errors := helper.FormatValidationError(err)
+		errors := utils.FormatValidationError(err)
 		errorMessage := gin.H{"errors": errors}
 
-		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		response := utils.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
@@ -71,33 +73,33 @@ func (h *userController) Login(c *gin.Context) {
 	if err != nil {
 		errorMessage := gin.H{"errors": err.Error()}
 
-		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		response := utils.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
 
 	token, err := h.authService.GenerateToken(loggedinUser.ID)
 	if err != nil {
-		response := helper.APIResponse("Login failed", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Login failed", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	formatter := user.FormatUser(loggedinUser, token)
+	formatter := formatters.FormatUser(loggedinUser, token)
 
-	response := helper.APIResponse("Successfuly loggedin", http.StatusOK, "success", formatter)
+	response := utils.APIResponse("Successfuly loggedin", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusOK, response)
 
 }
 
-func (h *userController) FetchUser(c *gin.Context) {
+func (h *UserController) FetchUser(c *gin.Context) {
 
-	currentUser := c.MustGet("currentUser").(user.User)
+	currentUser := c.MustGet("currentUser").(models.User)
 
-	formatter := user.FormatUser(currentUser, "")
+	formatter := formatters.FormatUser(currentUser, "")
 
-	response := helper.APIResponse("Successfuly fetch user data", http.StatusOK, "success", formatter)
+	response := utils.APIResponse("Successfuly fetch user data", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusOK, response)
 
