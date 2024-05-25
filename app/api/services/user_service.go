@@ -7,6 +7,7 @@ import (
 	"github.com/IdaDanuartha/atv-backend-app/app/api/repositories"
 	"github.com/IdaDanuartha/atv-backend-app/app/enums"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
+	"github.com/IdaDanuartha/atv-backend-app/app/utils"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -83,7 +84,9 @@ func (s *userService) GetUserByID(ID string) (models.User, error) {
 }
 
 func (s *userService) UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Context) (models.User, error) {
-	user, err := s.repository.FindByID(input.ID)
+	userID := ctx.MustGet("currentUser").(models.User).ID
+
+	user, err := s.repository.FindByID(userID)
 	if err != nil {
 		return user, err
 	}
@@ -91,6 +94,8 @@ func (s *userService) UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Conte
 	user.Username = input.Username
 	user.Email = input.Email
 	user.Role = input.Role
+
+	utils.UploadFile(ctx.Writer, ctx.Request)
 
 	updatedUser, err := s.repository.Update(user)
 	if err != nil {

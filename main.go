@@ -27,9 +27,10 @@ func main() {
 	userService := services.NewUserService(userRepository)
 	userController := controllers.NewUserController(userService, authService)
 	userRoute := routes.NewUserRoute(userController, router)
-	userRoute.Setup()
 
 	authMiddleware := middlewares.AuthMiddleware(authService, userService)
+	userRoute.Setup(authMiddleware)
+
 
 	// Master Data API
 	entertainmentCategoryRepository := repositories.NewEntertainmentCategoryRepository(db)

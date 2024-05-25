@@ -4,12 +4,13 @@ import (
 	"errors"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/config"
+	// "github.com/IdaDanuartha/atv-backend-app/app/enums"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
 	"gorm.io/gorm"
 )
 
 type UserRepository interface {
-	Save(user models.Customer) (models.Customer, error)
+	Save(customer models.Customer) (models.Customer, error)
 	FindByEmail(email string) (models.User, error)
 	FindByID(ID string) (models.User, error)
 	Update(user models.User) (models.User, error)
@@ -43,15 +44,6 @@ func (r *userRepository) Save(customer models.Customer) (models.Customer, error)
 	if existingUser.ID != "" {
 		return customer, errors.New("username already exists") // Return error if username exists
 	}
-
-	// 3. Create and save the User (if email doesn't exist)
-	err = r.db.DB.Create(&customer.User).Error
-	if err != nil {
-		return customer, err
-	}
-
-	// 4. Set the UserID in the Customer object
-	customer.UserID = customer.User.ID
 
 	// 5. Save the Customer
 	err = r.db.DB.Create(&customer).Error
@@ -101,6 +93,64 @@ func (r *userRepository) Update(user models.User) (models.User, error) {
 	if err != nil {
 		return user, err
 	}
+
+	// if user.Role == enums.Admin {
+	// 	var admin models.Admin
+
+	// 	err := r.db.DB.Where("user_id =?", user.ID).Find(&admin).Error
+	// 	if err != nil {
+	// 		return user, err
+	// 	}
+
+	// 	admin.UserID = user.ID
+
+	// 	err = r.db.DB.Save(&admin).Error
+	// 	if err != nil {
+	// 		return user, err
+	// 	}
+	// } else if user.Role == enums.Staff {
+	// 	var staff models.Staff
+
+	// 	err := r.db.DB.Where("user_id =?", user.ID).Find(&staff).Error
+	// 	if err != nil {
+	// 		return user, err
+	// 	}
+
+	// 	staff.UserID = user.ID
+
+	// 	err = r.db.DB.Save(&staff).Error
+	// 	if err != nil {
+	// 		return user, err
+	// 	}
+	// } else if user.Role == enums.Instructor {
+	// 	var instructor models.Instructor
+
+	// 	err := r.db.DB.Where("user_id =?", user.ID).Find(&instructor).Error
+	// 	if err != nil {
+	// 		return user, err
+	// 	}
+
+	// 	instructor.UserID = user.ID
+
+	// 	err = r.db.DB.Save(&instructor).Error
+	// 	if err != nil {
+	// 		return user, err
+	// 	}
+	// } else if user.Role == enums.Customer {
+	// 	var customer models.Customer
+
+	// 	err := r.db.DB.Where("user_id =?", user.ID).Find(&customer).Error
+	// 	if err != nil {
+	// 		return user, err
+	// 	}
+
+	// 	customer.UserID = user.ID
+
+	// 	err = r.db.DB.Save(&customer).Error
+	// 	if err != nil {
+	// 		return user, err
+	// 	}
+	// }
 
 	return user, nil
 }

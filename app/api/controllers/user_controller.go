@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/formatters"
@@ -111,6 +112,36 @@ func (h *UserController) FetchUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 
+}
+
+func (h *UserController) UploadAvatar(c *gin.Context) {
+	file, err := c.FormFile("avatar")
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := utils.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(models.User)
+	userID := currentUser.ID
+
+	path := fmt.Sprintf("images/%d-%s", userID, file.Filename)
+
+	err = c.SaveUploadedFile(file, path)
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := utils.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	data := gin.H{"is_uploaded": true}
+	response := utils.APIResponse("Avatar successfuly uploaded", http.StatusOK, "success", data)
+
+	c.JSON(http.StatusOK, response)
 }
 
 func (h *UserController) UpdateProfile(ctx *gin.Context) {

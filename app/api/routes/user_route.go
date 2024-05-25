@@ -5,6 +5,7 @@ import (
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/controllers"
 	"github.com/IdaDanuartha/atv-backend-app/app/config"
+	"github.com/gin-gonic/gin"
 )
 
 // UserRoute -> Route for question module
@@ -26,13 +27,13 @@ func NewUserRoute(
 }
 
 // Setup -> setups new choice Routes
-func (p UserRoute) Setup() {
+func (p UserRoute) Setup(authMiddleware gin.HandlerFunc) {
 	apiPrefix := os.Getenv("APP_PREFIX")
 
 	auth := p.Handler.Gin.Group(apiPrefix + "/auth") //Router group
 	{
 		auth.POST("/register", p.Controller.RegisterUser)
 		auth.POST("/login", p.Controller.Login)
-		auth.PATCH("/update", p.Controller.UpdateProfile)
+		auth.PATCH("/update", authMiddleware, p.Controller.UpdateProfile)
 	}
 }
