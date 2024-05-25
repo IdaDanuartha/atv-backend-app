@@ -7,7 +7,6 @@ import (
 	"github.com/IdaDanuartha/atv-backend-app/app/api/repositories"
 	"github.com/IdaDanuartha/atv-backend-app/app/enums"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
-	"github.com/IdaDanuartha/atv-backend-app/app/utils"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -16,6 +15,7 @@ type UserService interface {
 	RegisterUser(input inputs.RegisterInput) (models.Customer, error)
 	Login(input inputs.LoginInput) (models.User, error)
 	GetUserByID(ID string) (models.User, error)
+	SaveAvatar(ID string, fileLocation string) (models.User, error)
 	UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Context) (models.User, error)
 }
 
@@ -83,6 +83,22 @@ func (s *userService) GetUserByID(ID string) (models.User, error) {
 	return user, nil
 }
 
+func (s *userService) SaveAvatar(ID string, fileLocation string) (models.User, error) {
+	user, err := s.repository.FindByID(ID)
+	if err != nil {
+		return user, err
+	}
+
+	user.ProfilePath = &fileLocation
+
+	updatedUser, err := s.repository.Update(user)
+	if err != nil {
+		return updatedUser, err
+	}
+
+	return updatedUser, nil
+}
+
 func (s *userService) UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Context) (models.User, error) {
 	userID := ctx.MustGet("currentUser").(models.User).ID
 
@@ -94,8 +110,6 @@ func (s *userService) UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Conte
 	user.Username = input.Username
 	user.Email = input.Email
 	user.Role = input.Role
-
-	utils.UploadFile(ctx.Writer, ctx.Request)
 
 	updatedUser, err := s.repository.Update(user)
 	if err != nil {

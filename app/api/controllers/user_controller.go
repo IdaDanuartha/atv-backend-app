@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/formatters"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
@@ -115,7 +116,7 @@ func (h *UserController) FetchUser(c *gin.Context) {
 }
 
 func (h *UserController) UploadAvatar(c *gin.Context) {
-	file, err := c.FormFile("avatar")
+	file, err := c.FormFile("image")
 	if err != nil {
 		data := gin.H{"is_uploaded": false}
 		response := utils.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
@@ -127,9 +128,31 @@ func (h *UserController) UploadAvatar(c *gin.Context) {
 	currentUser := c.MustGet("currentUser").(models.User)
 	userID := currentUser.ID
 
-	path := fmt.Sprintf("images/%d-%s", userID, file.Filename)
+	// Check if the old avatar image exists for the user
+	_, err = os.Stat(*currentUser.ProfilePath)
+	if err == nil {
+		// If the old avatar image exists, delete it
+		err := os.Remove(*currentUser.ProfilePath)
+		if err != nil {
+			data := gin.H{"is_uploaded": false}
+			response := utils.APIResponse("Failed to delete old avatar image", http.StatusBadRequest, "error", data)
+			c.JSON(http.StatusBadRequest, response)
+			return
+		}
+	}
+
+	path := fmt.Sprintf("uploads/users/%s-%s", userID, file.Filename)
 
 	err = c.SaveUploadedFile(file, path)
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := utils.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	_, err = h.userService.SaveAvatar(userID, path)
 	if err != nil {
 		data := gin.H{"is_uploaded": false}
 		response := utils.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
@@ -156,6 +179,14 @@ func (h *UserController) UpdateProfile(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
+
+	// Check if avatar file is uploaded
+	// file, _ := ctx.FormFile("avatar")
+	// if file != nil {
+	// 	// If avatar file is uploaded, call UploadAvatar function
+	// 	h.UploadAvatar(ctx)
+	// 	return
+	// }
 
 	updatedUser, err := h.userService.UpdateUser(inputData, ctx)
 	if err != nil {

@@ -1,6 +1,8 @@
 package inputs
 
-import "github.com/IdaDanuartha/atv-backend-app/app/enums"
+import (
+	"github.com/IdaDanuartha/atv-backend-app/app/enums"
+)
 
 type RegisterInput struct {
 	Name     string `json:"name" binding:"required"`
@@ -19,5 +21,5 @@ type UpdateProfileInput struct {
 	Username    string     `json:"username" binding:"required"`
 	Email       string     `json:"email" binding:"required,email"`
 	Role        enums.Role `json:"role" binding:"required"`
-	ProfilePath string     `json:"profile_path"`
+	ProfilePath *string    `json:"profile_path" binding:"omitempty"`
 }
