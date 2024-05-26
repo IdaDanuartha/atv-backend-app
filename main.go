@@ -56,6 +56,12 @@ func main() {
 	mandatoryLuggageController := controllers.NewMandatoryLuggageController(mandatoryLuggageService)
 	mandatoryLuggageRoute := routes.NewMandatoryLuggageRoute(*mandatoryLuggageController, router)
 	mandatoryLuggageRoute.Setup(authMiddleware)
+
+	routeRepository := repositories.NewRouteRepository(db)
+	routeService := services.NewRouteService(&routeRepository)
+	routeController := controllers.NewRouteController(routeService)
+	routeRoute := routes.NewRuteRoute(*routeController, router)
+	routeRoute.Setup(authMiddleware)
 	
 
 	router.Gin.Run(":" + os.Getenv("APP_PORT"))

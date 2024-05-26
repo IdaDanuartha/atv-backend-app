@@ -2,19 +2,41 @@ package models
 
 import (
 	"time"
-	"gorm.io/gorm"
+
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 // Base Models
 type Base struct {
 	// ID           string     `gorm:"type:uuid;primary_key;" json:"id"`
-	ID           string     `gorm:"primary_key;" json:"id"`
-	CreatedAt    time.Time `json:"created_at,omitempty"`
-	UpdatedAt    time.Time `json:"updated_at,omitempty"`
-	DeletedAt    gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
+	ID        string         `gorm:"primary_key;" json:"id"`
+	CreatedAt time.Time      `json:"created_at,omitempty"`
+	UpdatedAt time.Time      `json:"updated_at,omitempty"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
 }
 
+// BeforeCreate hook will set the CreatedAt and UpdatedAt fields before creating a new record
+func (base *Base) BeforeCreate(tx *gorm.DB) (err error) {
+	now := time.Now()
+	base.CreatedAt = now
+	base.UpdatedAt = now
+	return
+}
+
+// BeforeUpdate hook will set the UpdatedAt field before updating a record
+func (base *Base) BeforeUpdate(tx *gorm.DB) (err error) {
+	base.UpdatedAt = time.Now()
+	return
+}
+
+// Delete overrides the Delete method to set DeletedAt before actual deletion
+func (base *Base) Delete(tx *gorm.DB) error {
+	base.DeletedAt = gorm.DeletedAt{Time: time.Now(), Valid: true}
+	return tx.Delete(base).Error
+}
+
+// ----------------------------------------------------------------
 
 // BeforeCreate will set a UUID rather than numeric ID.
 func (b *EntertainmentCategory) BeforeCreate(tx *gorm.DB) (err error) {
@@ -50,6 +72,10 @@ func (b *Instructor) BeforeCreate(tx *gorm.DB) (err error) {
 	return
 }
 func (b *Customer) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}
+func (b *Route) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = uuid.New().String()
 	return
 }
