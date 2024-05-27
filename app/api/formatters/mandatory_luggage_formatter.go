@@ -6,6 +6,9 @@ func FormatMandatoryLuggage(mandatoryLuggage models.MandatoryLuggage) models.Man
 	mandatoryLuggageFormatter := models.MandatoryLuggage{}
 	mandatoryLuggageFormatter.ID = mandatoryLuggage.ID
 	mandatoryLuggageFormatter.Name = mandatoryLuggage.Name
+	mandatoryLuggageFormatter.CreatedAt = mandatoryLuggage.CreatedAt
+	mandatoryLuggageFormatter.UpdatedAt = mandatoryLuggage.UpdatedAt
+	mandatoryLuggageFormatter.DeletedAt = mandatoryLuggage.DeletedAt
 
 	return mandatoryLuggageFormatter
 }

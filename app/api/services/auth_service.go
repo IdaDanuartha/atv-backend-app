@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"os"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -22,10 +23,16 @@ func NewAuthService() *jwtService {
 }
 
 func (s *jwtService) GenerateToken(userID string) (string, error) {
-	claim := jwt.MapClaims{}
-	claim["user_id"] = userID
+	// Define the expiration time (one week from now)
+    expirationTime := time.Now().Add(7 * 24 * time.Hour)
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
+    // Create the JWT claims, including the user ID and expiration time
+    claims := jwt.MapClaims{
+        "user_id": userID,
+        "exp":     expirationTime.Unix(),
+    }
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	signedToken, err := token.SignedString(SECRET_KEY)
 	if err != nil {

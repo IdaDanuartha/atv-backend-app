@@ -9,6 +9,9 @@ func FormatRoute(route models.Route) models.Route {
 	routeFormatter.FinalRoute = route.FinalRoute
 	routeFormatter.Duration = route.Duration
 	routeFormatter.Distance = route.Distance
+	routeFormatter.CreatedAt = route.CreatedAt
+	routeFormatter.UpdatedAt = route.UpdatedAt
+	routeFormatter.DeletedAt = route.DeletedAt
 
 	return routeFormatter
 }

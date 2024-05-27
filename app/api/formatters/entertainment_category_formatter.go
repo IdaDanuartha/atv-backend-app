@@ -6,6 +6,9 @@ func FormatEntertainmentCategory(entertainmentCategory models.EntertainmentCateg
 	entertainmentCategoryFormatter := models.EntertainmentCategory{}
 	entertainmentCategoryFormatter.ID = entertainmentCategory.ID
 	entertainmentCategoryFormatter.Name = entertainmentCategory.Name
+	entertainmentCategoryFormatter.CreatedAt = entertainmentCategory.CreatedAt
+	entertainmentCategoryFormatter.UpdatedAt = entertainmentCategory.UpdatedAt
+	entertainmentCategoryFormatter.DeletedAt = entertainmentCategory.DeletedAt
 
 	return entertainmentCategoryFormatter
 }

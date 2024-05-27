@@ -28,6 +28,8 @@ func NewGinRouter() GinRouter {
     httpRouter.ForwardedByClientIP = true
     httpRouter.SetTrustedProxies([]string{"127.0.0.1"})
 
+    httpRouter.Static("/uploads", "./uploads")
+
     // httpRouter.GET("/", func(c *gin.Context) {
     //     c.JSON(http.StatusOK, gin.H{"data": "Up and Running..."})
     // })

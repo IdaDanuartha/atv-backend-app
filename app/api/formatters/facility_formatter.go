@@ -6,6 +6,9 @@ func FormatFacility(facility models.Facility) models.Facility {
 	facilityFormatter := models.Facility{}
 	facilityFormatter.ID = facility.ID
 	facilityFormatter.Name = facility.Name
+	facilityFormatter.CreatedAt = facility.CreatedAt
+	facilityFormatter.UpdatedAt = facility.UpdatedAt
+	facilityFormatter.DeletedAt = facility.DeletedAt
 
 	return facilityFormatter
 }

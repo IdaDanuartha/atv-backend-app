@@ -16,17 +16,10 @@ type Base struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
 }
 
-// BeforeCreate hook will set the CreatedAt and UpdatedAt fields before creating a new record
-func (base *Base) BeforeCreate(tx *gorm.DB) (err error) {
+func (b *Base) BeforeCreate(tx *gorm.DB) (err error) {
 	now := time.Now()
-	base.CreatedAt = now
-	base.UpdatedAt = now
-	return
-}
-
-// BeforeUpdate hook will set the UpdatedAt field before updating a record
-func (base *Base) BeforeUpdate(tx *gorm.DB) (err error) {
-	base.UpdatedAt = time.Now()
+	b.CreatedAt = now
+	b.UpdatedAt = now
 	return
 }
 

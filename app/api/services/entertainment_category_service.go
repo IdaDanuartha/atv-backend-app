@@ -1,6 +1,7 @@
 package services
 
 import (
+
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/repositories"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
@@ -8,25 +9,25 @@ import (
 
 type EntertainmentCategoryService interface {
 	FindAll(model models.EntertainmentCategory, search string) ([]models.EntertainmentCategory, int64, error)
-    Find(input inputs.GetEntertainmentCategoryDetailInput) (models.EntertainmentCategory, error)
-    Save(input inputs.EntertainmentCategoryInput) (models.EntertainmentCategory, error)
-    Update(inputID inputs.GetEntertainmentCategoryDetailInput, input inputs.EntertainmentCategoryInput) (models.EntertainmentCategory, error)
-    Delete(inputID inputs.GetEntertainmentCategoryDetailInput) (models.EntertainmentCategory, error)
+	Find(input inputs.GetEntertainmentCategoryDetailInput) (models.EntertainmentCategory, error)
+	Save(input inputs.EntertainmentCategoryInput) (models.EntertainmentCategory, error)
+	Update(inputID inputs.GetEntertainmentCategoryDetailInput, input inputs.EntertainmentCategoryInput) (models.EntertainmentCategory, error)
+	Delete(inputID inputs.GetEntertainmentCategoryDetailInput) (models.EntertainmentCategory, error)
 }
 
-//EntertainmentCategoryService EntertainmentCategoryService struct
+// EntertainmentCategoryService EntertainmentCategoryService struct
 type entertainmentCategoryService struct {
-    repository repositories.EntertainmentCategoryRepository
+	repository repositories.EntertainmentCategoryRepository
 }
 
-//NewEntertainmentCategoryService : returns the EntertainmentCategoryService struct instance
+// NewEntertainmentCategoryService : returns the EntertainmentCategoryService struct instance
 func NewEntertainmentCategoryService(repository repositories.EntertainmentCategoryRepository) entertainmentCategoryService {
-    return entertainmentCategoryService{repository}
+	return entertainmentCategoryService{repository}
 }
 
-//FindAll -> calls Entertainment Category repo find all method
+// FindAll -> calls Entertainment Category repo find all method
 func (s entertainmentCategoryService) FindAll(model models.EntertainmentCategory, search string) ([]models.EntertainmentCategory, int64, error) {
-    entertainmentCategories, total, err := s.repository.FindAll(model, search)
+	entertainmentCategories, total, err := s.repository.FindAll(model, search)
 	if err != nil {
 		return entertainmentCategories, total, err
 	}
@@ -36,7 +37,7 @@ func (s entertainmentCategoryService) FindAll(model models.EntertainmentCategory
 
 // Find -> calls Entertainment Category repo find method
 func (s entertainmentCategoryService) Find(input inputs.GetEntertainmentCategoryDetailInput) (models.EntertainmentCategory, error) {
-    entertainmentCategory, err := s.repository.Find(input.ID)
+	entertainmentCategory, err := s.repository.Find(input.ID)
 
 	if err != nil {
 		return entertainmentCategory, err
@@ -45,9 +46,9 @@ func (s entertainmentCategoryService) Find(input inputs.GetEntertainmentCategory
 	return entertainmentCategory, nil
 }
 
-//Save -> calls Entertainment Category repository save method
+// Save -> calls Entertainment Category repository save method
 func (s entertainmentCategoryService) Save(input inputs.EntertainmentCategoryInput) (models.EntertainmentCategory, error) {
-    entertainmentCategory := models.EntertainmentCategory{}
+	entertainmentCategory := models.EntertainmentCategory{}
 	entertainmentCategory.Name = input.Name
 
 	newEntertainmentCategory, err := s.repository.Save(entertainmentCategory)
@@ -60,12 +61,12 @@ func (s entertainmentCategoryService) Save(input inputs.EntertainmentCategoryInp
 
 // Update -> calls Entertainment Category repo update method
 func (s entertainmentCategoryService) Update(inputID inputs.GetEntertainmentCategoryDetailInput, input inputs.EntertainmentCategoryInput) (models.EntertainmentCategory, error) {
-    entertainmentCategory, err := s.repository.Find(inputID.ID)
+	entertainmentCategory, err := s.repository.Find(inputID.ID)
 	if err != nil {
 		return entertainmentCategory, err
 	}
 
-    entertainmentCategory.Name = input.Name
+	entertainmentCategory.Name = input.Name
 
 	updatedEntertainmentCategory, err := s.repository.Update(entertainmentCategory)
 	if err != nil {
@@ -77,7 +78,7 @@ func (s entertainmentCategoryService) Update(inputID inputs.GetEntertainmentCate
 
 // Delete -> calls Entertainment Category repo delete method
 func (s entertainmentCategoryService) Delete(inputID inputs.GetEntertainmentCategoryDetailInput) (models.EntertainmentCategory, error) {
-    entertainmentCategory, err := s.repository.Find(inputID.ID)
+	entertainmentCategory, err := s.repository.Find(inputID.ID)
 	if err != nil {
 		return entertainmentCategory, err
 	}
