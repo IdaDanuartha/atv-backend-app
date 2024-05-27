@@ -7,13 +7,15 @@ func FormatInstructor(intructor models.Instructor) models.Instructor {
 	intructorFormatter.ID = intructor.ID
 	intructorFormatter.Name = intructor.Name
 	intructorFormatter.EmployeeCode = intructor.EmployeeCode
-	intructorFormatter.User.Username = intructor.User.Username
-	intructorFormatter.User.Email = intructor.User.Email
-	intructorFormatter.User.Password = intructor.User.Password
+	intructorFormatter.UserID = intructor.User.ID
 	intructorFormatter.CreatedAt = intructor.CreatedAt
 	intructorFormatter.UpdatedAt = intructor.UpdatedAt
 	intructorFormatter.DeletedAt = intructor.DeletedAt
 
+	intructorFormatter.User.ID = intructor.User.ID
+	intructorFormatter.User.Username = intructor.User.Username
+	intructorFormatter.User.Email = intructor.User.Email
+	intructorFormatter.User.Password = intructor.User.Password
 	intructorFormatter.User.Role = intructor.User.Role
 	intructorFormatter.User.CreatedAt = intructor.User.CreatedAt
 	intructorFormatter.User.UpdatedAt = intructor.User.UpdatedAt

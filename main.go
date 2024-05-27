@@ -69,6 +69,12 @@ func main() {
     instructorController := controllers.NewInstructorController(instructorService)
     instructorRoute := routes.NewInstructorRoute(*instructorController, router)
     instructorRoute.Setup(authMiddleware)
+
+	staffRepository := repositories.NewStaffRepository(db)
+	staffService := services.NewStaffService(&staffRepository)
+	staffController := controllers.NewStaffController(staffService)
+	staffRoute := routes.NewStaffRoute(*staffController, router)
+	staffRoute.Setup(authMiddleware)
 	
 
 	router.Gin.Run(":" + os.Getenv("APP_PORT"))

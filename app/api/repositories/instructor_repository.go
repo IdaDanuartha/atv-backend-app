@@ -40,6 +40,7 @@ func (r instructorRepository) FindAll(instructor models.Instructor, search strin
 	}
 
 	err := queryBuider.
+		Preload("User").
 		Where(instructor).
 		Find(&instructors).
 		Count(&totalRows).Error
@@ -50,6 +51,7 @@ func (r instructorRepository) FindAll(instructor models.Instructor, search strin
 func (r instructorRepository) Find(ID string) (models.Instructor, error) {
 	var instructors models.Instructor
 	err := r.db.DB.
+		Preload("User").
 		Debug().
 		Model(&models.Instructor{}).
 		Where("id = ?", ID).

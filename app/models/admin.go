@@ -4,8 +4,8 @@ package models
 type Admin struct {
 	Base
 	Name 	string `gorm:"size:100" json:"name"`
-	UserID  string    `gorm:"type:varchar(100);primaryKey;foreignKey:UserID"`
-  	User    User   `gorm:"foreignKey:UserID"`
+	UserID  string    `gorm:"type:varchar(100);primaryKey;foreignKey:UserID" json:"user_id"`
+  	User    User   `gorm:"foreignKey:UserID" json:"user"`
 }
 
 // TableName method sets table name for Admin model
