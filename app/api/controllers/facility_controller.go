@@ -30,7 +30,7 @@ func (h *FacilityController) GetFacilities(ctx *gin.Context) {
 	getFacilities, _, err := h.service.FindAll(facilities, search)
 
 	if err != nil {
-		response := utils.APIResponse("Failed to find facility", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to find facility", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -45,14 +45,14 @@ func (h *FacilityController) GetFacility(c *gin.Context) {
 
 	err := c.ShouldBindUri(&input)
 	if err != nil {
-		response := utils.APIResponse("Failed to get detail of facility", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to get detail of facility", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	Facility, err := h.service.Find(input)
 	if err != nil {
-		response := utils.APIResponse("Failed to get detail of facility", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to get detail of facility", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -86,7 +86,7 @@ func (h *FacilityController) AddFacility(ctx *gin.Context) {
 
 	newFacility, err := h.service.Save(input)
 	if err != nil {
-		response := utils.APIResponse("Failed to store facility", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to store facility", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -101,7 +101,7 @@ func (h *FacilityController) UpdateFacility(ctx *gin.Context) {
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to update facility", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update facility", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -120,7 +120,7 @@ func (h *FacilityController) UpdateFacility(ctx *gin.Context) {
 
 	updatedFacility, err := h.service.Update(inputID, inputData)
 	if err != nil {
-		response := utils.APIResponse("Failed to update facility", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update facility", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -135,14 +135,14 @@ func (h *FacilityController) DeleteFacility(ctx *gin.Context) {
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete facility", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete facility", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	deletedFacility, err := h.service.Delete(inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete facility", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete facility", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}

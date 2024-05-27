@@ -30,7 +30,7 @@ func (h *MandatoryLuggageController) GetMandatoryLuggages(ctx *gin.Context) {
 	mandatoryLuggages, _, err := h.service.FindAll(mandatory_luggages, search)
 
 	if err != nil {
-		response := utils.APIResponse("Failed to find mandatory luggage", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to find mandatory luggage", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -45,14 +45,14 @@ func (h *MandatoryLuggageController) GetMandatoryLuggage(c *gin.Context) {
 
 	err := c.ShouldBindUri(&input)
 	if err != nil {
-		response := utils.APIResponse("Failed to get detail of mandatory luggage", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to get detail of mandatory luggage", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	mandatoryLuggage, err := h.service.Find(input)
 	if err != nil {
-		response := utils.APIResponse("Failed to get detail of mandatory luggage", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to get detail of mandatory luggage", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -86,7 +86,7 @@ func (h *MandatoryLuggageController) AddMandatoryLuggage(ctx *gin.Context) {
 
 	newMandatoryLuggage, err := h.service.Save(input)
 	if err != nil {
-		response := utils.APIResponse("Failed to store mandatory luggage", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to store mandatory luggage", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -101,7 +101,7 @@ func (h *MandatoryLuggageController) UpdateMandatoryLuggage(ctx *gin.Context) {
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to update mandatory luggage", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update mandatory luggage", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -120,7 +120,7 @@ func (h *MandatoryLuggageController) UpdateMandatoryLuggage(ctx *gin.Context) {
 
 	updatedMandatoryLuggage, err := h.service.Update(inputID, inputData)
 	if err != nil {
-		response := utils.APIResponse("Failed to update mandatory luggage", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update mandatory luggage", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -135,14 +135,14 @@ func (h *MandatoryLuggageController) DeleteMandatoryLuggage(ctx *gin.Context) {
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete mandatory luggage", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete mandatory luggage", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	deletedMandatoryLuggage, err := h.service.Delete(inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete mandatory luggage", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete mandatory luggage", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}

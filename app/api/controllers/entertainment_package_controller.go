@@ -30,7 +30,7 @@ func (h *EntertainmentPackageController) GetEntertainmentPackages(ctx *gin.Conte
 	entertainmentPackages, _, err := h.service.FindAll(entertainment_packages, search)
 
 	if err != nil {
-		response := utils.APIResponse("Failed to find entertainment package", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to find entertainment package", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -45,14 +45,14 @@ func (h *EntertainmentPackageController) GetEntertainmentPackage(c *gin.Context)
 
 	err := c.ShouldBindUri(&input)
 	if err != nil {
-		response := utils.APIResponse("Failed to get detail of entertainment package", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to get detail of entertainment package", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	entertainmentPackage, err := h.service.Find(input)
 	if err != nil {
-		response := utils.APIResponse("Failed to get detail of entertainment package", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to get detail of entertainment package", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -86,7 +86,7 @@ func (h *EntertainmentPackageController) AddEntertainmentPackage(ctx *gin.Contex
 
 	newEntertainmentPackage, err := h.service.Save(input)
 	if err != nil {
-		response := utils.APIResponse("Failed to store entertainment package", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to store entertainment package", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -101,7 +101,7 @@ func (h *EntertainmentPackageController) UpdateEntertainmentPackage(ctx *gin.Con
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to update entertainment package", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update entertainment package", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -120,7 +120,7 @@ func (h *EntertainmentPackageController) UpdateEntertainmentPackage(ctx *gin.Con
 
 	updatedEntertainmentPackage, err := h.service.Update(inputID, inputData)
 	if err != nil {
-		response := utils.APIResponse("Failed to update entertainment package", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update entertainment package", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -135,14 +135,14 @@ func (h *EntertainmentPackageController) DeleteEntertainmentPackage(ctx *gin.Con
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete entertainment package", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete entertainment package", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	deletedEntertainmentPackage, err := h.service.Delete(inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete entertainment package", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete entertainment package", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}

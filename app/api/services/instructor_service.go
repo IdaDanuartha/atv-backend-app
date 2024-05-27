@@ -3,7 +3,9 @@ package services
 import (
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/repositories"
+	"github.com/IdaDanuartha/atv-backend-app/app/enums"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type InstructorService interface {
@@ -49,6 +51,19 @@ func (s instructorService) Find(input inputs.GetInstructorDetailInput) (models.I
 func (s instructorService) Save(input inputs.InstructorInput) (models.Instructor, error) {
 	instructor := models.Instructor{}
 	instructor.Name = input.Name
+	instructor.EmployeeCode = input.EmployeeCode
+	instructor.User.Username = input.Username
+	instructor.User.Email = input.Email
+	instructor.User.Password = input.Password
+
+	instructor.User.Role = enums.Role(enums.Instructor)
+
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
+	if err != nil {
+		return instructor, err
+	}
+
+	instructor.User.Password = string(passwordHash)
 
 	newInstructor, err := s.repository.Save(instructor)
 	if err != nil {
@@ -66,6 +81,21 @@ func (s instructorService) Update(inputID inputs.GetInstructorDetailInput, input
 	}
 
 	instructor.Name = input.Name
+	instructor.EmployeeCode = input.EmployeeCode
+	instructor.User.Username = input.Username
+	instructor.User.Email = input.Email
+	instructor.User.Password = input.Password
+
+	instructor.User.Role = enums.Role(enums.Instructor)
+
+	if input.Password != "" {
+		passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
+		if err != nil {
+			return instructor, err
+		}
+
+		instructor.User.Password = string(passwordHash)
+	}
 
 	updatedInstructor, err := s.repository.Update(instructor)
 	if err != nil {

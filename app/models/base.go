@@ -53,18 +53,22 @@ func (b *User) BeforeCreate(tx *gorm.DB) (err error) {
 	return
 }
 func (b *Admin) BeforeCreate(tx *gorm.DB) (err error) {
+	b.User.ID = uuid.New().String()
 	b.ID = uuid.New().String()
 	return
 }
 func (b *Staff) BeforeCreate(tx *gorm.DB) (err error) {
+	b.User.ID = uuid.New().String()
 	b.ID = uuid.New().String()
 	return
 }
 func (b *Instructor) BeforeCreate(tx *gorm.DB) (err error) {
+	b.User.ID = uuid.New().String()
 	b.ID = uuid.New().String()
 	return
 }
 func (b *Customer) BeforeCreate(tx *gorm.DB) (err error) {
+	b.User.ID = uuid.New().String()
 	b.ID = uuid.New().String()
 	return
 }

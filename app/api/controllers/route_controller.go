@@ -30,7 +30,7 @@ func (h *RouteController) GetRoutes(ctx *gin.Context) {
 	getRoutes, _, err := h.service.FindAll(routes, search)
 
 	if err != nil {
-		response := utils.APIResponse("Failed to find route", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to find route", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -45,14 +45,14 @@ func (h *RouteController) GetRoute(c *gin.Context) {
 
 	err := c.ShouldBindUri(&input)
 	if err != nil {
-		response := utils.APIResponse("Failed to get detail of route", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to get detail of route", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	route, err := h.service.Find(input)
 	if err != nil {
-		response := utils.APIResponse("Failed to get detail of route", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to get detail of route", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -86,7 +86,7 @@ func (h *RouteController) AddRoute(ctx *gin.Context) {
 
 	newRoute, err := h.service.Save(input)
 	if err != nil {
-		response := utils.APIResponse("Failed to store route", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to store route", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -101,7 +101,7 @@ func (h *RouteController) UpdateRoute(ctx *gin.Context) {
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to update route", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update route", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -120,7 +120,7 @@ func (h *RouteController) UpdateRoute(ctx *gin.Context) {
 
 	updatedRoute, err := h.service.Update(inputID, inputData)
 	if err != nil {
-		response := utils.APIResponse("Failed to update route", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update route", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -135,14 +135,14 @@ func (h *RouteController) DeleteRoute(ctx *gin.Context) {
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete route", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete route", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	deletedRoute, err := h.service.Delete(inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete route", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete route", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}

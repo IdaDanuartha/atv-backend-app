@@ -1,8 +1,11 @@
 package repositories
 
 import (
+	"errors"
+
 	"github.com/IdaDanuartha/atv-backend-app/app/config"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
+	"gorm.io/gorm"
 )
 
 type InstructorRepository interface {
@@ -56,7 +59,29 @@ func (r instructorRepository) Find(ID string) (models.Instructor, error) {
 
 // Save -> Method for saving Instructor to database
 func (r instructorRepository) Save(instructor models.Instructor) (models.Instructor, error) {
-	err := r.db.DB.Create(&instructor).Error
+	userRepository := NewUserRepository(r.db)
+
+	// 1. Validate email existence (using FindByEmail)
+	existingUser, err := userRepository.FindByEmail(instructor.User.Email)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return instructor, err // Return error if not a "not found" error
+	}
+
+	if existingUser.ID != "" {
+		return instructor, errors.New("email already exists") // Return error if email exists
+	}
+
+	// 2. Validate username existence (using FindByUsername)
+	existingUser, err = userRepository.FindByUsername(instructor.User.Username)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return instructor, err // Return error if not a "not found" error
+	}
+
+	if existingUser.ID != "" {
+		return instructor, errors.New("username already exists") // Return error if username exists
+	}
+
+	err = r.db.DB.Create(&instructor).Error
 	if err != nil {
 		return instructor, err
 	}

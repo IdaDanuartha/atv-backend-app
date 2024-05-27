@@ -14,6 +14,11 @@ func FormatInstructor(intructor models.Instructor) models.Instructor {
 	intructorFormatter.UpdatedAt = intructor.UpdatedAt
 	intructorFormatter.DeletedAt = intructor.DeletedAt
 
+	intructorFormatter.User.Role = intructor.User.Role
+	intructorFormatter.User.CreatedAt = intructor.User.CreatedAt
+	intructorFormatter.User.UpdatedAt = intructor.User.UpdatedAt
+	intructorFormatter.User.DeletedAt = intructor.User.DeletedAt
+
 	return intructorFormatter
 }
 

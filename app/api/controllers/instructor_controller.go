@@ -30,7 +30,7 @@ func (h *InstructorController) GetInstructors(ctx *gin.Context) {
 	getInstructors, _, err := h.service.FindAll(instructors, search)
 
 	if err != nil {
-		response := utils.APIResponse("Failed to find instructor", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to find instructor", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -45,14 +45,14 @@ func (h *InstructorController) GetInstructor(c *gin.Context) {
 
 	err := c.ShouldBindUri(&input)
 	if err != nil {
-		response := utils.APIResponse("Failed to get detail of instructor", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to get detail of instructor", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	instructor, err := h.service.Find(input)
 	if err != nil {
-		response := utils.APIResponse("Failed to get detail of instructor", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to get detail of instructor", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -86,7 +86,7 @@ func (h *InstructorController) AddInstructor(ctx *gin.Context) {
 
 	newInstructor, err := h.service.Save(input)
 	if err != nil {
-		response := utils.APIResponse("Failed to store instructor", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to store instructor", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -101,7 +101,7 @@ func (h *InstructorController) UpdateInstructor(ctx *gin.Context) {
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to update instructor", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update instructor", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -120,7 +120,7 @@ func (h *InstructorController) UpdateInstructor(ctx *gin.Context) {
 
 	updatedInstructor, err := h.service.Update(inputID, inputData)
 	if err != nil {
-		response := utils.APIResponse("Failed to update instructor", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update instructor", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -135,14 +135,14 @@ func (h *InstructorController) DeleteInstructor(ctx *gin.Context) {
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete instructor", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete instructor", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	deletedInstructor, err := h.service.Delete(inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete instructor", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete instructor", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}

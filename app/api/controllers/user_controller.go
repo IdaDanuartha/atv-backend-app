@@ -90,7 +90,7 @@ func (h *UserController) Login(c *gin.Context) {
 
 	token, err := h.authService.GenerateToken(loggedinUser.ID)
 	if err != nil {
-		response := utils.APIResponse("Login failed", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Login failed", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}

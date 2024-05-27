@@ -30,7 +30,7 @@ func (h *EntertainmentCategoryController) GetEntertainmentCategories(ctx *gin.Co
 	entertainmentCategories, _, err := h.service.FindAll(entertainment_categories, search)
 
 	if err != nil {
-		response := utils.APIResponse("Failed to find entertainment category", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to find entertainment category", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -45,14 +45,14 @@ func (h *EntertainmentCategoryController) GetEntertainmentCategory(c *gin.Contex
 
 	err := c.ShouldBindUri(&input)
 	if err != nil {
-		response := utils.APIResponse("Failed to get detail of entertainment category", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to get detail of entertainment category", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	entertainmentCategory, err := h.service.Find(input)
 	if err != nil {
-		response := utils.APIResponse("Failed to get detail of entertainment category", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to get detail of entertainment category", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -86,7 +86,7 @@ func (h *EntertainmentCategoryController) AddEntertainmentCategory(ctx *gin.Cont
 
 	newEntertainmentCategory, err := h.service.Save(input)
 	if err != nil {
-		response := utils.APIResponse("Failed to store entertainment category", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to store entertainment category", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -101,7 +101,7 @@ func (h *EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.C
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to update entertainment category", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update entertainment category", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -120,7 +120,7 @@ func (h *EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.C
 
 	updatedEntertainmentCategory, err := h.service.Update(inputID, inputData)
 	if err != nil {
-		response := utils.APIResponse("Failed to update entertainment category", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to update entertainment category", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -135,14 +135,14 @@ func (h *EntertainmentCategoryController) DeleteEntertainmentCategory(ctx *gin.C
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete entertainment category", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete entertainment category", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	deletedEntertainmentCategory, err := h.service.Delete(inputID)
 	if err != nil {
-		response := utils.APIResponse("Failed to delete entertainment category", http.StatusBadRequest, "error", nil)
+		response := utils.APIResponse("Failed to delete entertainment category", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}

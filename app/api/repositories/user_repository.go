@@ -12,6 +12,7 @@ import (
 type UserRepository interface {
 	Save(customer models.Customer) (models.Customer, error)
 	FindByEmail(email string) (models.User, error)
+	FindByUsername(username string) (models.User, error)
 	FindByID(ID string) (models.User, error)
 	Update(user models.User) (models.User, error)
 }
