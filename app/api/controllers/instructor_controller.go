@@ -76,8 +76,7 @@ func (h *InstructorController) AddInstructor(ctx *gin.Context) {
 
 	err := ctx.ShouldBindJSON(&input)
 	if err != nil {
-		errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": errors}
+		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to store instructor", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)
@@ -110,8 +109,7 @@ func (h *InstructorController) UpdateInstructor(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&inputData)
 	if err != nil {
-		errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": errors}
+		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to update instructor", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)

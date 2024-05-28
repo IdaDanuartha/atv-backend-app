@@ -12,7 +12,7 @@ type CustomerFormatter struct {
 	User  models.User `json:"user"`
 }
 
-func FormatCustomer(customer models.Customer, token string) CustomerFormatter {
+func FormatAuthCustomer(customer models.Customer, token string) CustomerFormatter {
 	formatter := CustomerFormatter{
 		ID:    customer.ID,
 		Name:  customer.Name,

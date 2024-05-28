@@ -10,9 +10,15 @@ require (
 )
 
 require (
+	github.com/dlclark/regexp2 v1.11.0 // indirect
+	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/golodash/galidator v1.4.4 // indirect
+	github.com/golodash/godash v1.2.0 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
 	github.com/gorilla/sessions v1.2.2 // indirect
+	github.com/jinzhu/copier v0.3.5 // indirect
+	github.com/nyaruka/phonenumbers v1.1.6 // indirect
 )
 
 require (

@@ -40,6 +40,7 @@ func (r staffRepository) FindAll(staff models.Staff, search string) ([]models.St
 	}
 
 	err := queryBuider.
+		Preload("User").
 		Where(staff).
 		Find(&staffs).
 		Count(&totalRows).Error
@@ -50,6 +51,7 @@ func (r staffRepository) FindAll(staff models.Staff, search string) ([]models.St
 func (r staffRepository) Find(ID string) (models.Staff, error) {
 	var staffs models.Staff
 	err := r.db.DB.
+		Preload("User").
 		Debug().
 		Model(&models.Staff{}).
 		Where("id = ?", ID).

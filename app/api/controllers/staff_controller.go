@@ -76,8 +76,8 @@ func (h *StaffController) AddStaff(ctx *gin.Context) {
 
 	err := ctx.ShouldBindJSON(&input)
 	if err != nil {
-		errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": errors}
+		// errors := utils.FormatValidationError(err)
+		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to store staff", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)
@@ -110,8 +110,7 @@ func (h *StaffController) UpdateStaff(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&inputData)
 	if err != nil {
-		errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": errors}
+		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to update staff", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)
