@@ -65,6 +65,7 @@ func (h *EntertainmentCategoryController) GetEntertainmentCategory(c *gin.Contex
 // AddEntertainmentCategory : AddEntertainmentCategory controller
 func (h *EntertainmentCategoryController) AddEntertainmentCategory(ctx *gin.Context) {
 	var input inputs.EntertainmentCategoryInput
+	customizer := g.Validator(inputs.EntertainmentCategoryInput{})
 
 	// Check if request body is empty or has no content type
 	if ctx.Request.Body == nil || ctx.Request.ContentLength == 0 || ctx.GetHeader("Content-Type") == "" {
@@ -77,7 +78,7 @@ func (h *EntertainmentCategoryController) AddEntertainmentCategory(ctx *gin.Cont
 	err := ctx.ShouldBindJSON(&input)
 	if err != nil {
 		// errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to store entertainment category", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)
@@ -98,6 +99,7 @@ func (h *EntertainmentCategoryController) AddEntertainmentCategory(ctx *gin.Cont
 // UpdateEntertainmentCategory : get update by id
 func (h *EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.Context) {
 	var inputID inputs.GetEntertainmentCategoryDetailInput
+	customizer := g.Validator(inputs.EntertainmentCategoryInput{})
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
@@ -111,7 +113,7 @@ func (h *EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.C
 	err = ctx.ShouldBindJSON(&inputData)
 	if err != nil {
 		// errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to update entertainment category", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)

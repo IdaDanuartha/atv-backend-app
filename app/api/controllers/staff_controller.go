@@ -65,6 +65,7 @@ func (h *StaffController) GetStaff(c *gin.Context) {
 // AddStaff : AddStaff controller
 func (h *StaffController) AddStaff(ctx *gin.Context) {
 	var input inputs.StaffInput
+	customizer := g.Validator(inputs.StaffInput{})
 
 	// Check if request body is empty or has no content type
 	if ctx.Request.Body == nil || ctx.Request.ContentLength == 0 || ctx.GetHeader("Content-Type") == "" {
@@ -77,7 +78,7 @@ func (h *StaffController) AddStaff(ctx *gin.Context) {
 	err := ctx.ShouldBindJSON(&input)
 	if err != nil {
 		// errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to store staff", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)
@@ -98,6 +99,7 @@ func (h *StaffController) AddStaff(ctx *gin.Context) {
 // UpdateStaff : get update by id
 func (h *StaffController) UpdateStaff(ctx *gin.Context) {
 	var inputID inputs.GetStaffDetailInput
+	customizer := g.Validator(inputs.StaffInput{})
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
@@ -110,7 +112,7 @@ func (h *StaffController) UpdateStaff(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&inputData)
 	if err != nil {
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to update staff", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)

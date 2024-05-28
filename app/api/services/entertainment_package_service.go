@@ -1,9 +1,6 @@
 package services
 
 import (
-	"strconv"
-	"time"
-
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/repositories"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
@@ -52,21 +49,10 @@ func (s entertainmentPackageService) Find(input inputs.GetEntertainmentPackageDe
 func (s entertainmentPackageService) Save(input inputs.EntertainmentPackageInput) (models.EntertainmentPackage, error) {
 	entertainmentPackage := models.EntertainmentPackage{}
 
-	price, err := strconv.ParseInt(input.Price, 10, 32)
-	if err!= nil {
-        return entertainmentPackage, err
-    }
-
-	priceInt32 := int32(price)
-	parseTime, err := time.Parse(time.RFC1123, input.ExpiredAt)
-    if err != nil {
-      panic(err)
-    }
-
 	entertainmentPackage.Name = input.Name
 	entertainmentPackage.Description = input.Description
-	entertainmentPackage.Price = priceInt32
-	entertainmentPackage.ExpiredAt = parseTime
+	entertainmentPackage.Price = input.Price
+	// entertainmentPackage.ExpiredAt = input.ExpiredAt
 
 	newEntertainmentPackage, err := s.repository.Save(entertainmentPackage)
 	if err != nil {
@@ -83,21 +69,10 @@ func (s entertainmentPackageService) Update(inputID inputs.GetEntertainmentPacka
 		return entertainmentPackage, err
 	}
 
-	price, err := strconv.ParseInt(input.Price, 10, 32)
-	if err!= nil {
-        return entertainmentPackage, err
-    }
-
-	priceInt32 := int32(price)
-	parseTime, err := time.Parse(time.RFC1123, input.ExpiredAt)
-    if err != nil {
-      panic(err)
-    }
-
 	entertainmentPackage.Name = input.Name
 	entertainmentPackage.Description = input.Description
-	entertainmentPackage.Price = priceInt32
-	entertainmentPackage.ExpiredAt = parseTime
+	entertainmentPackage.Price = input.Price
+	entertainmentPackage.ExpiredAt = input.ExpiredAt
 
 	updatedEntertainmentPackage, err := s.repository.Update(entertainmentPackage)
 	if err != nil {

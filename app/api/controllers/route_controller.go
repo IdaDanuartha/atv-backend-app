@@ -65,6 +65,7 @@ func (h *RouteController) GetRoute(c *gin.Context) {
 // AddRoute : AddRoute controller
 func (h *RouteController) AddRoute(ctx *gin.Context) {
 	var input inputs.RouteInput
+	customizer := g.Validator(inputs.RouteInput{})
 
 	// Check if request body is empty or has no content type
 	if ctx.Request.Body == nil || ctx.Request.ContentLength == 0 || ctx.GetHeader("Content-Type") == "" {
@@ -77,7 +78,7 @@ func (h *RouteController) AddRoute(ctx *gin.Context) {
 	err := ctx.ShouldBindJSON(&input)
 	if err != nil {
 		// errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to store route", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)
@@ -98,6 +99,7 @@ func (h *RouteController) AddRoute(ctx *gin.Context) {
 // UpdateRoute : get update by id
 func (h *RouteController) UpdateRoute(ctx *gin.Context) {
 	var inputID inputs.GetRouteDetailInput
+	customizer := g.Validator(inputs.RouteInput{})
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
@@ -111,7 +113,7 @@ func (h *RouteController) UpdateRoute(ctx *gin.Context) {
 	err = ctx.ShouldBindJSON(&inputData)
 	if err != nil {
 		// errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to update route", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)

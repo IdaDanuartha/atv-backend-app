@@ -24,6 +24,7 @@ func NewUserController(userService services.UserService, authService services.Au
 
 func (h *UserController) RegisterUser(c *gin.Context) {
 	var input inputs.RegisterInput
+	customizer := g.Validator(inputs.RegisterInput{})
 
 	// Check if request body is empty or has no content type
 	if c.Request.Body == nil || c.Request.ContentLength == 0 || c.GetHeader("Content-Type") == "" {
@@ -36,7 +37,7 @@ func (h *UserController) RegisterUser(c *gin.Context) {
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		// errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Register account failed", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response)
@@ -67,11 +68,12 @@ func (h *UserController) RegisterUser(c *gin.Context) {
 
 func (h *UserController) Login(c *gin.Context) {
 	var input inputs.LoginInput
+	customizer := g.Validator(inputs.LoginInput{})
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		// errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response)

@@ -65,6 +65,8 @@ func (h *EntertainmentPackageController) GetEntertainmentPackage(c *gin.Context)
 // AddEntertainmentPackage : AddEntertainmentPackage controller
 func (h *EntertainmentPackageController) AddEntertainmentPackage(ctx *gin.Context) {
 	var input inputs.EntertainmentPackageInput
+	customizer := g.Validator(inputs.EntertainmentPackageInput{})
+
 
 	// Check if request body is empty or has no content type
 	if ctx.Request.Body == nil || ctx.Request.ContentLength == 0 || ctx.GetHeader("Content-Type") == "" {
@@ -77,7 +79,7 @@ func (h *EntertainmentPackageController) AddEntertainmentPackage(ctx *gin.Contex
 	err := ctx.ShouldBindJSON(&input)
 	if err != nil {
 		// errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to store entertainment package", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)
@@ -98,6 +100,7 @@ func (h *EntertainmentPackageController) AddEntertainmentPackage(ctx *gin.Contex
 // UpdateEntertainmentPackage : get update by id
 func (h *EntertainmentPackageController) UpdateEntertainmentPackage(ctx *gin.Context) {
 	var inputID inputs.GetEntertainmentPackageDetailInput
+	customizer := g.Validator(inputs.EntertainmentPackageInput{})
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
@@ -111,7 +114,7 @@ func (h *EntertainmentPackageController) UpdateEntertainmentPackage(ctx *gin.Con
 	err = ctx.ShouldBindJSON(&inputData)
 	if err != nil {
 		// errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to update entertainment package", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)

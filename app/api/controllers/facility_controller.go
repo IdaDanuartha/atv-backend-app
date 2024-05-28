@@ -65,6 +65,7 @@ func (h *FacilityController) GetFacility(c *gin.Context) {
 // AddFacility : AddFacility controller
 func (h *FacilityController) AddFacility(ctx *gin.Context) {
 	var input inputs.FacilityInput
+	customizer := g.Validator(inputs.FacilityInput{})
 
 	// Check if request body is empty or has no content type
 	if ctx.Request.Body == nil || ctx.Request.ContentLength == 0 || ctx.GetHeader("Content-Type") == "" {
@@ -77,7 +78,7 @@ func (h *FacilityController) AddFacility(ctx *gin.Context) {
 	err := ctx.ShouldBindJSON(&input)
 	if err != nil {
 		// errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to store facility", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)
@@ -98,6 +99,7 @@ func (h *FacilityController) AddFacility(ctx *gin.Context) {
 // UpdateFacility : get update by id
 func (h *FacilityController) UpdateFacility(ctx *gin.Context) {
 	var inputID inputs.GetFacilityDetailInput
+	customizer := g.Validator(inputs.FacilityInput{})
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
@@ -111,7 +113,7 @@ func (h *FacilityController) UpdateFacility(ctx *gin.Context) {
 	err = ctx.ShouldBindJSON(&inputData)
 	if err != nil {
 		// errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to update facility", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)

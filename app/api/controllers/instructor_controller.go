@@ -65,6 +65,7 @@ func (h *InstructorController) GetInstructor(c *gin.Context) {
 // AddInstructor : AddInstructor controller
 func (h *InstructorController) AddInstructor(ctx *gin.Context) {
 	var input inputs.InstructorInput
+	customizer := g.Validator(inputs.InstructorInput{})
 
 	// Check if request body is empty or has no content type
 	if ctx.Request.Body == nil || ctx.Request.ContentLength == 0 || ctx.GetHeader("Content-Type") == "" {
@@ -76,7 +77,7 @@ func (h *InstructorController) AddInstructor(ctx *gin.Context) {
 
 	err := ctx.ShouldBindJSON(&input)
 	if err != nil {
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to store instructor", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)
@@ -97,6 +98,7 @@ func (h *InstructorController) AddInstructor(ctx *gin.Context) {
 // UpdateInstructor : get update by id
 func (h *InstructorController) UpdateInstructor(ctx *gin.Context) {
 	var inputID inputs.GetInstructorDetailInput
+	customizer := g.Validator(inputs.InstructorInput{})
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
@@ -109,7 +111,7 @@ func (h *InstructorController) UpdateInstructor(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&inputData)
 	if err != nil {
-		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to update instructor", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)
