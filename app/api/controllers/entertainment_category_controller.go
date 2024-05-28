@@ -76,8 +76,8 @@ func (h *EntertainmentCategoryController) AddEntertainmentCategory(ctx *gin.Cont
 
 	err := ctx.ShouldBindJSON(&input)
 	if err != nil {
-		errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": errors}
+		// errors := utils.FormatValidationError(err)
+		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to store entertainment category", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)
@@ -110,8 +110,8 @@ func (h *EntertainmentCategoryController) UpdateEntertainmentCategory(ctx *gin.C
 
 	err = ctx.ShouldBindJSON(&inputData)
 	if err != nil {
-		errors := utils.FormatValidationError(err)
-		errorMessage := gin.H{"errors": errors}
+		// errors := utils.FormatValidationError(err)
+		errorMessage := gin.H{"errors": utils.Customizer.DecryptErrors(err)}
 
 		response := utils.APIResponse("Failed to update entertainment category", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)

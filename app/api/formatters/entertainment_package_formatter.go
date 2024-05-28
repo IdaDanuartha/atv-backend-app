@@ -6,6 +6,9 @@ func FormatEntertainmentPackage(entertainmentPackage models.EntertainmentPackage
 	entertainmentPackageFormatter := models.EntertainmentPackage{}
 	entertainmentPackageFormatter.ID = entertainmentPackage.ID
 	entertainmentPackageFormatter.Name = entertainmentPackage.Name
+	entertainmentPackageFormatter.Description = entertainmentPackage.Description
+	entertainmentPackageFormatter.Price = entertainmentPackage.Price
+	entertainmentPackageFormatter.ExpiredAt = entertainmentPackage.ExpiredAt
 	entertainmentPackageFormatter.CreatedAt = entertainmentPackage.CreatedAt
 	entertainmentPackageFormatter.UpdatedAt = entertainmentPackage.UpdatedAt
 	entertainmentPackageFormatter.DeletedAt = entertainmentPackage.DeletedAt
