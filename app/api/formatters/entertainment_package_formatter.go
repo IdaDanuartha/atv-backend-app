@@ -13,6 +13,26 @@ func FormatEntertainmentPackage(entertainmentPackage models.EntertainmentPackage
 	entertainmentPackageFormatter.UpdatedAt = entertainmentPackage.UpdatedAt
 	entertainmentPackageFormatter.DeletedAt = entertainmentPackage.DeletedAt
 
+	packageDetails := make([]models.EntertainmentPackageDetail, 0)
+
+	for _, packageDetail := range entertainmentPackageFormatter.EntertainmentPackageDetails {
+		newPackageDetail := models.EntertainmentPackageDetail{}
+
+		newPackageDetail.ID = packageDetail.ID
+		newPackageDetail.CreatedAt = packageDetail.CreatedAt
+		newPackageDetail.UpdatedAt = packageDetail.UpdatedAt
+		newPackageDetail.DeletedAt = packageDetail.DeletedAt
+
+		newPackageDetail.EntertainmentService.Name = packageDetail.EntertainmentService.Name
+		newPackageDetail.EntertainmentService.Price = packageDetail.EntertainmentService.Price
+		newPackageDetail.EntertainmentService.CreatedAt = packageDetail.EntertainmentService.CreatedAt
+		newPackageDetail.EntertainmentService.UpdatedAt = packageDetail.EntertainmentService.UpdatedAt
+		newPackageDetail.EntertainmentService.DeletedAt = packageDetail.EntertainmentService.DeletedAt
+
+		packageDetails = append(packageDetails, newPackageDetail)
+	}
+	entertainmentPackageFormatter.EntertainmentPackageDetails = packageDetails
+
 	return entertainmentPackageFormatter
 }
 

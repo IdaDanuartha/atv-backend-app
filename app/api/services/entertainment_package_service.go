@@ -53,6 +53,7 @@ func (s entertainmentPackageService) Save(input inputs.EntertainmentPackageInput
 	entertainmentPackage.Description = input.Description
 	entertainmentPackage.Price = input.Price
 	entertainmentPackage.ExpiredAt = input.ExpiredAt
+	entertainmentPackage.EntertainmentPackageDetails = input.Services
 
 	newEntertainmentPackage, err := s.repository.Save(entertainmentPackage)
 	if err != nil {
@@ -73,6 +74,7 @@ func (s entertainmentPackageService) Update(inputID inputs.GetEntertainmentPacka
 	entertainmentPackage.Description = input.Description
 	entertainmentPackage.Price = input.Price
 	entertainmentPackage.ExpiredAt = input.ExpiredAt
+	entertainmentPackage.EntertainmentPackageDetails = input.Services
 
 	updatedEntertainmentPackage, err := s.repository.Update(entertainmentPackage)
 	if err != nil {

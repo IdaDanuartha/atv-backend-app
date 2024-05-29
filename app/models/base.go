@@ -45,6 +45,11 @@ func (b *EntertainmentPackage) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = uuid.New().String()
 	return
 }
+func (b *EntertainmentPackageDetail) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return	
+}
+
 func (b *Facility) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = uuid.New().String()
 	return

@@ -37,6 +37,7 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 	}
 
 	err := queryBuider.
+		Preload("EntertainmentPackageDetails.EntertainmentService").
 		Where(entertainmentPackage).
 		Find(&entertainment_packages).
 		Count(&totalRows).Error
@@ -47,6 +48,7 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 func (r entertainmentPackageRepository) Find(ID string) (models.EntertainmentPackage, error) {
 	var entertainment_packages models.EntertainmentPackage
 	err := r.db.DB.
+		Preload("EntertainmentPackageDetails.EntertainmentService").
 		Debug().
 		Model(&models.EntertainmentPackage{}).
 		Where("id = ?", ID).
@@ -56,7 +58,9 @@ func (r entertainmentPackageRepository) Find(ID string) (models.EntertainmentPac
 
 // Save -> Method for saving Entertainment Package to database
 func (r entertainmentPackageRepository) Save(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error) {
-	err := r.db.DB.Create(&entertainmentPackage).Error
+	err := r.db.DB.
+		Preload("EntertainmentPackageDetails.EntertainmentService").
+		Create(&entertainmentPackage).Error
 	if err != nil {
 		return entertainmentPackage, err
 	}
@@ -66,7 +70,9 @@ func (r entertainmentPackageRepository) Save(entertainmentPackage models.Enterta
 
 // Update -> Method for updating Entertainment Package
 func (r *entertainmentPackageRepository) Update(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error) {
-	err := r.db.DB.Save(&entertainmentPackage).Error
+	err := r.db.DB.
+		Preload("EntertainmentPackageDetails.EntertainmentService").
+		Save(&entertainmentPackage).Error
 
 	if err != nil {
 		return entertainmentPackage, err
@@ -77,7 +83,9 @@ func (r *entertainmentPackageRepository) Update(entertainmentPackage models.Ente
 
 // Delete -> Method for deleting Entertainment Package
 func (r entertainmentPackageRepository) Delete(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error) {
-	err := r.db.DB.Delete(&entertainmentPackage).Error
+	err := r.db.DB.
+		Preload("EntertainmentPackageDetails.EntertainmentService").
+		Delete(&entertainmentPackage).Error
 
 	if err != nil {
 		return entertainmentPackage, err

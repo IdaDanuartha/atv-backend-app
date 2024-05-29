@@ -76,6 +76,9 @@ func (s entertainmentServiceService) Update(inputID inputs.GetEntertainmentServi
 	entertainmentService.Price = input.Price
 	entertainmentService.EntertainmentCategoryID = input.EntertainmentCategoryID
 	entertainmentService.RouteID = input.RouteID
+	entertainmentService.EntertainmentServiceFacilities = input.Facilities
+	entertainmentService.EntertainmentServiceInstructors = input.Instructors
+	entertainmentService.MandatoryLuggageEntertainmentServices = input.MandatoryLuggages
 
 	updatedEntertainmentService, err := s.repository.Update(entertainmentService)
 	if err != nil {
