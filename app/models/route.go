@@ -13,18 +13,3 @@ type Route struct {
 func (route *Route) TableName() string {
 	return "routes"
 }
-
-// ResponseMap -> response map method of Route
-func (route *Route) ResponseMap() map[string]interface{} {
-	resp := make(map[string]interface{})
-	resp["id"] = route.ID
-	resp["starting_route"] = route.StartingRoute
-	resp["final_route"] = route.FinalRoute
-	resp["duration"] = route.Duration
-	resp["distance"] = route.Distance
-	resp["created_at"] = route.CreatedAt
-	resp["updated_at"] = route.UpdatedAt
-	resp["deleted_at"] = route.DeletedAt
-
-	return resp
-}

@@ -40,6 +40,7 @@ func NewDatabase() Database {
 	db.AutoMigrate(&models.Customer{})
 	db.AutoMigrate(&models.EntertainmentCategory{})
     db.AutoMigrate(&models.EntertainmentPackage{})
+    db.AutoMigrate(&models.EntertainmentService{})
     db.AutoMigrate(&models.Facility{})
     db.AutoMigrate(&models.MandatoryLuggage{})
     db.AutoMigrate(&models.Route{})

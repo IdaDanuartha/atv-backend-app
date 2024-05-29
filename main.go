@@ -60,8 +60,14 @@ func main() {
 	routeRepository := repositories.NewRouteRepository(db)
 	routeService := services.NewRouteService(&routeRepository)
 	routeController := controllers.NewRouteController(routeService)
-	routeRoute := routes.NewRuteRoute(*routeController, router)
+	routeRoute := routes.NewRouteRoute(*routeController, router)
 	routeRoute.Setup(authMiddleware)
+
+	entertainmentServiceRepository := repositories.NewEntertainmentServiceRepository(db)
+	entertainmentServiceService := services.NewEntertainmentServiceService(&entertainmentServiceRepository)
+	entertainmentServiceController := controllers.NewEntertainmentServiceController(entertainmentServiceService)
+	entertainmentServiceRoute := routes.NewEntertainmentServiceRoute(*entertainmentServiceController, router)
+	entertainmentServiceRoute.Setup(authMiddleware)
 
 	// User Management
 	instructorRepository := repositories.NewInstructorRepository(db)

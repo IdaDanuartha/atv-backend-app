@@ -7,7 +7,6 @@ func FormatInstructor(intructor models.Instructor) models.Instructor {
 	intructorFormatter.ID = intructor.ID
 	intructorFormatter.Name = intructor.Name
 	intructorFormatter.EmployeeCode = intructor.EmployeeCode
-	intructorFormatter.UserID = intructor.User.ID
 	intructorFormatter.CreatedAt = intructor.CreatedAt
 	intructorFormatter.UpdatedAt = intructor.UpdatedAt
 	intructorFormatter.DeletedAt = intructor.DeletedAt

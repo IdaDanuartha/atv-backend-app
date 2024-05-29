@@ -7,7 +7,6 @@ func FormatStaff(staff models.Staff) models.Staff {
 	staffFormatter.ID = staff.ID
 	staffFormatter.Name = staff.Name
 	staffFormatter.EmployeeCode = staff.EmployeeCode
-	staffFormatter.UserID = staff.User.ID
 	staffFormatter.CreatedAt = staff.CreatedAt
 	staffFormatter.UpdatedAt = staff.UpdatedAt
 	staffFormatter.DeletedAt = staff.DeletedAt

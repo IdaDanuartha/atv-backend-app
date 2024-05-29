@@ -10,15 +10,3 @@ type MandatoryLuggage struct {
 func (MandatoryLuggage *MandatoryLuggage) TableName() string {
 	return "mandatory_luggages"
 }
-
-// ResponseMap -> response map method of Entertainment Category
-func (MandatoryLuggage *MandatoryLuggage) ResponseMap() map[string]interface{} {
-	resp := make(map[string]interface{})
-	resp["id"] = MandatoryLuggage.ID
-	resp["name"] = MandatoryLuggage.Name
-	resp["created_at"] = MandatoryLuggage.CreatedAt
-	resp["updated_at"] = MandatoryLuggage.UpdatedAt
-	resp["deleted_at"] = MandatoryLuggage.DeletedAt
-
-	return resp
-}

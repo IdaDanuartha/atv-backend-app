@@ -23,6 +23,11 @@ func (b *Base) BeforeCreate(tx *gorm.DB) (err error) {
 	return
 }
 
+func (b *Base) BeforeUpdate(tx *gorm.DB) (err error) {
+	b.UpdatedAt = time.Now()
+	return
+}
+
 // Delete overrides the Delete method to set DeletedAt before actual deletion
 func (base *Base) Delete(tx *gorm.DB) error {
 	base.DeletedAt = gorm.DeletedAt{Time: time.Now(), Valid: true}
@@ -73,6 +78,10 @@ func (b *Customer) BeforeCreate(tx *gorm.DB) (err error) {
 	return
 }
 func (b *Route) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}
+func (b *EntertainmentService) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = uuid.New().String()
 	return
 }

@@ -8,26 +8,26 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// RuteRoute -> Route for question module
-type RuteRoute struct {
+// RouteRoute -> Route for question module
+type RouteRoute struct {
 	Controller controllers.RouteController
 	Handler    config.GinRouter
 }
 
-// NewRuteRoute -> initializes new choice rouets
-func NewRuteRoute(
+// NewRouteRoute -> initializes new choice rouets
+func NewRouteRoute(
 	controller controllers.RouteController,
 	handler config.GinRouter,
 
-) RuteRoute {
-	return RuteRoute{
+) RouteRoute {
+	return RouteRoute{
 		Controller: controller,
 		Handler:    handler,
 	}
 }
 
 // Setup -> setups new choice Routes
-func (p RuteRoute) Setup(authMiddleware gin.HandlerFunc) {
+func (p RouteRoute) Setup(authMiddleware gin.HandlerFunc) {
 	apiPrefix := os.Getenv("APP_PREFIX")
 
 	route := p.Handler.Gin.Group(apiPrefix + "/routes") //Router group

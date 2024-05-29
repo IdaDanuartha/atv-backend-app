@@ -18,19 +18,3 @@ type User struct {
 func (User *User) TableName() string {
 	return "users"
 }
-
-// ResponseMap -> response map method of Entertainment Category
-func (User *User) ResponseMap() map[string]interface{} {
-	resp := make(map[string]interface{})
-	resp["id"] = User.ID
-	resp["username"] = User.Username
-	resp["email"] = User.Email
-	resp["password"] = User.Password
-	resp["role"] = User.Role
-	resp["profile_path"] = User.ProfilePath
-	resp["created_at"] = User.CreatedAt
-	resp["updated_at"] = User.UpdatedAt
-	resp["deleted_at"] = User.DeletedAt
-
-	return resp
-}
