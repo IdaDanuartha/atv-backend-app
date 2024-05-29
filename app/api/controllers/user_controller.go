@@ -61,9 +61,9 @@ func (h *UserController) RegisterUser(c *gin.Context) {
 
 	formatter := formatters.FormatAuthCustomer(newUser, token)
 
-	response := utils.APIResponse("Account registered successfully", http.StatusOK, "success", formatter)
+	response := utils.APIResponse("Account registered successfully", http.StatusCreated, "success", formatter)
 
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusCreated, response)
 }
 
 func (h *UserController) Login(c *gin.Context) {

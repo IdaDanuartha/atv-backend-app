@@ -83,7 +83,7 @@ func (r instructorRepository) Save(instructor models.Instructor) (models.Instruc
 		return instructor, errors.New("username already exists") // Return error if username exists
 	}
 
-	err = r.db.DB.Create(&instructor).Error
+	err = r.db.DB.Preload("User").Create(&instructor).Error
 	if err != nil {
 		return instructor, err
 	}
@@ -93,7 +93,7 @@ func (r instructorRepository) Save(instructor models.Instructor) (models.Instruc
 
 // Update -> Method for updating Instructor
 func (r *instructorRepository) Update(instructor models.Instructor) (models.Instructor, error) {
-	err := r.db.DB.Save(&instructor).Error
+	err := r.db.DB.Preload("User").Save(&instructor).Error
 
 	if err != nil {
 		return instructor, err
@@ -104,7 +104,7 @@ func (r *instructorRepository) Update(instructor models.Instructor) (models.Inst
 
 // Delete -> Method for deleting Instructor
 func (r instructorRepository) Delete(instructor models.Instructor) (models.Instructor, error) {
-	err := r.db.DB.Delete(&instructor).Error
+	err := r.db.DB.Preload("User").Delete(&instructor).Error
 
 	if err != nil {
 		return instructor, err

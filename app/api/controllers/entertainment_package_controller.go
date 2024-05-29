@@ -93,8 +93,8 @@ func (h *EntertainmentPackageController) AddEntertainmentPackage(ctx *gin.Contex
 		return
 	}
 
-	response := utils.APIResponse("Success to store entertainment package", http.StatusOK, "success", formatters.FormatEntertainmentPackage(newEntertainmentPackage))
-	ctx.JSON(http.StatusOK, response)
+	response := utils.APIResponse("Success to store entertainment package", http.StatusCreated, "success", formatters.FormatEntertainmentPackage(newEntertainmentPackage))
+	ctx.JSON(http.StatusCreated, response)
 }
 
 // UpdateEntertainmentPackage : get update by id

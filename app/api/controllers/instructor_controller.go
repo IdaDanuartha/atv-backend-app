@@ -91,8 +91,8 @@ func (h *InstructorController) AddInstructor(ctx *gin.Context) {
 		return
 	}
 
-	response := utils.APIResponse("Success to store instructor", http.StatusOK, "success", formatters.FormatInstructor(newInstructor))
-	ctx.JSON(http.StatusOK, response)
+	response := utils.APIResponse("Success to store instructor", http.StatusCreated, "success", formatters.FormatInstructor(newInstructor))
+	ctx.JSON(http.StatusCreated, response)
 }
 
 // UpdateInstructor : get update by id

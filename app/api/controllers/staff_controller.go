@@ -92,8 +92,8 @@ func (h *StaffController) AddStaff(ctx *gin.Context) {
 		return
 	}
 
-	response := utils.APIResponse("Success to store staff", http.StatusOK, "success", formatters.FormatStaff(newStaff))
-	ctx.JSON(http.StatusOK, response)
+	response := utils.APIResponse("Success to store staff", http.StatusCreated, "success", formatters.FormatStaff(newStaff))
+	ctx.JSON(http.StatusCreated, response)
 }
 
 // UpdateStaff : get update by id

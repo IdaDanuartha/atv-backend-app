@@ -92,8 +92,8 @@ func (h *MandatoryLuggageController) AddMandatoryLuggage(ctx *gin.Context) {
 		return
 	}
 
-	response := utils.APIResponse("Success to store mandatory luggage", http.StatusOK, "success", formatters.FormatMandatoryLuggage(newMandatoryLuggage))
-	ctx.JSON(http.StatusOK, response)
+	response := utils.APIResponse("Success to store mandatory luggage", http.StatusCreated, "success", formatters.FormatMandatoryLuggage(newMandatoryLuggage))
+	ctx.JSON(http.StatusCreated, response)
 }
 
 // UpdateMandatoryLuggage : get update by id

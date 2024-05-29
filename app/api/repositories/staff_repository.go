@@ -83,7 +83,7 @@ func (r staffRepository) Save(staff models.Staff) (models.Staff, error) {
 		return staff, errors.New("username already exists") // Return error if username exists
 	}
 
-	err = r.db.DB.Create(&staff).Error
+	err = r.db.DB.Preload("User").Create(&staff).Error
 	if err != nil {
 		return staff, err
 	}
@@ -93,7 +93,7 @@ func (r staffRepository) Save(staff models.Staff) (models.Staff, error) {
 
 // Update -> Method for updating Staff
 func (r *staffRepository) Update(staff models.Staff) (models.Staff, error) {
-	err := r.db.DB.Save(&staff).Error
+	err := r.db.DB.Preload("User").Save(&staff).Error
 
 	if err != nil {
 		return staff, err
@@ -104,7 +104,7 @@ func (r *staffRepository) Update(staff models.Staff) (models.Staff, error) {
 
 // Delete -> Method for deleting Staff
 func (r staffRepository) Delete(staff models.Staff) (models.Staff, error) {
-	err := r.db.DB.Delete(&staff).Error
+	err := r.db.DB.Preload("User").Delete(&staff).Error
 
 	if err != nil {
 		return staff, err

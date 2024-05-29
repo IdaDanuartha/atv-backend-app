@@ -92,8 +92,8 @@ func (h *EntertainmentCategoryController) AddEntertainmentCategory(ctx *gin.Cont
 		return
 	}
 
-	response := utils.APIResponse("Success to store entertainment category", http.StatusOK, "success", formatters.FormatEntertainmentCategory(newEntertainmentCategory))
-	ctx.JSON(http.StatusOK, response)
+	response := utils.APIResponse("Success to store entertainment category", http.StatusCreated, "success", formatters.FormatEntertainmentCategory(newEntertainmentCategory))
+	ctx.JSON(http.StatusCreated, response)
 }
 
 // UpdateEntertainmentCategory : get update by id

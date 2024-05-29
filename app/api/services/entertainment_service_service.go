@@ -53,6 +53,9 @@ func (s entertainmentServiceService) Save(input inputs.EntertainmentServiceInput
 	entertainmentService.Price = input.Price
 	entertainmentService.EntertainmentCategoryID = input.EntertainmentCategoryID
 	entertainmentService.RouteID = input.RouteID
+	entertainmentService.EntertainmentServiceFacilities = input.Facilities
+	entertainmentService.EntertainmentServiceInstructors = input.Instructors
+	entertainmentService.MandatoryLuggageEntertainmentServices = input.MandatoryLuggages
 
 	newEntertainmentService, err := s.repository.Save(entertainmentService)
 	if err != nil {

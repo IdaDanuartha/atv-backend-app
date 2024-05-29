@@ -92,8 +92,8 @@ func (h *RouteController) AddRoute(ctx *gin.Context) {
 		return
 	}
 
-	response := utils.APIResponse("Success to store route", http.StatusOK, "success", formatters.FormatRoute(newRoute))
-	ctx.JSON(http.StatusOK, response)
+	response := utils.APIResponse("Success to store route", http.StatusCreated, "success", formatters.FormatRoute(newRoute))
+	ctx.JSON(http.StatusCreated, response)
 }
 
 // UpdateRoute : get update by id

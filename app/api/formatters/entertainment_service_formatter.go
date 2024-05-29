@@ -1,6 +1,8 @@
 package formatters
 
-import "github.com/IdaDanuartha/atv-backend-app/app/models"
+import (
+	"github.com/IdaDanuartha/atv-backend-app/app/models"
+)
 
 func FormatEntertainmentService(entertainmentService models.EntertainmentService) models.EntertainmentService {
 	entertainmentServiceFormatter := models.EntertainmentService{}
@@ -25,6 +27,79 @@ func FormatEntertainmentService(entertainmentService models.EntertainmentService
 	entertainmentServiceFormatter.Route.CreatedAt = entertainmentService.Route.CreatedAt
 	entertainmentServiceFormatter.Route.UpdatedAt = entertainmentService.Route.UpdatedAt
 	entertainmentServiceFormatter.Route.DeletedAt = entertainmentService.Route.DeletedAt
+
+	facilities := make([]models.EntertainmentServiceFacility, 0)
+
+	for _, facility := range entertainmentService.EntertainmentServiceFacilities {
+		newFacility := models.EntertainmentServiceFacility{}
+
+		newFacility.ID = facility.ID
+		newFacility.CreatedAt = facility.CreatedAt
+		newFacility.UpdatedAt = facility.UpdatedAt
+		newFacility.DeletedAt = facility.DeletedAt
+
+		newFacility.Facility.ID = facility.Facility.ID
+		newFacility.Facility.Name = facility.Facility.Name
+		newFacility.Facility.CreatedAt = facility.Facility.CreatedAt
+		newFacility.Facility.UpdatedAt = facility.Facility.UpdatedAt
+		newFacility.Facility.DeletedAt = facility.Facility.DeletedAt
+
+		facilities = append(facilities, newFacility)
+	}
+
+	entertainmentServiceFormatter.EntertainmentServiceFacilities = facilities
+
+	instructors := make([]models.EntertainmentServiceInstructor, 0)
+
+	for _, instructor := range entertainmentService.EntertainmentServiceInstructors {
+		newInstructor := models.EntertainmentServiceInstructor{}
+
+		newInstructor.ID = instructor.ID
+		newInstructor.CreatedAt = instructor.CreatedAt
+		newInstructor.UpdatedAt = instructor.UpdatedAt
+		newInstructor.DeletedAt = instructor.DeletedAt
+
+		newInstructor.Instructor.ID = instructor.Instructor.ID
+		newInstructor.Instructor.EmployeeCode = instructor.Instructor.EmployeeCode
+		newInstructor.Instructor.Name = instructor.Instructor.Name
+		newInstructor.Instructor.CreatedAt = instructor.Instructor.CreatedAt
+		newInstructor.Instructor.UpdatedAt = instructor.Instructor.UpdatedAt
+		newInstructor.Instructor.DeletedAt = instructor.Instructor.DeletedAt
+
+		newInstructor.Instructor.User.ID = instructor.Instructor.User.ID
+		newInstructor.Instructor.User.Username = instructor.Instructor.User.Username
+		newInstructor.Instructor.User.Email = instructor.Instructor.User.Email
+		newInstructor.Instructor.User.Role = instructor.Instructor.User.Role
+		newInstructor.Instructor.User.ProfilePath = instructor.Instructor.User.ProfilePath
+		newInstructor.Instructor.CreatedAt = instructor.Instructor.CreatedAt
+		newInstructor.Instructor.UpdatedAt = instructor.Instructor.UpdatedAt
+		newInstructor.Instructor.DeletedAt = instructor.Instructor.DeletedAt
+
+		instructors = append(instructors, newInstructor)
+	}
+
+	entertainmentServiceFormatter.EntertainmentServiceInstructors = instructors
+
+	mandatoryLuggages := make([]models.MandatoryLuggageEntertainmentService, 0)
+
+	for _, mandatoryLuggage := range entertainmentService.MandatoryLuggageEntertainmentServices {
+		newMandatoryLuggage := models.MandatoryLuggageEntertainmentService{}
+
+		newMandatoryLuggage.ID = mandatoryLuggage.ID
+		newMandatoryLuggage.CreatedAt = mandatoryLuggage.CreatedAt
+		newMandatoryLuggage.UpdatedAt = mandatoryLuggage.UpdatedAt
+		newMandatoryLuggage.DeletedAt = mandatoryLuggage.DeletedAt
+
+		newMandatoryLuggage.MandatoryLuggage.ID = mandatoryLuggage.MandatoryLuggage.ID
+		newMandatoryLuggage.MandatoryLuggage.Name = mandatoryLuggage.MandatoryLuggage.Name
+		newMandatoryLuggage.MandatoryLuggage.CreatedAt = mandatoryLuggage.MandatoryLuggage.CreatedAt
+		newMandatoryLuggage.MandatoryLuggage.UpdatedAt = mandatoryLuggage.MandatoryLuggage.UpdatedAt
+		newMandatoryLuggage.MandatoryLuggage.DeletedAt = mandatoryLuggage.MandatoryLuggage.DeletedAt
+
+		mandatoryLuggages = append(mandatoryLuggages, newMandatoryLuggage)
+	}
+
+	entertainmentServiceFormatter.MandatoryLuggageEntertainmentServices = mandatoryLuggages
 
 	return entertainmentServiceFormatter
 }

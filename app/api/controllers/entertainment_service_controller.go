@@ -23,11 +23,11 @@ func NewEntertainmentServiceController(service services.EntertainmentServiceServ
 
 // GetEntertainmentServices : GetEntertainmentServices controller
 func (h *EntertainmentServiceController) GetEntertainmentServices(ctx *gin.Context) {
-	var entertainment_categories models.EntertainmentService
+	var entertainment_services models.EntertainmentService
 
 	search := ctx.Query("search")
 
-	entertainmentServices, _, err := h.service.FindAll(entertainment_categories, search)
+	entertainmentServices, _, err := h.service.FindAll(entertainment_services, search)
 
 	if err != nil {
 		response := utils.APIResponse("Failed to find entertainment service", http.StatusBadRequest, "error", err.Error())
@@ -92,8 +92,8 @@ func (h *EntertainmentServiceController) AddEntertainmentService(ctx *gin.Contex
 		return
 	}
 
-	response := utils.APIResponse("Success to store entertainment service", http.StatusOK, "success", formatters.FormatEntertainmentService(newEntertainmentService))
-	ctx.JSON(http.StatusOK, response)
+	response := utils.APIResponse("Success to store entertainment service", http.StatusCreated, "success", formatters.FormatEntertainmentService(newEntertainmentService))
+	ctx.JSON(http.StatusCreated, response)
 }
 
 // UpdateEntertainmentService : get update by id

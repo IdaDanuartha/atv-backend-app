@@ -92,8 +92,8 @@ func (h *FacilityController) AddFacility(ctx *gin.Context) {
 		return
 	}
 
-	response := utils.APIResponse("Success to store facility", http.StatusOK, "success", formatters.FormatFacility(newFacility))
-	ctx.JSON(http.StatusOK, response)
+	response := utils.APIResponse("Success to store facility", http.StatusCreated, "success", formatters.FormatFacility(newFacility))
+	ctx.JSON(http.StatusCreated, response)
 }
 
 // UpdateFacility : get update by id

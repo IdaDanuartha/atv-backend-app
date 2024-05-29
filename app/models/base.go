@@ -85,3 +85,15 @@ func (b *EntertainmentService) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = uuid.New().String()
 	return
 }
+func (b *EntertainmentServiceFacility) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}
+func (b *EntertainmentServiceInstructor) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}
+func (b *MandatoryLuggageEntertainmentService) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}

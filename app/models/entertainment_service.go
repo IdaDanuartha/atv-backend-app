@@ -11,9 +11,13 @@ type EntertainmentService struct {
 	
 	RouteID string `gorm:"type:varchar(100);primaryKey;foreignKey:RouteID" json:"route_id,omitempty"`
 	Route Route `gorm:"foreignKey:RouteID" json:"route"`
+
+	EntertainmentServiceFacilities []EntertainmentServiceFacility `gorm:"foreignKey:EntertainmentServiceID" json:"facilities"`
+	EntertainmentServiceInstructors []EntertainmentServiceInstructor `gorm:"foreignKey:EntertainmentServiceID" json:"instructors"`
+	MandatoryLuggageEntertainmentServices []MandatoryLuggageEntertainmentService `gorm:"foreignKey:EntertainmentServiceID" json:"entertainment_services"`
 }
 
-// TableName method sets table name for Bus model
+// TableName method sets table name for Entertainment Service model
 func (entertainmentService *EntertainmentService) TableName() string {
 	return "entertainment_services"
 }
