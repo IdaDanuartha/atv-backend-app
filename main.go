@@ -87,7 +87,13 @@ func main() {
 	customerController := controllers.NewCustomerController(customerService)
 	customerRoute := routes.NewCustomerRoute(*customerController, router)
 	customerRoute.Setup(authMiddleware)
-	
+
+	// Booking API
+	bookingRepository := repositories.NewBookingRepository(db)
+    bookingService := services.NewBookingService(&bookingRepository)
+    bookingController := controllers.NewBookingController(bookingService)
+    bookingRoute := routes.NewBookingRoute(*bookingController, router)
+    bookingRoute.Setup(authMiddleware)
 
 	router.Gin.Run(":" + os.Getenv("APP_PORT"))
 

@@ -6,6 +6,7 @@ func FormatCustomer(customer models.Customer) models.Customer {
 	customerFormatter := models.Customer{}
 	customerFormatter.ID = customer.ID
 	customerFormatter.Name = customer.Name
+	customerFormatter.PhoneNumber = customer.PhoneNumber
 	customerFormatter.CreatedAt = customer.CreatedAt
 	customerFormatter.UpdatedAt = customer.UpdatedAt
 	customerFormatter.DeletedAt = customer.DeletedAt

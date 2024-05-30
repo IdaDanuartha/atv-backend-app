@@ -102,3 +102,11 @@ func (b *MandatoryLuggageEntertainmentService) BeforeCreate(tx *gorm.DB) (err er
 	b.ID = uuid.New().String()
 	return
 }
+func (b *Booking) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}
+func (b *BookingDetail) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}
