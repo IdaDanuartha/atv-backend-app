@@ -38,6 +38,7 @@ func (p EntertainmentServiceRoute) Setup(authMiddleware gin.HandlerFunc) {
 	{
 		entertainmentService.GET("/", p.Controller.GetEntertainmentServices)
 		entertainmentService.GET("/:id", p.Controller.GetEntertainmentService)
+		entertainmentService.POST("/upload/:id", authMiddleware, p.Controller.UploadAvatar)
 		entertainmentService.POST("/", authMiddleware, p.Controller.AddEntertainmentService)
 		entertainmentService.PATCH("/:id", authMiddleware, p.Controller.UpdateEntertainmentService)
 		entertainmentService.DELETE("/:id", authMiddleware, p.Controller.DeleteEntertainmentService)

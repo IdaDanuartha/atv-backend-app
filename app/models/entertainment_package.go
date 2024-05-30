@@ -5,10 +5,11 @@ import "time"
 // Entertainment Package Model
 type EntertainmentPackage struct {
 	Base
-	Name                       string                       `gorm:"size:100" json:"name"`
-	Description                string                       `gorm:"type:text" json:"description"`
-	Price                      int32                        `json:"price"`
-	ExpiredAt                  time.Time                    `json:"expired_at"`
+	Name                        string                       `gorm:"size:100" json:"name"`
+	Description                 string                       `gorm:"type:text" json:"description"`
+	Price                       int32                        `json:"price"`
+	ExpiredAt                   time.Time                    `json:"expired_at"`
+	ImagePath                   *string                      `gorm:"size:100;" json:"image_path"`
 	EntertainmentPackageDetails []EntertainmentPackageDetail `gorm:"foreignKey:EntertainmentPackageID" json:"services"`
 }
 

@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/formatters"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
@@ -60,6 +62,67 @@ func (h *EntertainmentServiceController) GetEntertainmentService(c *gin.Context)
 	response := utils.APIResponse("Entertainment service detail", http.StatusOK, "success", formatters.FormatEntertainmentService(entertainmentService))
 	c.JSON(http.StatusOK, response)
 
+}
+
+func (h *EntertainmentServiceController) UploadAvatar(c *gin.Context) {
+	var input inputs.GetEntertainmentServiceDetailInput
+	file, err := c.FormFile("image")
+	if err != nil {
+		data := gin.H{"message": err.Error()}
+		response := utils.APIResponse("Failed to upload image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	entertainmentService, err := h.service.Find(input)
+	if err!= nil {
+		data := gin.H{"message": err.Error()}
+        response := utils.APIResponse("Failed to get entertainment service id", http.StatusBadRequest, "error", data)
+
+        c.JSON(http.StatusBadRequest, response)
+        return
+    }
+
+	ID := entertainmentService.ID
+
+	// Check if the old avatar image exists for the user
+	_, err = os.Stat(*entertainmentService.ImagePath)
+	if err == nil {
+		// If the old avatar image exists, delete it
+		err := os.Remove(*entertainmentService.ImagePath)
+		if err != nil {
+			data := gin.H{"message": err.Error()}
+			response := utils.APIResponse("Failed to delete old avatar image", http.StatusBadRequest, "error", data)
+			c.JSON(http.StatusBadRequest, response)
+			return
+		}
+	}
+
+	path := fmt.Sprintf("uploads/entertainment_services/%s-%s", ID, file.Filename)
+
+	err = c.SaveUploadedFile(file, path)
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := utils.APIResponse("Failed to upload image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	_, err = h.service.SaveImage(ID, path)
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := utils.APIResponse("Failed to upload image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	data := gin.H{"is_uploaded": true}
+	response := utils.APIResponse("Image successfuly uploaded", http.StatusOK, "success", data)
+
+	c.JSON(http.StatusOK, response)
 }
 
 // AddEntertainmentService : AddEntertainmentService controller
