@@ -9,7 +9,7 @@ type EntertainmentPackage struct {
 	Description                string                       `gorm:"type:text" json:"description"`
 	Price                      int32                        `json:"price"`
 	ExpiredAt                  time.Time                    `json:"expired_at"`
-	EntertainmentPackageDetails []EntertainmentPackageDetail `gorm:"foreignKey:EntertainmentPackageID" json:"facilities"`
+	EntertainmentPackageDetails []EntertainmentPackageDetail `gorm:"foreignKey:EntertainmentPackageID" json:"services"`
 }
 
 // TableName method sets table name for Bus model

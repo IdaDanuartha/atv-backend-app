@@ -1,6 +1,8 @@
 package formatters
 
-import "github.com/IdaDanuartha/atv-backend-app/app/models"
+import (
+	"github.com/IdaDanuartha/atv-backend-app/app/models"
+)
 
 func FormatEntertainmentPackage(entertainmentPackage models.EntertainmentPackage) models.EntertainmentPackage {
 	entertainmentPackageFormatter := models.EntertainmentPackage{}
@@ -15,7 +17,7 @@ func FormatEntertainmentPackage(entertainmentPackage models.EntertainmentPackage
 
 	packageDetails := make([]models.EntertainmentPackageDetail, 0)
 
-	for _, packageDetail := range entertainmentPackageFormatter.EntertainmentPackageDetails {
+	for _, packageDetail := range entertainmentPackage.EntertainmentPackageDetails {
 		newPackageDetail := models.EntertainmentPackageDetail{}
 
 		newPackageDetail.ID = packageDetail.ID
@@ -23,6 +25,7 @@ func FormatEntertainmentPackage(entertainmentPackage models.EntertainmentPackage
 		newPackageDetail.UpdatedAt = packageDetail.UpdatedAt
 		newPackageDetail.DeletedAt = packageDetail.DeletedAt
 
+		newPackageDetail.EntertainmentService.ID = packageDetail.EntertainmentService.ID
 		newPackageDetail.EntertainmentService.Name = packageDetail.EntertainmentService.Name
 		newPackageDetail.EntertainmentService.Price = packageDetail.EntertainmentService.Price
 		newPackageDetail.EntertainmentService.CreatedAt = packageDetail.EntertainmentService.CreatedAt
