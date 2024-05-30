@@ -32,9 +32,10 @@ func (p UserRoute) Setup(authMiddleware gin.HandlerFunc) {
 
 	auth := p.Handler.Gin.Group(apiPrefix + "/auth") //Router group
 	{
+		auth.GET("/user/me", authMiddleware, p.Controller.FetchUser)
 		auth.POST("/register", p.Controller.RegisterUser)
 		auth.POST("/login", p.Controller.Login)
-		auth.POST("/upload-image", authMiddleware, p.Controller.UploadAvatar)
+		auth.POST("/upload-avatar", authMiddleware, p.Controller.UploadAvatar)
 		auth.PATCH("/update", authMiddleware, p.Controller.UpdateProfile)
 	}
 }

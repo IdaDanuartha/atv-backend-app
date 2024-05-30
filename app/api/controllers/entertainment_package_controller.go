@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/formatters"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
@@ -60,6 +62,91 @@ func (h *EntertainmentPackageController) GetEntertainmentPackage(c *gin.Context)
 	response := utils.APIResponse("Entertainment package detail", http.StatusOK, "success", formatters.FormatEntertainmentPackage(entertainmentPackage))
 	c.JSON(http.StatusOK, response)
 
+}
+
+func (h *EntertainmentPackageController) UploadImage(ctx *gin.Context) {
+	var inputID inputs.GetEntertainmentPackageDetailInput
+
+	err := ctx.ShouldBindUri(&inputID)
+	if err != nil {
+		response := utils.APIResponse("Failed to get entertainment package id", http.StatusBadRequest, "error", err.Error())
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+	
+	file, err := ctx.FormFile("image")
+	if err != nil {
+		data := gin.H{"message": err.Error()}
+		response := utils.APIResponse("Failed to upload image", http.StatusBadRequest, "error", data)
+
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	entertainmentPackage, err := h.service.Find(inputID)
+	if err!= nil {
+		data := gin.H{"message": err.Error()}
+        response := utils.APIResponse("Failed to get entertainment package id", http.StatusBadRequest, "error", data)
+
+        ctx.JSON(http.StatusBadRequest, response)
+        return
+    }
+
+	ID := entertainmentPackage.ID
+
+
+	// Check if ImagePath is not nil before proceeding
+	if entertainmentPackage.ImagePath != nil {
+		// Check if the old avatar image exists for the user
+		_, err := os.Stat(*entertainmentPackage.ImagePath)
+		if err == nil {
+			// If the old avatar image exists, delete it
+			err := os.Remove(*entertainmentPackage.ImagePath)
+			if err != nil {
+				data := gin.H{
+					"is_uploaded": false,
+					"message":     err.Error(),
+				}
+				response := utils.APIResponse("Failed to delete old avatar image", http.StatusBadRequest, "error", data)
+				ctx.JSON(http.StatusBadRequest, response)
+				return
+			}
+		} else if !os.IsNotExist(err) {
+			// Handle other possible errors from os.Stat
+			data := gin.H{
+				"is_uploaded": false,
+				"message":     err.Error(),
+			}
+			response := utils.APIResponse("Error checking old avatar image", http.StatusInternalServerError, "error", data)
+			ctx.JSON(http.StatusInternalServerError, response)
+			return
+		}
+	}
+
+	path := fmt.Sprintf("uploads/entertainment_packages/%s-%s", ID, file.Filename)
+
+	err = ctx.SaveUploadedFile(file, path)
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := utils.APIResponse("Failed to upload image", http.StatusBadRequest, "error", data)
+
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	_, err = h.service.SaveImage(ID, path)
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := utils.APIResponse("Failed to upload image", http.StatusBadRequest, "error", data)
+
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	data := gin.H{"is_uploaded": true}
+	response := utils.APIResponse("Image successfuly uploaded", http.StatusOK, "success", data)
+
+	ctx.JSON(http.StatusOK, response)
 }
 
 // AddEntertainmentPackage : AddEntertainmentPackage controller

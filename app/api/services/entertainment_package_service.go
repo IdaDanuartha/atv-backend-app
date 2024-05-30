@@ -9,6 +9,7 @@ import (
 type EntertainmentPackageService interface {
 	FindAll(model models.EntertainmentPackage, search string) ([]models.EntertainmentPackage, int64, error)
 	Find(input inputs.GetEntertainmentPackageDetailInput) (models.EntertainmentPackage, error)
+	SaveImage(ID string, fileLocation string) (models.EntertainmentPackage, error)
 	Save(input inputs.EntertainmentPackageInput) (models.EntertainmentPackage, error)
 	Update(inputID inputs.GetEntertainmentPackageDetailInput, input inputs.EntertainmentPackageInput) (models.EntertainmentPackage, error)
 	Delete(inputID inputs.GetEntertainmentPackageDetailInput) (models.EntertainmentPackage, error)
@@ -43,6 +44,22 @@ func (s entertainmentPackageService) Find(input inputs.GetEntertainmentPackageDe
 	}
 
 	return entertainmentPackage, nil
+}
+
+func (s entertainmentPackageService) SaveImage(ID string, fileLocation string) (models.EntertainmentPackage, error) {
+	entertainment_package, err := s.repository.Find(ID)
+	if err != nil {
+		return entertainment_package, err
+	}
+
+	entertainment_package.ImagePath = &fileLocation
+
+	updatedEntertainmentPackage, err := s.repository.Update(entertainment_package)
+	if err != nil {
+		return updatedEntertainmentPackage, err
+	}
+
+	return updatedEntertainmentPackage, nil
 }
 
 // Save -> calls Entertainment Package repository save method

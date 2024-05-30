@@ -38,6 +38,7 @@ func (p EntertainmentPackageRoute) Setup(authMiddleware gin.HandlerFunc) {
 	{
 		entertainmentPackage.GET("/", p.Controller.GetEntertainmentPackages)
 		entertainmentPackage.GET("/:id", p.Controller.GetEntertainmentPackage)
+		entertainmentPackage.POST("/upload/:id", authMiddleware, p.Controller.UploadImage)
 		entertainmentPackage.POST("/", authMiddleware, p.Controller.AddEntertainmentPackage)
 		entertainmentPackage.PATCH("/:id", authMiddleware, p.Controller.UpdateEntertainmentPackage)
 		entertainmentPackage.DELETE("/:id", authMiddleware, p.Controller.DeleteEntertainmentPackage)

@@ -8,7 +8,7 @@ import (
 type CustomerFormatter struct {
 	ID    string      `json:"id"`
 	Name  string      `json:"name"`
-	Token string      `json:"token"`
+	Token string      `json:"token,omitempty"`
 	User  models.User `json:"user"`
 }
 
@@ -27,7 +27,7 @@ type AuthFormatter struct {
 	ID       string     `json:"id"`
 	Username string     `json:"username"`
 	Email    string     `json:"email"`
-	Token    string     `json:"token"`
+	Token    string     `json:"token,omitempty"`
 	Role     enums.Role `json:"role"`
 }
 

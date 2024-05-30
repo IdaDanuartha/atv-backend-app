@@ -64,49 +64,73 @@ func (h *EntertainmentServiceController) GetEntertainmentService(c *gin.Context)
 
 }
 
-func (h *EntertainmentServiceController) UploadAvatar(c *gin.Context) {
-	var input inputs.GetEntertainmentServiceDetailInput
-	file, err := c.FormFile("image")
+func (h *EntertainmentServiceController) UploadImage(ctx *gin.Context) {
+	var inputID inputs.GetEntertainmentServiceDetailInput
+
+	err := ctx.ShouldBindUri(&inputID)
+	if err != nil {
+		response := utils.APIResponse("Failed to get entertainment service id", http.StatusBadRequest, "error", err.Error())
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+	
+	file, err := ctx.FormFile("image")
 	if err != nil {
 		data := gin.H{"message": err.Error()}
 		response := utils.APIResponse("Failed to upload image", http.StatusBadRequest, "error", data)
 
-		c.JSON(http.StatusBadRequest, response)
+		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	entertainmentService, err := h.service.Find(input)
+	entertainmentService, err := h.service.Find(inputID)
 	if err!= nil {
 		data := gin.H{"message": err.Error()}
         response := utils.APIResponse("Failed to get entertainment service id", http.StatusBadRequest, "error", data)
 
-        c.JSON(http.StatusBadRequest, response)
+        ctx.JSON(http.StatusBadRequest, response)
         return
     }
 
 	ID := entertainmentService.ID
 
-	// Check if the old avatar image exists for the user
-	_, err = os.Stat(*entertainmentService.ImagePath)
-	if err == nil {
-		// If the old avatar image exists, delete it
-		err := os.Remove(*entertainmentService.ImagePath)
-		if err != nil {
-			data := gin.H{"message": err.Error()}
-			response := utils.APIResponse("Failed to delete old avatar image", http.StatusBadRequest, "error", data)
-			c.JSON(http.StatusBadRequest, response)
+
+	// Check if ImagePath is not nil before proceeding
+	if entertainmentService.ImagePath != nil {
+		// Check if the old avatar image exists for the user
+		_, err := os.Stat(*entertainmentService.ImagePath)
+		if err == nil {
+			// If the old avatar image exists, delete it
+			err := os.Remove(*entertainmentService.ImagePath)
+			if err != nil {
+				data := gin.H{
+					"is_uploaded": false,
+					"message":     err.Error(),
+				}
+				response := utils.APIResponse("Failed to delete old avatar image", http.StatusBadRequest, "error", data)
+				ctx.JSON(http.StatusBadRequest, response)
+				return
+			}
+		} else if !os.IsNotExist(err) {
+			// Handle other possible errors from os.Stat
+			data := gin.H{
+				"is_uploaded": false,
+				"message":     err.Error(),
+			}
+			response := utils.APIResponse("Error checking old avatar image", http.StatusInternalServerError, "error", data)
+			ctx.JSON(http.StatusInternalServerError, response)
 			return
 		}
 	}
 
 	path := fmt.Sprintf("uploads/entertainment_services/%s-%s", ID, file.Filename)
 
-	err = c.SaveUploadedFile(file, path)
+	err = ctx.SaveUploadedFile(file, path)
 	if err != nil {
 		data := gin.H{"is_uploaded": false}
 		response := utils.APIResponse("Failed to upload image", http.StatusBadRequest, "error", data)
 
-		c.JSON(http.StatusBadRequest, response)
+		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
@@ -115,14 +139,14 @@ func (h *EntertainmentServiceController) UploadAvatar(c *gin.Context) {
 		data := gin.H{"is_uploaded": false}
 		response := utils.APIResponse("Failed to upload image", http.StatusBadRequest, "error", data)
 
-		c.JSON(http.StatusBadRequest, response)
+		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	data := gin.H{"is_uploaded": true}
 	response := utils.APIResponse("Image successfuly uploaded", http.StatusOK, "success", data)
 
-	c.JSON(http.StatusOK, response)
+	ctx.JSON(http.StatusOK, response)
 }
 
 // AddEntertainmentService : AddEntertainmentService controller

@@ -102,7 +102,6 @@ func (h *UserController) Login(c *gin.Context) {
 	response := utils.APIResponse("Successfuly loggedin", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusOK, response)
-
 }
 
 func (h *UserController) FetchUser(c *gin.Context) {
@@ -120,7 +119,10 @@ func (h *UserController) FetchUser(c *gin.Context) {
 func (h *UserController) UploadAvatar(c *gin.Context) {
 	file, err := c.FormFile("image")
 	if err != nil {
-		data := gin.H{"is_uploaded": false}
+		data := gin.H{
+			"is_uploaded": false,
+			"message":     err.Error(),
+		}
 		response := utils.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
 
 		c.JSON(http.StatusBadRequest, response)
@@ -130,24 +132,42 @@ func (h *UserController) UploadAvatar(c *gin.Context) {
 	currentUser := c.MustGet("currentUser").(models.User)
 	userID := currentUser.ID
 
-	// Check if the old avatar image exists for the user
-	_, err = os.Stat(*currentUser.ProfilePath)
-	if err == nil {
-		// If the old avatar image exists, delete it
-		err := os.Remove(*currentUser.ProfilePath)
-		if err != nil {
-			data := gin.H{"is_uploaded": false}
-			response := utils.APIResponse("Failed to delete old avatar image", http.StatusBadRequest, "error", data)
-			c.JSON(http.StatusBadRequest, response)
+	// Check if ProfilePath is not nil before proceeding
+	if currentUser.ProfilePath != nil {
+		// Check if the old avatar image exists for the user
+		_, err := os.Stat(*currentUser.ProfilePath)
+		if err == nil {
+			// If the old avatar image exists, delete it
+			err := os.Remove(*currentUser.ProfilePath)
+			if err != nil {
+				data := gin.H{
+					"is_uploaded": false,
+					"message":     err.Error(),
+				}
+				response := utils.APIResponse("Failed to delete old avatar image", http.StatusBadRequest, "error", data)
+				c.JSON(http.StatusBadRequest, response)
+				return
+			}
+		} else if !os.IsNotExist(err) {
+			// Handle other possible errors from os.Stat
+			data := gin.H{
+				"is_uploaded": false,
+				"message":     err.Error(),
+			}
+			response := utils.APIResponse("Error checking old avatar image", http.StatusInternalServerError, "error", data)
+			c.JSON(http.StatusInternalServerError, response)
 			return
 		}
-	}
+	} 
 
 	path := fmt.Sprintf("uploads/users/%s-%s", userID, file.Filename)
 
 	err = c.SaveUploadedFile(file, path)
 	if err != nil {
-		data := gin.H{"is_uploaded": false}
+		data := gin.H{
+			"is_uploaded": false,
+			"message":     err.Error(),
+		}
 		response := utils.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
 
 		c.JSON(http.StatusBadRequest, response)
@@ -156,7 +176,10 @@ func (h *UserController) UploadAvatar(c *gin.Context) {
 
 	_, err = h.userService.SaveAvatar(userID, path)
 	if err != nil {
-		data := gin.H{"is_uploaded": false}
+		data := gin.H{
+			"is_uploaded": false,
+			"message":     err.Error(),
+		}
 		response := utils.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
 
 		c.JSON(http.StatusBadRequest, response)
@@ -181,14 +204,6 @@ func (h *UserController) UpdateProfile(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
-
-	// Check if avatar file is uploaded
-	// file, _ := ctx.FormFile("avatar")
-	// if file != nil {
-	// 	// If avatar file is uploaded, call UploadAvatar function
-	// 	h.UploadAvatar(ctx)
-	// 	return
-	// }
 
 	updatedUser, err := h.userService.UpdateUser(inputData, ctx)
 	if err != nil {
