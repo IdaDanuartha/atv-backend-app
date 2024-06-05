@@ -1,12 +1,17 @@
 package repositories
 
 import (
+	"fmt"
+
+	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/IdaDanuartha/atv-backend-app/app/config"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
+	"github.com/gin-gonic/gin"
 )
 
 type FacilityRepository interface {
 	FindAll(facility models.Facility, search string) ([]models.Facility, int64, error)
+	ExportToExcel(facility models.Facility, ctx *gin.Context) (error)
 	Find(ID string) (models.Facility, error)
 	Save(facility models.Facility) (models.Facility, error)
 	Update(facility models.Facility) (models.Facility, error)
@@ -41,6 +46,54 @@ func (r facilityRepository) FindAll(facility models.Facility, search string) ([]
 		Find(&facilities).
 		Count(&totalRows).Error
 	return facilities, totalRows, err
+}
+
+// ExportToExcel -> Method for exporting all data to excel file
+func(r facilityRepository) ExportToExcel(facility models.Facility, ctx *gin.Context) (error) {
+	var facilities []models.Facility
+
+	// Retrieve data from the database
+    rows := r.db.DB.Find(&facilities)
+	if rows.Error!= nil {
+        return rows.Error
+    }
+
+    // Create an Excel file
+    xlsx := excelize.NewFile()
+    sheetName := "Facilities"
+    xlsx.SetSheetName("Facilities", sheetName)
+
+    // Add headers
+	xlsx.SetCellValue(sheetName, "A1", "No")
+    xlsx.SetCellValue(sheetName, "B1", "Name")
+
+    // Fill data from the database into an Excel file
+	rowIndex := 1
+    for _, facility := range facilities {		
+		xlsx.SetCellValue(sheetName, fmt.Sprintf("A%d", rowIndex), rowIndex)
+        xlsx.SetCellValue(sheetName, fmt.Sprintf("B%d", rowIndex), facility.Name)
+        rowIndex++
+    }
+
+	// Save the file to a local path for debugging (optional)
+	err := xlsx.SaveAs("facilities_export.xlsx")
+	if err != nil {
+		fmt.Println("Error saving file locally:", err)
+		return err
+	}
+
+    // Set header response
+    ctx.Header("Content-Transfer-Encoding", "binary")
+    ctx.Header("Content-Disposition", "attachment; filename=facilities_export.xlsx")
+    ctx.Header("Content-Type", "application/octet-stream")
+
+    // Write the Excel file to the response
+    err = xlsx.Write(ctx.Writer)
+    if err != nil {
+        return err
+    }
+
+	return nil
 }
 
 // Find -> Method for fetching Facility by id

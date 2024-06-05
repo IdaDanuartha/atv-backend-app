@@ -20,14 +20,22 @@ func FormatEntertainmentService(entertainmentService models.EntertainmentService
 	entertainmentServiceFormatter.EntertainmentCategory.UpdatedAt = entertainmentService.EntertainmentCategory.UpdatedAt
 	entertainmentServiceFormatter.EntertainmentCategory.DeletedAt = entertainmentService.EntertainmentCategory.DeletedAt
 
-	entertainmentServiceFormatter.Route.ID = entertainmentService.RouteID
-	entertainmentServiceFormatter.Route.StartingRoute = entertainmentService.Route.StartingRoute
-	entertainmentServiceFormatter.Route.FinalRoute = entertainmentService.Route.FinalRoute
-	entertainmentServiceFormatter.Route.Duration = entertainmentService.Route.Duration
-	entertainmentServiceFormatter.Route.Distance = entertainmentService.Route.Distance
-	entertainmentServiceFormatter.Route.CreatedAt = entertainmentService.Route.CreatedAt
-	entertainmentServiceFormatter.Route.UpdatedAt = entertainmentService.Route.UpdatedAt
-	entertainmentServiceFormatter.Route.DeletedAt = entertainmentService.Route.DeletedAt
+	routes := make([]models.Route, 0)
+
+	for _, route := range entertainmentService.Routes {
+		newRoute := models.Route{}
+
+		newRoute.ID = route.ID
+		newRoute.Name = route.Name
+		newRoute.Address = route.Address
+		newRoute.CreatedAt = route.CreatedAt
+		newRoute.UpdatedAt = route.UpdatedAt
+		newRoute.DeletedAt = route.DeletedAt
+
+		routes = append(routes, newRoute)
+	}
+
+	entertainmentServiceFormatter.Routes = routes
 
 	facilities := make([]models.EntertainmentServiceFacility, 0)
 

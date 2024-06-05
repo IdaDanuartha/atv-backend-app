@@ -38,6 +38,7 @@ func (p FacilityRoute) Setup(authMiddleware gin.HandlerFunc) {
 	{
 		facility.GET("/", p.Controller.GetFacilities)
 		facility.GET("/:id", p.Controller.GetFacility)
+		facility.GET("/export", p.Controller.ExportToExcel)
 		facility.POST("/", authMiddleware, p.Controller.AddFacility)
 		facility.PATCH("/:id", authMiddleware, p.Controller.UpdateFacility)
 		facility.DELETE("/:id", authMiddleware, p.Controller.DeleteFacility)

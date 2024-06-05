@@ -4,10 +4,12 @@ import (
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/repositories"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
+	"github.com/gin-gonic/gin"
 )
 
 type FacilityService interface {
 	FindAll(model models.Facility, search string) ([]models.Facility, int64, error)
+	ExportToExcel(model models.Facility, ctx *gin.Context) (error)
 	Find(input inputs.GetFacilityDetailInput) (models.Facility, error)
 	Save(input inputs.FacilityInput) (models.Facility, error)
 	Update(inputID inputs.GetFacilityDetailInput, input inputs.FacilityInput) (models.Facility, error)
@@ -32,6 +34,16 @@ func (s facilityService) FindAll(model models.Facility, search string) ([]models
 	}
 
 	return facilities, total, nil
+}
+
+// ExportToExcel -> calls Facility repo ExportToExcel method
+func (s facilityService) ExportToExcel(model models.Facility, ctx *gin.Context) (error) {
+	err := s.repository.ExportToExcel(model, ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Find -> calls Facility repo find method

@@ -5,10 +5,8 @@ import "github.com/IdaDanuartha/atv-backend-app/app/models"
 func FormatRoute(route models.Route) models.Route {
 	routeFormatter := models.Route{}
 	routeFormatter.ID = route.ID
-	routeFormatter.StartingRoute = route.StartingRoute
-	routeFormatter.FinalRoute = route.FinalRoute
-	routeFormatter.Duration = route.Duration
-	routeFormatter.Distance = route.Distance
+	routeFormatter.Name = route.Name
+	routeFormatter.Address = route.Address
 	routeFormatter.CreatedAt = route.CreatedAt
 	routeFormatter.UpdatedAt = route.UpdatedAt
 	routeFormatter.DeletedAt = route.DeletedAt

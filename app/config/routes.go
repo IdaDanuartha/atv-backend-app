@@ -20,6 +20,10 @@ type GinRouter struct {
 func NewGinRouter() GinRouter {
 
     httpRouter := gin.Default()
+    // Apply CORS middleware
+    config := cors.DefaultConfig()
+    config.AllowOrigins = []string{"*"}
+    // config.AllowHeaders = []string{"Content-Type", "Content-Disposition"} 
     httpRouter.Use(cors.Default())
 
 	cookieStore := cookie.NewStore([]byte(os.Getenv("SECRET_KEY")))

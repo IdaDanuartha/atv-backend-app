@@ -39,6 +39,22 @@ func (h *FacilityController) GetFacilities(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// ExportToExcel : ExportToExcel controller
+func (h *FacilityController) ExportToExcel(ctx *gin.Context) {
+	var facilities models.Facility
+
+	err := h.service.ExportToExcel(facilities, ctx)
+
+	if err != nil {
+		response := utils.APIResponse("Failed to export facilities data", http.StatusBadRequest, "error", err.Error())
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	// response := utils.APIResponse("Export facility to excel success", http.StatusOK, "success", err)
+	// ctx.JSON(http.StatusOK, response)
+}
+
 // GetFacility : get facility by id
 func (h *FacilityController) GetFacility(c *gin.Context) {
 	var input inputs.GetFacilityDetailInput

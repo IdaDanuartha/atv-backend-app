@@ -69,7 +69,7 @@ func (s entertainmentServiceService) Save(input inputs.EntertainmentServiceInput
 	entertainmentService.Name = input.Name
 	entertainmentService.Price = input.Price
 	entertainmentService.EntertainmentCategoryID = input.EntertainmentCategoryID
-	entertainmentService.RouteID = input.RouteID
+	entertainmentService.Routes = input.Routes
 	entertainmentService.EntertainmentServiceFacilities = input.Facilities
 	entertainmentService.EntertainmentServiceInstructors = input.Instructors
 	entertainmentService.MandatoryLuggageEntertainmentServices = input.MandatoryLuggages
@@ -92,7 +92,7 @@ func (s entertainmentServiceService) Update(inputID inputs.GetEntertainmentServi
 	entertainmentService.Name = input.Name
 	entertainmentService.Price = input.Price
 	entertainmentService.EntertainmentCategoryID = input.EntertainmentCategoryID
-	entertainmentService.RouteID = input.RouteID
+	entertainmentService.Routes = input.Routes
 	entertainmentService.EntertainmentServiceFacilities = input.Facilities
 	entertainmentService.EntertainmentServiceInstructors = input.Instructors
 	entertainmentService.MandatoryLuggageEntertainmentServices = input.MandatoryLuggages

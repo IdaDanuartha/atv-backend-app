@@ -48,10 +48,8 @@ func (s routeService) Find(input inputs.GetRouteDetailInput) (models.Route, erro
 // Save -> calls Route repository save method
 func (s routeService) Save(input inputs.RouteInput) (models.Route, error) {
 	route := models.Route{}
-	route.StartingRoute = input.StartingRoute
-	route.FinalRoute = input.FinalRoute
-	route.Duration = input.Duration
-	route.Distance = input.Distance
+	route.Name = input.Name
+	route.Address = input.Address
 
 	newRoute, err := s.repository.Save(route)
 	if err != nil {
@@ -68,10 +66,8 @@ func (s routeService) Update(inputID inputs.GetRouteDetailInput, input inputs.Ro
 		return route, err
 	}
 
-	route.StartingRoute = input.StartingRoute
-	route.FinalRoute = input.FinalRoute
-	route.Duration = input.Duration
-	route.Distance = input.Distance
+	route.Name = input.Name
+	route.Address = input.Address
 
 	updatedRoute, err := s.repository.Update(route)
 	if err != nil {

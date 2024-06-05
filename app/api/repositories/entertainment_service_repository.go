@@ -38,7 +38,7 @@ func (r entertainmentServiceRepository) FindAll(entertainmentService models.Ente
 
 	err := queryBuider.
 		Preload("EntertainmentCategory").
-		Preload("Route").
+		Preload("Routes").
 		Preload("EntertainmentServiceFacilities.Facility").
 		Preload("EntertainmentServiceInstructors.Instructor.User").
 		Preload("MandatoryLuggageEntertainmentServices.MandatoryLuggage").
@@ -53,7 +53,7 @@ func (r entertainmentServiceRepository) Find(ID string) (models.EntertainmentSer
 	var entertainment_services models.EntertainmentService
 	err := r.db.DB.
 		Preload("EntertainmentCategory").
-		Preload("Route").
+		Preload("Routes").
 		Preload("EntertainmentServiceFacilities.Facility").
 		Preload("EntertainmentServiceInstructors.Instructor.User").
 		Preload("MandatoryLuggageEntertainmentServices.MandatoryLuggage").
@@ -68,7 +68,7 @@ func (r entertainmentServiceRepository) Find(ID string) (models.EntertainmentSer
 func (r entertainmentServiceRepository) Save(entertainmentService models.EntertainmentService) (models.EntertainmentService, error) {
 	err := r.db.DB.
 		Preload("EntertainmentCategory").
-		Preload("Route").
+		Preload("Routes").
 		Preload("EntertainmentServiceFacilities.Facility").
 		Preload("EntertainmentServiceInstructors.Instructor.User").
 		Preload("MandatoryLuggageEntertainmentServices.MandatoryLuggage").
@@ -85,7 +85,7 @@ func (r entertainmentServiceRepository) Save(entertainmentService models.Enterta
 func (r *entertainmentServiceRepository) Update(entertainmentService models.EntertainmentService) (models.EntertainmentService, error) {
 	err := r.db.DB.
 		Preload("EntertainmentCategory").
-		Preload("Route").
+		Preload("Routes").
 		Preload("EntertainmentServiceFacilities.Facility").
 		Preload("EntertainmentServiceInstructors.Instructor.User").
 		Preload("MandatoryLuggageEntertainmentServices.MandatoryLuggage").
@@ -102,7 +102,7 @@ func (r *entertainmentServiceRepository) Update(entertainmentService models.Ente
 func (r entertainmentServiceRepository) Delete(entertainmentService models.EntertainmentService) (models.EntertainmentService, error) {
 	err := r.db.DB.
 		Preload("EntertainmentCategory").
-		Preload("Route").
+		Preload("Routes").
 		Preload("EntertainmentServiceFacilities.Facility").
 		Preload("EntertainmentServiceInstructors.Instructor.User").
 		Preload("MandatoryLuggageEntertainmentServices.MandatoryLuggage").
