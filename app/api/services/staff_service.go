@@ -3,7 +3,7 @@ package services
 import (
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/repositories"
-	"github.com/IdaDanuartha/atv-backend-app/app/enums"
+	// "github.com/IdaDanuartha/atv-backend-app/app/enums"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -56,7 +56,8 @@ func (s staffService) Save(input inputs.StaffInput) (models.Staff, error) {
 	staff.User.Email = input.Email
 	staff.User.Password = input.Password
 
-	staff.User.Role = enums.Role(enums.Staff)
+	// staff.User.Role = enums.Role(enums.Staff)
+	staff.User.Role = "staff"
 
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
 	if err != nil {
@@ -86,7 +87,8 @@ func (s staffService) Update(inputID inputs.GetStaffDetailInput, input inputs.St
 	staff.User.Email = input.Email
 	staff.User.Password = input.Password
 
-	staff.User.Role = enums.Role(enums.Staff)
+	// staff.User.Role = enums.Role(enums.Staff)
+	staff.User.Role = "staff"
 
 	if input.Password != "" {
 		passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)

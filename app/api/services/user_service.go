@@ -5,7 +5,7 @@ import (
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/repositories"
-	"github.com/IdaDanuartha/atv-backend-app/app/enums"
+	// "github.com/IdaDanuartha/atv-backend-app/app/enums"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -32,7 +32,8 @@ func (s *userService) RegisterUser(input inputs.RegisterInput) (models.Customer,
 	customer.Name = input.Name
 	customer.User.Username = input.Username
 	customer.User.Email = input.Email
-	customer.User.Role = enums.Role(enums.Customer)
+	// customer.User.Role = enums.Role(enums.Customer)
+	customer.User.Role = "customer"
 
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
 	if err != nil {

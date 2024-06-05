@@ -20,17 +20,22 @@ func FormatEntertainmentService(entertainmentService models.EntertainmentService
 	entertainmentServiceFormatter.EntertainmentCategory.UpdatedAt = entertainmentService.EntertainmentCategory.UpdatedAt
 	entertainmentServiceFormatter.EntertainmentCategory.DeletedAt = entertainmentService.EntertainmentCategory.DeletedAt
 
-	routes := make([]models.Route, 0)
+	routes := make([]models.EntertainmentServiceRoute, 0)
 
 	for _, route := range entertainmentService.Routes {
-		newRoute := models.Route{}
+		newRoute := models.EntertainmentServiceRoute{}
 
 		newRoute.ID = route.ID
-		newRoute.Name = route.Name
-		newRoute.Address = route.Address
 		newRoute.CreatedAt = route.CreatedAt
 		newRoute.UpdatedAt = route.UpdatedAt
 		newRoute.DeletedAt = route.DeletedAt
+
+		newRoute.Route.ID = route.Route.ID
+		newRoute.Route.Name = route.Route.Name
+		newRoute.Route.Address = route.Route.Address
+		newRoute.Route.CreatedAt = route.Route.CreatedAt
+		newRoute.Route.UpdatedAt = route.Route.UpdatedAt
+		newRoute.Route.DeletedAt = route.Route.DeletedAt
 
 		routes = append(routes, newRoute)
 	}
@@ -39,7 +44,7 @@ func FormatEntertainmentService(entertainmentService models.EntertainmentService
 
 	facilities := make([]models.EntertainmentServiceFacility, 0)
 
-	for _, facility := range entertainmentService.EntertainmentServiceFacilities {
+	for _, facility := range entertainmentService.Facilities {
 		newFacility := models.EntertainmentServiceFacility{}
 
 		newFacility.ID = facility.ID
@@ -56,11 +61,11 @@ func FormatEntertainmentService(entertainmentService models.EntertainmentService
 		facilities = append(facilities, newFacility)
 	}
 
-	entertainmentServiceFormatter.EntertainmentServiceFacilities = facilities
+	entertainmentServiceFormatter.Facilities = facilities
 
 	instructors := make([]models.EntertainmentServiceInstructor, 0)
 
-	for _, instructor := range entertainmentService.EntertainmentServiceInstructors {
+	for _, instructor := range entertainmentService.Instructors {
 		newInstructor := models.EntertainmentServiceInstructor{}
 
 		newInstructor.ID = instructor.ID
@@ -80,18 +85,18 @@ func FormatEntertainmentService(entertainmentService models.EntertainmentService
 		newInstructor.Instructor.User.Email = instructor.Instructor.User.Email
 		newInstructor.Instructor.User.Role = instructor.Instructor.User.Role
 		newInstructor.Instructor.User.ProfilePath = instructor.Instructor.User.ProfilePath
-		newInstructor.Instructor.CreatedAt = instructor.Instructor.CreatedAt
-		newInstructor.Instructor.UpdatedAt = instructor.Instructor.UpdatedAt
-		newInstructor.Instructor.DeletedAt = instructor.Instructor.DeletedAt
+		newInstructor.Instructor.User.CreatedAt = instructor.Instructor.User.CreatedAt
+		newInstructor.Instructor.User.UpdatedAt = instructor.Instructor.User.UpdatedAt
+		newInstructor.Instructor.User.DeletedAt = instructor.Instructor.User.DeletedAt
 
 		instructors = append(instructors, newInstructor)
 	}
 
-	entertainmentServiceFormatter.EntertainmentServiceInstructors = instructors
+	entertainmentServiceFormatter.Instructors = instructors
 
 	mandatoryLuggages := make([]models.MandatoryLuggageEntertainmentService, 0)
 
-	for _, mandatoryLuggage := range entertainmentService.MandatoryLuggageEntertainmentServices {
+	for _, mandatoryLuggage := range entertainmentService.MandatoryLuggages {
 		newMandatoryLuggage := models.MandatoryLuggageEntertainmentService{}
 
 		newMandatoryLuggage.ID = mandatoryLuggage.ID
@@ -108,7 +113,7 @@ func FormatEntertainmentService(entertainmentService models.EntertainmentService
 		mandatoryLuggages = append(mandatoryLuggages, newMandatoryLuggage)
 	}
 
-	entertainmentServiceFormatter.MandatoryLuggageEntertainmentServices = mandatoryLuggages
+	entertainmentServiceFormatter.MandatoryLuggages = mandatoryLuggages
 
 	return entertainmentServiceFormatter
 }

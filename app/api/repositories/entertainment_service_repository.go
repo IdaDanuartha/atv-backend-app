@@ -38,10 +38,10 @@ func (r entertainmentServiceRepository) FindAll(entertainmentService models.Ente
 
 	err := queryBuider.
 		Preload("EntertainmentCategory").
-		Preload("Routes").
-		Preload("EntertainmentServiceFacilities.Facility").
-		Preload("EntertainmentServiceInstructors.Instructor.User").
-		Preload("MandatoryLuggageEntertainmentServices.MandatoryLuggage").
+		Preload("Routes.Route").
+		Preload("Facilities.Facility").
+		Preload("Instructors.Instructor.User").
+		Preload("MandatoryLuggages.MandatoryLuggage").
 		Where(entertainmentService).
 		Find(&entertainment_services).
 		Count(&totalRows).Error
@@ -53,10 +53,10 @@ func (r entertainmentServiceRepository) Find(ID string) (models.EntertainmentSer
 	var entertainment_services models.EntertainmentService
 	err := r.db.DB.
 		Preload("EntertainmentCategory").
-		Preload("Routes").
-		Preload("EntertainmentServiceFacilities.Facility").
-		Preload("EntertainmentServiceInstructors.Instructor.User").
-		Preload("MandatoryLuggageEntertainmentServices.MandatoryLuggage").
+		Preload("Routes.Route").
+		Preload("Facilities.Facility").
+		Preload("Instructors.Instructor.User").
+		Preload("MandatoryLuggages.MandatoryLuggage").
 		Debug().
 		Model(&models.EntertainmentService{}).
 		Where("id = ?", ID).
@@ -68,10 +68,10 @@ func (r entertainmentServiceRepository) Find(ID string) (models.EntertainmentSer
 func (r entertainmentServiceRepository) Save(entertainmentService models.EntertainmentService) (models.EntertainmentService, error) {
 	err := r.db.DB.
 		Preload("EntertainmentCategory").
-		Preload("Routes").
-		Preload("EntertainmentServiceFacilities.Facility").
-		Preload("EntertainmentServiceInstructors.Instructor.User").
-		Preload("MandatoryLuggageEntertainmentServices.MandatoryLuggage").
+		Preload("Routes.Route").
+		Preload("Facilities.Facility").
+		Preload("Instructors.Instructor.User").
+		Preload("MandatoryLuggages.MandatoryLuggage").
 		Create(&entertainmentService).Error
 
 	if err != nil {
@@ -85,10 +85,10 @@ func (r entertainmentServiceRepository) Save(entertainmentService models.Enterta
 func (r *entertainmentServiceRepository) Update(entertainmentService models.EntertainmentService) (models.EntertainmentService, error) {
 	err := r.db.DB.
 		Preload("EntertainmentCategory").
-		Preload("Routes").
-		Preload("EntertainmentServiceFacilities.Facility").
-		Preload("EntertainmentServiceInstructors.Instructor.User").
-		Preload("MandatoryLuggageEntertainmentServices.MandatoryLuggage").
+		Preload("Routes.Route").
+		Preload("Facilities.Facility").
+		Preload("Instructors.Instructor.User").
+		Preload("MandatoryLuggages.MandatoryLuggage").
 		Save(&entertainmentService).Error
 
 	if err != nil {
@@ -102,10 +102,10 @@ func (r *entertainmentServiceRepository) Update(entertainmentService models.Ente
 func (r entertainmentServiceRepository) Delete(entertainmentService models.EntertainmentService) (models.EntertainmentService, error) {
 	err := r.db.DB.
 		Preload("EntertainmentCategory").
-		Preload("Routes").
-		Preload("EntertainmentServiceFacilities.Facility").
-		Preload("EntertainmentServiceInstructors.Instructor.User").
-		Preload("MandatoryLuggageEntertainmentServices.MandatoryLuggage").
+		Preload("Routes.Route").
+		Preload("Facilities.Facility").
+		Preload("Instructors.Instructor.User").
+		Preload("MandatoryLuggages.MandatoryLuggage").
 		Delete(&entertainmentService).Error
 
 	if err != nil {

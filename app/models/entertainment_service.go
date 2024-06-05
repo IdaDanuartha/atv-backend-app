@@ -13,10 +13,10 @@ type EntertainmentService struct {
 	// RouteID string `gorm:"type:varchar(100);primaryKey;foreignKey:RouteID" json:"route_id,omitempty"`
 	// Route Route `gorm:"foreignKey:RouteID" json:"route"`
 
-	Routes                                []Route                                `gorm:"many2many:entertainment_service_routes;" json:"routes"`
-	EntertainmentServiceFacilities        []EntertainmentServiceFacility         `gorm:"foreignKey:EntertainmentServiceID" json:"facilities"`
-	EntertainmentServiceInstructors       []EntertainmentServiceInstructor       `gorm:"foreignKey:EntertainmentServiceID" json:"instructors"`
-	MandatoryLuggageEntertainmentServices []MandatoryLuggageEntertainmentService `gorm:"foreignKey:EntertainmentServiceID" json:"entertainment_services"`
+	Routes            []EntertainmentServiceRoute            `gorm:"foreignKey:EntertainmentServiceID;" json:"routes"`
+	Facilities        []EntertainmentServiceFacility         `gorm:"foreignKey:EntertainmentServiceID" json:"facilities"`
+	Instructors       []EntertainmentServiceInstructor       `gorm:"foreignKey:EntertainmentServiceID" json:"instructors"`
+	MandatoryLuggages []MandatoryLuggageEntertainmentService `gorm:"foreignKey:EntertainmentServiceID" json:"mandatory_luggages"`
 }
 
 // TableName method sets table name for Entertainment Service model

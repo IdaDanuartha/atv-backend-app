@@ -1,7 +1,6 @@
 package formatters
 
 import (
-	"github.com/IdaDanuartha/atv-backend-app/app/enums"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
 )
 
@@ -24,11 +23,12 @@ func FormatAuthCustomer(customer models.Customer, token string) CustomerFormatte
 }
 
 type AuthFormatter struct {
-	ID       string     `json:"id"`
-	Username string     `json:"username"`
-	Email    string     `json:"email"`
-	Token    string     `json:"token,omitempty"`
-	Role     enums.Role `json:"role"`
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Token    string `json:"token,omitempty"`
+	// Role     enums.Role `json:"role"`
+	Role string `json:"role"`
 }
 
 type UserFormatter struct {
