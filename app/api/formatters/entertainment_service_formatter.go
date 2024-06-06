@@ -25,11 +25,6 @@ func FormatEntertainmentService(entertainmentService models.EntertainmentService
 	for _, route := range entertainmentService.Routes {
 		newRoute := models.EntertainmentServiceRoute{}
 
-		newRoute.ID = route.ID
-		newRoute.CreatedAt = route.CreatedAt
-		newRoute.UpdatedAt = route.UpdatedAt
-		newRoute.DeletedAt = route.DeletedAt
-
 		newRoute.Route.ID = route.Route.ID
 		newRoute.Route.Name = route.Route.Name
 		newRoute.Route.Address = route.Route.Address
@@ -47,11 +42,6 @@ func FormatEntertainmentService(entertainmentService models.EntertainmentService
 	for _, facility := range entertainmentService.Facilities {
 		newFacility := models.EntertainmentServiceFacility{}
 
-		newFacility.ID = facility.ID
-		newFacility.CreatedAt = facility.CreatedAt
-		newFacility.UpdatedAt = facility.UpdatedAt
-		newFacility.DeletedAt = facility.DeletedAt
-
 		newFacility.Facility.ID = facility.Facility.ID
 		newFacility.Facility.Name = facility.Facility.Name
 		newFacility.Facility.CreatedAt = facility.Facility.CreatedAt
@@ -67,11 +57,6 @@ func FormatEntertainmentService(entertainmentService models.EntertainmentService
 
 	for _, instructor := range entertainmentService.Instructors {
 		newInstructor := models.EntertainmentServiceInstructor{}
-
-		newInstructor.ID = instructor.ID
-		newInstructor.CreatedAt = instructor.CreatedAt
-		newInstructor.UpdatedAt = instructor.UpdatedAt
-		newInstructor.DeletedAt = instructor.DeletedAt
 
 		newInstructor.Instructor.ID = instructor.Instructor.ID
 		newInstructor.Instructor.EmployeeCode = instructor.Instructor.EmployeeCode
@@ -98,11 +83,6 @@ func FormatEntertainmentService(entertainmentService models.EntertainmentService
 
 	for _, mandatoryLuggage := range entertainmentService.MandatoryLuggages {
 		newMandatoryLuggage := models.MandatoryLuggageEntertainmentService{}
-
-		newMandatoryLuggage.ID = mandatoryLuggage.ID
-		newMandatoryLuggage.CreatedAt = mandatoryLuggage.CreatedAt
-		newMandatoryLuggage.UpdatedAt = mandatoryLuggage.UpdatedAt
-		newMandatoryLuggage.DeletedAt = mandatoryLuggage.DeletedAt
 
 		newMandatoryLuggage.MandatoryLuggage.ID = mandatoryLuggage.MandatoryLuggage.ID
 		newMandatoryLuggage.MandatoryLuggage.Name = mandatoryLuggage.MandatoryLuggage.Name

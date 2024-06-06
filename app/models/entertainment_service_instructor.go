@@ -2,7 +2,6 @@ package models
 
 // Entertainment Service Instructor Model
 type EntertainmentServiceInstructor struct {
-	Base
 	EntertainmentServiceID string     `gorm:"type:varchar(100);primaryKey;foreignKey:EntertainmentServiceID" json:"entertainment_service_id,omitempty"`
 	Instructor             Instructor `gorm:"foreignKey:InstructorID" json:"instructor"`
 	InstructorID           string     `gorm:"type:varchar(100);primaryKey;foreignKey:InstructorID" json:"instructor_id,omitempty"`
