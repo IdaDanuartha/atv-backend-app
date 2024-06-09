@@ -99,7 +99,7 @@ func (h *StaffController) AddStaff(ctx *gin.Context) {
 // UpdateStaff : get update by id
 func (h *StaffController) UpdateStaff(ctx *gin.Context) {
 	var inputID inputs.GetStaffDetailInput
-	customizer := g.Validator(inputs.StaffInput{})
+	customizer := g.Validator(inputs.EditStaffInput{})
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
@@ -108,7 +108,7 @@ func (h *StaffController) UpdateStaff(ctx *gin.Context) {
 		return
 	}
 
-	var inputData inputs.StaffInput
+	var inputData inputs.EditStaffInput
 
 	err = ctx.ShouldBindJSON(&inputData)
 	if err != nil {

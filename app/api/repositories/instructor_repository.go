@@ -11,6 +11,7 @@ import (
 type InstructorRepository interface {
 	FindAll(instructor models.Instructor, search string) ([]models.Instructor, int64, error)
 	Find(ID string) (models.Instructor, error)
+	FindByUserID(userID string) (models.Instructor, error)
 	Save(instructor models.Instructor) (models.Instructor, error)
 	Update(instructor models.Instructor) (models.Instructor, error)
 	Delete(instructor models.Instructor) (models.Instructor, error)
@@ -55,6 +56,18 @@ func (r instructorRepository) Find(ID string) (models.Instructor, error) {
 		Debug().
 		Model(&models.Instructor{}).
 		Where("id = ?", ID).
+		Find(&instructors).Error
+	return instructors, err
+}
+
+// FindByUserID -> Method for fetching Instructor by user id
+func (r instructorRepository) FindByUserID(userID string) (models.Instructor, error) {
+	var instructors models.Instructor
+	err := r.db.DB.
+		Preload("User").
+		Debug().
+		Model(&models.Instructor{}).
+		Where("user_id = ?", userID).
 		Find(&instructors).Error
 	return instructors, err
 }

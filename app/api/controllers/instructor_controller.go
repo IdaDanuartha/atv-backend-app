@@ -98,7 +98,7 @@ func (h *InstructorController) AddInstructor(ctx *gin.Context) {
 // UpdateInstructor : get update by id
 func (h *InstructorController) UpdateInstructor(ctx *gin.Context) {
 	var inputID inputs.GetInstructorDetailInput
-	customizer := g.Validator(inputs.InstructorInput{})
+	customizer := g.Validator(inputs.EditInstructorInput{})
 
 	err := ctx.ShouldBindUri(&inputID)
 	if err != nil {
@@ -107,7 +107,7 @@ func (h *InstructorController) UpdateInstructor(ctx *gin.Context) {
 		return
 	}
 
-	var inputData inputs.InstructorInput
+	var inputData inputs.EditInstructorInput
 
 	err = ctx.ShouldBindJSON(&inputData)
 	if err != nil {

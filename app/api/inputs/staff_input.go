@@ -11,3 +11,11 @@ type StaffInput struct {
 	Email        string `json:"email" binding:"required,email"`
 	Password     string `json:"password" binding:"required"`
 }
+
+type EditStaffInput struct {
+	Name         string `json:"name" binding:"required"`
+	EmployeeCode string `json:"employee_code" binding:"required"`
+	Username     string `json:"username" binding:"required"`
+	Email        string `json:"email" binding:"required,email"`
+	Password     string `json:"password"`
+}

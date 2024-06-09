@@ -12,7 +12,7 @@ type StaffService interface {
 	FindAll(model models.Staff, search string) ([]models.Staff, int64, error)
 	Find(input inputs.GetStaffDetailInput) (models.Staff, error)
 	Save(input inputs.StaffInput) (models.Staff, error)
-	Update(inputID inputs.GetStaffDetailInput, input inputs.StaffInput) (models.Staff, error)
+	Update(inputID inputs.GetStaffDetailInput, input inputs.EditStaffInput) (models.Staff, error)
 	Delete(inputID inputs.GetStaffDetailInput) (models.Staff, error)
 }
 
@@ -75,7 +75,7 @@ func (s staffService) Save(input inputs.StaffInput) (models.Staff, error) {
 }
 
 // Update -> calls Staff repo update method
-func (s staffService) Update(inputID inputs.GetStaffDetailInput, input inputs.StaffInput) (models.Staff, error) {
+func (s staffService) Update(inputID inputs.GetStaffDetailInput, input inputs.EditStaffInput) (models.Staff, error) {
 	staff, err := s.repository.Find(inputID.ID)
 	if err != nil {
 		return staff, err

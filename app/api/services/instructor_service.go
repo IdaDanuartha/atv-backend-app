@@ -11,8 +11,9 @@ import (
 type InstructorService interface {
 	FindAll(model models.Instructor, search string) ([]models.Instructor, int64, error)
 	Find(input inputs.GetInstructorDetailInput) (models.Instructor, error)
+	FindByUserID(input inputs.GetInstructorDetailInput) (models.Instructor, error)
 	Save(input inputs.InstructorInput) (models.Instructor, error)
-	Update(inputID inputs.GetInstructorDetailInput, input inputs.InstructorInput) (models.Instructor, error)
+	Update(inputID inputs.GetInstructorDetailInput, input inputs.EditInstructorInput) (models.Instructor, error)
 	Delete(inputID inputs.GetInstructorDetailInput) (models.Instructor, error)
 }
 
@@ -38,6 +39,17 @@ func (s instructorService) FindAll(model models.Instructor, search string) ([]mo
 
 // Find -> calls Instructor repo find method
 func (s instructorService) Find(input inputs.GetInstructorDetailInput) (models.Instructor, error) {
+	instructor, err := s.repository.Find(input.ID)
+
+	if err != nil {
+		return instructor, err
+	}
+
+	return instructor, nil
+}
+
+// FindByUserID -> calls Instructor repo find method
+func (s instructorService) FindByUserID(input inputs.GetInstructorDetailInput) (models.Instructor, error) {
 	instructor, err := s.repository.Find(input.ID)
 
 	if err != nil {
@@ -75,7 +87,7 @@ func (s instructorService) Save(input inputs.InstructorInput) (models.Instructor
 }
 
 // Update -> calls Instructor repo update method
-func (s instructorService) Update(inputID inputs.GetInstructorDetailInput, input inputs.InstructorInput) (models.Instructor, error) {
+func (s instructorService) Update(inputID inputs.GetInstructorDetailInput, input inputs.EditInstructorInput) (models.Instructor, error) {
 	instructor, err := s.repository.Find(inputID.ID)
 	if err != nil {
 		return instructor, err

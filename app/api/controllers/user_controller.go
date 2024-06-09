@@ -99,6 +99,16 @@ func (h *UserController) Login(c *gin.Context) {
 
 	formatter := formatters.FormatAuth(loggedinUser, token)
 
+	if loggedinUser.Role == "admin" {
+		formatter = formatters.FormatAuthAdmin(loggedinUser, token)
+	} else if loggedinUser.Role == "staff" {
+		formatter = formatters.FormatAuthStaff(loggedinUser, token)
+	} else if loggedinUser.Role == "instructor" {
+		formatter = formatters.FormatAuthInstructor(loggedinUser, token)
+	} else if loggedinUser.Role == "customer" {
+		formatter = formatters.FormatAuthCustomer(loggedinUser, token)
+	}
+ 
 	response := utils.APIResponse("Successfuly loggedin", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusOK, response)
