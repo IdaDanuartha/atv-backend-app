@@ -2,9 +2,9 @@ package models
 
 // Entertainment Service Instructor Model
 type EntertainmentServiceInstructor struct {
-	EntertainmentServiceID string     `gorm:"type:varchar(100);primaryKey;foreignKey:EntertainmentServiceID" json:"entertainment_service_id,omitempty"`
+	EntertainmentServiceID string     `gorm:"type:varchar(100);foreignKey:EntertainmentServiceID" json:"entertainment_service_id,omitempty"`
 	Instructor             Instructor `gorm:"foreignKey:InstructorID" json:"instructor"`
-	InstructorID           string     `gorm:"type:varchar(100);primaryKey;foreignKey:InstructorID" json:"instructor_id,omitempty"`
+	InstructorID           string     `gorm:"type:varchar(100);foreignKey:InstructorID" json:"instructor_id,omitempty"`
 }
 
 // TableName method sets table name for Entertainment Service Instructor model

@@ -96,6 +96,38 @@ func (r entertainmentServiceRepository) Save(entertainmentService models.Enterta
 // Update -> Method for updating Entertainment Service
 func (r *entertainmentServiceRepository) Update(entertainmentService models.EntertainmentService) (models.EntertainmentService, error) {
 	err := r.db.DB.
+		Where("entertainment_service_id = ?", entertainmentService.ID).
+		Delete(&models.EntertainmentServiceRoute{}).Error
+
+	if err != nil {
+		return entertainmentService, err
+	}
+
+	err = r.db.DB.
+		Where("entertainment_service_id = ?", entertainmentService.ID).
+		Delete(&models.EntertainmentServiceFacility{}).Error
+
+	if err != nil {
+		return entertainmentService, err
+	}
+
+	err = r.db.DB.
+		Where("entertainment_service_id = ?", entertainmentService.ID).
+		Delete(&models.EntertainmentServiceInstructor{}).Error
+
+	if err != nil {
+		return entertainmentService, err
+	}
+
+	err = r.db.DB.
+		Where("entertainment_service_id = ?", entertainmentService.ID).
+		Delete(&models.MandatoryLuggageEntertainmentService{}).Error
+
+	if err != nil {
+		return entertainmentService, err
+	}
+
+	err = r.db.DB.
 		Preload("EntertainmentCategory").
 		Preload("Routes.Route").
 		Preload("Facilities.Facility").
