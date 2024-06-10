@@ -5,18 +5,18 @@ import (
 )
 
 type AdminFormatter struct {
-	ID          string      `json:"id"`
-	Name        string      `json:"name"`
-	Token       string      `json:"token,omitempty"`
-	User        models.User `json:"user"`
+	ID    string      `json:"id"`
+	Name  string      `json:"name"`
+	Token string      `json:"token,omitempty"`
+	User  models.User `json:"user"`
 }
 
 func FormatAuthAdmin(admin models.Admin, token string) AdminFormatter {
 	formatter := AdminFormatter{
-		ID:          admin.ID,
-		Name:        admin.Name,
-		Token:       token,
-		User:        admin.User,
+		ID:    admin.ID,
+		Name:  admin.Name,
+		Token: token,
+		User:  admin.User,
 	}
 
 	return formatter

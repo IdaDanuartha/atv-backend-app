@@ -11,6 +11,7 @@ func FormatBooking(booking models.Booking) models.Booking {
 	bookingFormatter.Name = booking.Name
 	bookingFormatter.PhoneNumber = booking.PhoneNumber
 	bookingFormatter.PaymentMethod = booking.PaymentMethod
+	bookingFormatter.Date = booking.Date
 	bookingFormatter.TotalPrice = booking.TotalPrice
 	bookingFormatter.TotalPay = booking.TotalPay
 	bookingFormatter.TotalChange = booking.TotalChange

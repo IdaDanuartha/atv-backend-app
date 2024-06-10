@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 // Entertainment Booking Model
 type Booking struct {
 	Base
@@ -8,6 +10,7 @@ type Booking struct {
 	Name           string          `gorm:"size:100" json:"name"`
 	PhoneNumber    string          `gorm:"size:15" json:"phone_number"`
 	PaymentMethod  string          `gorm:"size:50" json:"payment_method"`
+	Date           time.Time       `json:"date"`
 	TotalPrice     int32           `json:"total_price"`
 	TotalPay       int32           `json:"total_pay"`
 	TotalChange    int32           `json:"total_change"`

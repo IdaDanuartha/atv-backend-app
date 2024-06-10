@@ -69,10 +69,10 @@ func (s entertainmentServiceService) Save(input inputs.EntertainmentServiceInput
 	entertainmentService.Name = input.Name
 	entertainmentService.Price = input.Price
 	entertainmentService.EntertainmentCategoryID = input.EntertainmentCategoryID
-	entertainmentService.Routes = input.Routes
-	entertainmentService.Facilities = input.Facilities
-	entertainmentService.Instructors = input.Instructors
-	entertainmentService.MandatoryLuggages = input.MandatoryLuggages
+	//entertainmentService.Routes = input.Routes
+	//entertainmentService.Facilities = input.Facilities
+	//entertainmentService.Instructors = input.Instructors
+	//entertainmentService.MandatoryLuggages = input.MandatoryLuggages
 
 	newEntertainmentService, err := s.repository.Save(entertainmentService)
 	if err != nil {

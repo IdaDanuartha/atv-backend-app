@@ -97,33 +97,76 @@ func (h *UserController) Login(c *gin.Context) {
 		return
 	}
 
-	formatter := formatters.FormatAuth(loggedinUser, token)
-
 	if loggedinUser.Role == "admin" {
-		formatter = formatters.FormatAuthAdmin(loggedinUser, token)
-	} else if loggedinUser.Role == "staff" {
-		formatter = formatters.FormatAuthStaff(loggedinUser, token)
-	} else if loggedinUser.Role == "instructor" {
-		formatter = formatters.FormatAuthInstructor(loggedinUser, token)
-	} else if loggedinUser.Role == "customer" {
-		formatter = formatters.FormatAuthCustomer(loggedinUser, token)
-	}
- 
-	response := utils.APIResponse("Successfuly loggedin", http.StatusOK, "success", formatter)
+		getAdmin, _ := h.userService.GetAdminByUserID(loggedinUser.ID)
 
-	c.JSON(http.StatusOK, response)
+		formatter := formatters.FormatAuthAdmin(getAdmin, token)
+
+		response := utils.APIResponse("Successfuly loggedin", http.StatusOK, "success", formatter)
+		c.JSON(http.StatusOK, response)
+	} else if loggedinUser.Role == "staff" {
+		getStaff, _ := h.userService.GetStaffByUserID(loggedinUser.ID)
+
+		formatter := formatters.FormatAuthStaff(getStaff, token)
+
+		response := utils.APIResponse("Successfuly loggedin", http.StatusOK, "success", formatter)
+		c.JSON(http.StatusOK, response)
+	} else if loggedinUser.Role == "instructor" {
+		getInstructor, _ := h.userService.GetInstructorByUserID(loggedinUser.ID)
+
+		formatter := formatters.FormatAuthInstructor(getInstructor, token)
+
+		response := utils.APIResponse("Successfuly loggedin", http.StatusOK, "success", formatter)
+		c.JSON(http.StatusOK, response)
+	} else if loggedinUser.Role == "customer" {
+		getCustomer, _ := h.userService.GetCustomerByUserID(loggedinUser.ID)
+
+		formatter := formatters.FormatAuthCustomer(getCustomer, token)
+
+		response := utils.APIResponse("Successfuly loggedin", http.StatusOK, "success", formatter)
+		c.JSON(http.StatusOK, response)
+	} else {
+		response := utils.APIResponse("Logged in failed", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusOK, response)
+	}
 }
 
 func (h *UserController) FetchUser(c *gin.Context) {
 
 	currentUser := c.MustGet("currentUser").(models.User)
 
-	formatter := formatters.FormatAuth(currentUser, "")
+	if currentUser.Role == "admin" {
+		getAdmin, _ := h.userService.GetAdminByUserID(currentUser.ID)
 
-	response := utils.APIResponse("Successfuly fetch user data", http.StatusOK, "success", formatter)
+		formatter := formatters.FormatAuthAdmin(getAdmin, "")
 
-	c.JSON(http.StatusOK, response)
+		response := utils.APIResponse("Successfuly fetch user data", http.StatusOK, "success", formatter)
+		c.JSON(http.StatusOK, response)
+	} else if currentUser.Role == "staff" {
+		getStaff, _ := h.userService.GetStaffByUserID(currentUser.ID)
 
+		formatter := formatters.FormatAuthStaff(getStaff, "")
+
+		response := utils.APIResponse("Successfuly fetch user data", http.StatusOK, "success", formatter)
+		c.JSON(http.StatusOK, response)
+	} else if currentUser.Role == "instructor" {
+		getInstructor, _ := h.userService.GetInstructorByUserID(currentUser.ID)
+
+		formatter := formatters.FormatAuthInstructor(getInstructor, "")
+
+		response := utils.APIResponse("Successfuly fetch user data", http.StatusOK, "success", formatter)
+		c.JSON(http.StatusOK, response)
+	} else if currentUser.Role == "customer" {
+		getCustomer, _ := h.userService.GetCustomerByUserID(currentUser.ID)
+
+		formatter := formatters.FormatAuthCustomer(getCustomer, "")
+
+		response := utils.APIResponse("Successfuly fetch user data", http.StatusOK, "success", formatter)
+		c.JSON(http.StatusOK, response)
+	} else {
+		response := utils.APIResponse("Failed to fetch user data", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusOK, response)
+	}
 }
 
 func (h *UserController) UploadAvatar(c *gin.Context) {
@@ -168,7 +211,7 @@ func (h *UserController) UploadAvatar(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, response)
 			return
 		}
-	} 
+	}
 
 	path := fmt.Sprintf("uploads/users/%s-%s", userID, file.Filename)
 

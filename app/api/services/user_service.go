@@ -15,6 +15,10 @@ type UserService interface {
 	RegisterUser(input inputs.RegisterInput) (models.Customer, error)
 	Login(input inputs.LoginInput) (models.User, error)
 	GetUserByID(ID string) (models.User, error)
+	GetAdminByUserID(ID string) (models.Admin, error)
+	GetStaffByUserID(ID string) (models.Staff, error)
+	GetInstructorByUserID(ID string) (models.Instructor, error)
+	GetCustomerByUserID(ID string) (models.Customer, error)
 	SaveAvatar(ID string, fileLocation string) (models.User, error)
 	UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Context) (models.User, error)
 }
@@ -79,6 +83,58 @@ func (s *userService) GetUserByID(ID string) (models.User, error) {
 
 	if user.ID == "" {
 		return models.User{}, errors.New("no user found on with that ID")
+	}
+
+	return user, nil
+}
+
+func (s *userService) GetAdminByUserID(ID string) (models.Admin, error) {
+	user, err := s.repository.FindAdminByUserID(ID)
+	if err != nil {
+		return user, err
+	}
+
+	if user.ID == "" {
+		return models.Admin{}, errors.New("no admin found on with that ID")
+	}
+
+	return user, nil
+}
+
+func (s *userService) GetStaffByUserID(ID string) (models.Staff, error) {
+	user, err := s.repository.FindStaffByUserID(ID)
+	if err != nil {
+		return user, err
+	}
+
+	if user.ID == "" {
+		return models.Staff{}, errors.New("no staff found on with that ID")
+	}
+
+	return user, nil
+}
+
+func (s *userService) GetInstructorByUserID(ID string) (models.Instructor, error) {
+	user, err := s.repository.FindInstructorByUserID(ID)
+	if err != nil {
+		return user, err
+	}
+
+	if user.ID == "" {
+		return models.Instructor{}, errors.New("no instructor found on with that ID")
+	}
+
+	return user, nil
+}
+
+func (s *userService) GetCustomerByUserID(ID string) (models.Customer, error) {
+	user, err := s.repository.FindCustomerByUserID(ID)
+	if err != nil {
+		return user, err
+	}
+
+	if user.ID == "" {
+		return models.Customer{}, errors.New("no customer found on with that ID")
 	}
 
 	return user, nil

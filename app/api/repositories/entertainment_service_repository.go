@@ -10,7 +10,7 @@ type EntertainmentServiceRepository interface {
 	Find(ID string) (models.EntertainmentService, error)
 	Save(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
 	Update(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
-	DeleteRoute(entertainmentServiceRoute models.EntertainmentServiceRoute) (error)
+	//DeleteRoute(entertainmentServiceRoute models.EntertainmentServiceRoute) error
 	Delete(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
 }
 
@@ -83,15 +83,15 @@ func (r entertainmentServiceRepository) Save(entertainmentService models.Enterta
 }
 
 // Delete -> Method for deleting Entertainment Service Route
-func (r entertainmentServiceRepository) DeleteRoute(entertainmentServiceRoute models.EntertainmentServiceRoute) (error) {
-	err := r.db.DB.Delete(&entertainmentServiceRoute).Error
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
+//func (r entertainmentServiceRepository) DeleteRoute(entertainmentServiceRoute models.EntertainmentServiceRoute) (error) {
+//	err := r.db.DB.Delete(&entertainmentServiceRoute).Error
+//
+//	if err != nil {
+//		return err
+//	}
+//
+//	return nil
+//}
 
 // Update -> Method for updating Entertainment Service
 func (r *entertainmentServiceRepository) Update(entertainmentService models.EntertainmentService) (models.EntertainmentService, error) {

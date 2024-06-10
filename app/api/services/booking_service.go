@@ -53,6 +53,7 @@ func (s bookingService) Save(input inputs.BookingInput) (models.Booking, error) 
 	booking.Name = input.Name
 	booking.PhoneNumber = input.PhoneNumber
 	booking.PaymentMethod = input.PaymentMethod
+	booking.Date = input.Date
 	booking.TotalPrice = input.TotalPrice
 	booking.TotalPay = input.TotalPay
 	booking.TotalChange = input.TotalChange
@@ -76,6 +77,7 @@ func (s bookingService) Update(inputID inputs.GetBookingDetailInput, input input
 	booking.Name = input.Name
 	booking.PhoneNumber = input.PhoneNumber
 	booking.PaymentMethod = input.PaymentMethod
+	booking.Date = input.Date
 	booking.TotalPrice = input.TotalPrice
 	booking.TotalPay = input.TotalPay
 	booking.TotalChange = input.TotalChange

@@ -14,6 +14,10 @@ type UserRepository interface {
 	FindByEmail(email string) (models.User, error)
 	FindByUsername(username string) (models.User, error)
 	FindByID(ID string) (models.User, error)
+	FindAdminByUserID(ID string) (models.Admin, error)
+	FindStaffByUserID(ID string) (models.Staff, error)
+	FindInstructorByUserID(ID string) (models.Instructor, error)
+	FindCustomerByUserID(ID string) (models.Customer, error)
 	Update(user models.User) (models.User, error)
 }
 
@@ -81,6 +85,50 @@ func (r *userRepository) FindByID(ID string) (models.User, error) {
 	var user models.User
 
 	err := r.db.DB.Where("id = ?", ID).Find(&user).Error
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (r *userRepository) FindAdminByUserID(ID string) (models.Admin, error) {
+	var user models.Admin
+
+	err := r.db.DB.Preload("User").Where("user_id = ?", ID).Find(&user).Error
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (r *userRepository) FindStaffByUserID(ID string) (models.Staff, error) {
+	var user models.Staff
+
+	err := r.db.DB.Preload("User").Where("user_id = ?", ID).Find(&user).Error
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (r *userRepository) FindInstructorByUserID(ID string) (models.Instructor, error) {
+	var user models.Instructor
+
+	err := r.db.DB.Preload("User").Where("user_id = ?", ID).Find(&user).Error
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (r *userRepository) FindCustomerByUserID(ID string) (models.Customer, error) {
+	var user models.Customer
+
+	err := r.db.DB.Preload("User").Where("user_id = ?", ID).Find(&user).Error
 	if err != nil {
 		return user, err
 	}
