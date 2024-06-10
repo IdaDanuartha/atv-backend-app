@@ -7,11 +7,8 @@ type EntertainmentService struct {
 	Price     int32   `json:"price"`
 	ImagePath *string `gorm:"size:150;" json:"image_path"`
 
-	EntertainmentCategoryID string                `gorm:"type:varchar(100);primaryKey;foreignKey:EntertainmentCategoryID" json:"entertainment_category_id,omitempty"`
+	EntertainmentCategoryID string                `gorm:"type:varchar(100);foreignKey:EntertainmentCategoryID" json:"entertainment_category_id,omitempty"`
 	EntertainmentCategory   EntertainmentCategory `gorm:"foreignKey:EntertainmentCategoryID" json:"entertainment_category"`
-
-	// RouteID string `gorm:"type:varchar(100);primaryKey;foreignKey:RouteID" json:"route_id,omitempty"`
-	// Route Route `gorm:"foreignKey:RouteID" json:"route"`
 
 	Routes            []EntertainmentServiceRoute            `gorm:"foreignKey:EntertainmentServiceID;" json:"routes"`
 	Facilities        []EntertainmentServiceFacility         `gorm:"foreignKey:EntertainmentServiceID" json:"facilities"`
