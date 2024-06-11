@@ -164,9 +164,45 @@ func (s *userService) UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Conte
 		return user, err
 	}
 
+	if user.Role == "admin" {
+		admin, _ := s.repository.FindAdminByUserID(userID)
+		admin.Name = input.Name
+
+		_, err := s.repository.UpdateAdmin(admin)
+		if err != nil {
+			return user, err
+		}
+	} else if user.Role == "staff" {
+		staff, _ := s.repository.FindStaffByUserID(userID)
+		staff.Name = input.Name
+		staff.EmployeeCode = input.EmployeeCode
+
+		_, err := s.repository.UpdateStaff(staff)
+		if err != nil {
+			return user, err
+		}
+	} else if user.Role == "instructor" {
+		instructor, _ := s.repository.FindInstructorByUserID(userID)
+		instructor.Name = input.Name
+		instructor.EmployeeCode = input.EmployeeCode
+
+		_, err := s.repository.UpdateInstructor(instructor)
+		if err != nil {
+			return user, err
+		}
+	} else if user.Role == "customer" {
+		customer, _ := s.repository.FindCustomerByUserID(userID)
+		customer.Name = input.Name
+		customer.PhoneNumber = input.PhoneNumber
+
+		_, err := s.repository.UpdateCustomer(customer)
+		if err != nil {
+			return user, err
+		}
+	}
+
 	user.Username = input.Username
 	user.Email = input.Email
-	user.Role = input.Role
 
 	updatedUser, err := s.repository.Update(user)
 	if err != nil {

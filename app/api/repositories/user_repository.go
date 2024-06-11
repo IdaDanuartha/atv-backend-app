@@ -19,6 +19,10 @@ type UserRepository interface {
 	FindInstructorByUserID(ID string) (models.Instructor, error)
 	FindCustomerByUserID(ID string) (models.Customer, error)
 	Update(user models.User) (models.User, error)
+	UpdateAdmin(admin models.Admin) (models.Admin, error)
+	UpdateStaff(staff models.Staff) (models.Staff, error)
+	UpdateInstructor(instructor models.Instructor) (models.Instructor, error)
+	UpdateCustomer(customer models.Customer) (models.Customer, error)
 }
 
 type userRepository struct {
@@ -143,63 +147,45 @@ func (r *userRepository) Update(user models.User) (models.User, error) {
 		return user, err
 	}
 
-	// if user.Role == enums.Admin {
-	// 	var admin models.Admin
-
-	// 	err := r.db.DB.Where("user_id =?", user.ID).Find(&admin).Error
-	// 	if err != nil {
-	// 		return user, err
-	// 	}
-
-	// 	admin.UserID = user.ID
-
-	// 	err = r.db.DB.Save(&admin).Error
-	// 	if err != nil {
-	// 		return user, err
-	// 	}
-	// } else if user.Role == enums.Staff {
-	// 	var staff models.Staff
-
-	// 	err := r.db.DB.Where("user_id =?", user.ID).Find(&staff).Error
-	// 	if err != nil {
-	// 		return user, err
-	// 	}
-
-	// 	staff.UserID = user.ID
-
-	// 	err = r.db.DB.Save(&staff).Error
-	// 	if err != nil {
-	// 		return user, err
-	// 	}
-	// } else if user.Role == enums.Instructor {
-	// 	var instructor models.Instructor
-
-	// 	err := r.db.DB.Where("user_id =?", user.ID).Find(&instructor).Error
-	// 	if err != nil {
-	// 		return user, err
-	// 	}
-
-	// 	instructor.UserID = user.ID
-
-	// 	err = r.db.DB.Save(&instructor).Error
-	// 	if err != nil {
-	// 		return user, err
-	// 	}
-	// } else if user.Role == enums.Customer {
-	// 	var customer models.Customer
-
-	// 	err := r.db.DB.Where("user_id =?", user.ID).Find(&customer).Error
-	// 	if err != nil {
-	// 		return user, err
-	// 	}
-
-	// 	customer.UserID = user.ID
-
-	// 	err = r.db.DB.Save(&customer).Error
-	// 	if err != nil {
-	// 		return user, err
-	// 	}
-	// }
-
 	return user, nil
+}
+
+func (r *userRepository) UpdateAdmin(admin models.Admin) (models.Admin, error) {
+	err := r.db.DB.Save(&admin).Error
+
+	if err != nil {
+		return admin, err
+	}
+
+	return admin, nil
+}
+
+func (r *userRepository) UpdateStaff(staff models.Staff) (models.Staff, error) {
+	err := r.db.DB.Save(&staff).Error
+
+	if err != nil {
+		return staff, err
+	}
+
+	return staff, nil
+}
+
+func (r *userRepository) UpdateInstructor(instructor models.Instructor) (models.Instructor, error) {
+	err := r.db.DB.Save(&instructor).Error
+
+	if err != nil {
+		return instructor, err
+	}
+
+	return instructor, nil
+}
+
+func (r *userRepository) UpdateCustomer(customer models.Customer) (models.Customer, error) {
+	err := r.db.DB.Save(&customer).Error
+
+	if err != nil {
+		return customer, err
+	}
+
+	return customer, nil
 }

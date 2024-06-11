@@ -258,13 +258,55 @@ func (h *UserController) UpdateProfile(ctx *gin.Context) {
 		return
 	}
 
-	updatedUser, err := h.userService.UpdateUser(inputData, ctx)
+	_, err = h.userService.UpdateUser(inputData, ctx)
 	if err != nil {
 		response := utils.APIResponse("Failed to update your profile", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	response := utils.APIResponse("Success to update your profile", http.StatusOK, "success", formatters.FormatUser(updatedUser))
+	response := utils.APIResponse("Successfully to update your profile", http.StatusOK, "success", nil)
 	ctx.JSON(http.StatusOK, response)
+	return
+
+	//getUser, err := h.userService.GetUserByID(updatedUser.ID)
+	//if err != nil {
+	//	response := utils.APIResponse("Failed to update your profile", http.StatusBadRequest, "error", err.Error())
+	//	ctx.JSON(http.StatusBadRequest, response)
+	//	return
+	//}
+	//
+	//if getUser.Role == "admin" {
+	//	getAdmin, _ := h.userService.GetAdminByUserID(getUser.ID)
+	//
+	//	formatter := formatters.FormatAuthAdmin(getAdmin, "")
+	//
+	//	response := utils.APIResponse("Success to update your profile", http.StatusOK, "success", formatter)
+	//	ctx.JSON(http.StatusOK, response)
+	//} else if getUser.Role == "staff" {
+	//	getStaff, _ := h.userService.GetStaffByUserID(getUser.ID)
+	//
+	//	formatter := formatters.FormatAuthStaff(getStaff, "")
+	//
+	//	response := utils.APIResponse("Success to update your profile", http.StatusOK, "success", formatter)
+	//	ctx.JSON(http.StatusOK, response)
+	//} else if getUser.Role == "instructor" {
+	//	getInstructor, _ := h.userService.GetInstructorByUserID(getUser.ID)
+	//
+	//	formatter := formatters.FormatAuthInstructor(getInstructor, "")
+	//
+	//	response := utils.APIResponse("Success to update your profile", http.StatusOK, "success", formatter)
+	//	ctx.JSON(http.StatusOK, response)
+	//} else if getUser.Role == "customer" {
+	//	getCustomer, _ := h.userService.GetCustomerByUserID(getUser.ID)
+	//
+	//	formatter := formatters.FormatAuthCustomer(getCustomer, "")
+	//
+	//	response := utils.APIResponse("Success to update your profile", http.StatusOK, "success", formatter)
+	//	ctx.JSON(http.StatusOK, response)
+	//} else {
+	//	response := utils.APIResponse("Failed to update user profile", http.StatusBadRequest, "error", nil)
+	//	ctx.JSON(http.StatusOK, response)
+	//}
+
 }

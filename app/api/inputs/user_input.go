@@ -13,10 +13,10 @@ type LoginInput struct {
 }
 
 type UpdateProfileInput struct {
-	Name     string `json:"name" binding:"required"`
-	Username string `json:"username" binding:"required"`
-	Email    string `json:"email" binding:"required,email"`
-	// Role        enums.Role `json:"role" binding:"required"`
-	Role        string  `json:"role" binding:"required"`
-	ProfilePath *string `json:"profile_path" binding:"omitempty"`
+	Name         string `json:"name" binding:"required"`
+	PhoneNumber  string `json:"phone_number"`
+	EmployeeCode string `json:"employee_code"`
+	Username     string `json:"username" binding:"required"`
+	Email        string `json:"email" binding:"required,email"`
+	//ProfilePath *string `json:"profile_path" binding:"omitempty"`
 }
