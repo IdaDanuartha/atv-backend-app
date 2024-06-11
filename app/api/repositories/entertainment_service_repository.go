@@ -6,11 +6,10 @@ import (
 )
 
 type EntertainmentServiceRepository interface {
-	FindAll(entertainmentService models.EntertainmentService, search string) ([]models.EntertainmentService, int64, error)
+	FindAll(entertainmentService models.EntertainmentService, search string, currentPage int, pageSize int) ([]models.EntertainmentService, int64, int, error)
 	Find(ID string) (models.EntertainmentService, error)
 	Save(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
 	Update(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
-	//DeleteRoute(entertainmentServiceRoute models.EntertainmentServiceRoute) error
 	Delete(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
 }
 
@@ -24,29 +23,49 @@ func NewEntertainmentServiceRepository(db config.Database) entertainmentServiceR
 }
 
 // FindAll -> Method for fetching all Entertainment Service from database
-func (r entertainmentServiceRepository) FindAll(entertainmentService models.EntertainmentService, search string) ([]models.EntertainmentService, int64, error) {
+func (r entertainmentServiceRepository) FindAll(entertainmentService models.EntertainmentService, search string, currentPage int, pageSize int) ([]models.EntertainmentService, int64, int, error) {
 	var entertainment_services []models.EntertainmentService
 	var totalRows int64 = 0
 
-	queryBuider := r.db.DB.Order("created_at desc").Model(&models.EntertainmentService{})
+	queryBuilder := r.db.DB.Order("created_at desc").Model(&models.EntertainmentService{})
 
 	// Search parameter
 	if search != "" {
 		querySearch := "%" + search + "%"
-		queryBuider = queryBuider.Where(
+		queryBuilder = queryBuilder.Where(
 			r.db.DB.Where("entertainment_services.name LIKE ? ", querySearch))
 	}
 
-	err := queryBuider.
-		Preload("EntertainmentCategory").
-		Preload("Routes.Route").
-		Preload("Facilities.Facility").
-		Preload("Instructors.Instructor.User").
-		Preload("MandatoryLuggages.MandatoryLuggage").
-		Where(entertainmentService).
-		Find(&entertainment_services).
-		Count(&totalRows).Error
-	return entertainment_services, totalRows, err
+	if pageSize > 0 {
+		// count the total number of rows
+		err := queryBuilder.
+			Where(entertainmentService).
+			Count(&totalRows).Error
+
+		// Apply offset and limit to fetch paginated results
+		err = queryBuilder.
+			Preload("EntertainmentCategory").
+			Preload("Routes.Route").
+			Preload("Facilities.Facility").
+			Preload("Instructors.Instructor.User").
+			Preload("MandatoryLuggages.MandatoryLuggage").
+			Where(entertainmentService).
+			Offset((currentPage - 1) * pageSize).
+			Limit(pageSize).
+			Find(&entertainment_services).Error
+		return entertainment_services, totalRows, currentPage, err
+	} else {
+		err := queryBuilder.
+			Preload("EntertainmentCategory").
+			Preload("Routes.Route").
+			Preload("Facilities.Facility").
+			Preload("Instructors.Instructor.User").
+			Preload("MandatoryLuggages.MandatoryLuggage").
+			Where(entertainmentService).
+			Find(&entertainment_services).
+			Count(&totalRows).Error
+		return entertainment_services, 0, 0, err
+	}
 }
 
 // Find -> Method for fetching Entertainment Service by id

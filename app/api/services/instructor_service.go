@@ -9,7 +9,7 @@ import (
 )
 
 type InstructorService interface {
-	FindAll(model models.Instructor, search string) ([]models.Instructor, int64, error)
+	FindAll(model models.Instructor, search string, currentPage int, pageSize int) ([]models.Instructor, int64, int, error)
 	Find(input inputs.GetInstructorDetailInput) (models.Instructor, error)
 	FindByUserID(input inputs.GetInstructorDetailInput) (models.Instructor, error)
 	Save(input inputs.InstructorInput) (models.Instructor, error)
@@ -28,13 +28,13 @@ func NewInstructorService(repository repositories.InstructorRepository) instruct
 }
 
 // FindAll -> calls Instructor repo find all method
-func (s instructorService) FindAll(model models.Instructor, search string) ([]models.Instructor, int64, error) {
-	instructors, total, err := s.repository.FindAll(model, search)
+func (s instructorService) FindAll(model models.Instructor, search string, currentPage int, pageSize int) ([]models.Instructor, int64, int, error) {
+	instructors, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize)
 	if err != nil {
-		return instructors, total, err
+		return instructors, total, currentPage, err
 	}
 
-	return instructors, total, nil
+	return instructors, total, currentPage, nil
 }
 
 // Find -> calls Instructor repo find method

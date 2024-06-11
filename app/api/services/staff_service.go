@@ -9,7 +9,7 @@ import (
 )
 
 type StaffService interface {
-	FindAll(model models.Staff, search string) ([]models.Staff, int64, error)
+	FindAll(model models.Staff, search string, currentPage int, pageSize int) ([]models.Staff, int64, int, error)
 	Find(input inputs.GetStaffDetailInput) (models.Staff, error)
 	Save(input inputs.StaffInput) (models.Staff, error)
 	Update(inputID inputs.GetStaffDetailInput, input inputs.EditStaffInput) (models.Staff, error)
@@ -27,13 +27,13 @@ func NewStaffService(repository repositories.StaffRepository) staffService {
 }
 
 // FindAll -> calls Staff repo find all method
-func (s staffService) FindAll(model models.Staff, search string) ([]models.Staff, int64, error) {
-	staffs, total, err := s.repository.FindAll(model, search)
+func (s staffService) FindAll(model models.Staff, search string, currentPage int, pageSize int) ([]models.Staff, int64, int, error) {
+	staffs, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize)
 	if err != nil {
-		return staffs, total, err
+		return staffs, total, currentPage, err
 	}
 
-	return staffs, total, nil
+	return staffs, total, currentPage, nil
 }
 
 // Find -> calls Staff repo find method

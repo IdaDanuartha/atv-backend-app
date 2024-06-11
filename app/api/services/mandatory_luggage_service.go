@@ -7,7 +7,7 @@ import (
 )
 
 type MandatoryLuggageService interface {
-	FindAll(model models.MandatoryLuggage, search string) ([]models.MandatoryLuggage, int64, error)
+	FindAll(model models.MandatoryLuggage, search string, currentPage int, pageSize int) ([]models.MandatoryLuggage, int64, int, error)
 	Find(input inputs.GetMandatoryLuggageDetailInput) (models.MandatoryLuggage, error)
 	Save(input inputs.MandatoryLuggageInput) (models.MandatoryLuggage, error)
 	Update(inputID inputs.GetMandatoryLuggageDetailInput, input inputs.MandatoryLuggageInput) (models.MandatoryLuggage, error)
@@ -25,13 +25,13 @@ func NewMandatoryLuggageService(repository repositories.MandatoryLuggageReposito
 }
 
 // FindAll -> calls Entertainment Package repo find all method
-func (s mandatoryLuggageService) FindAll(model models.MandatoryLuggage, search string) ([]models.MandatoryLuggage, int64, error) {
-	mandatoryLuggages, total, err := s.repository.FindAll(model, search)
+func (s mandatoryLuggageService) FindAll(model models.MandatoryLuggage, search string, currentPage int, pageSize int) ([]models.MandatoryLuggage, int64, int, error) {
+	mandatoryLuggages, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize)
 	if err != nil {
-		return mandatoryLuggages, total, err
+		return mandatoryLuggages, total, currentPage, err
 	}
 
-	return mandatoryLuggages, total, nil
+	return mandatoryLuggages, total, currentPage, nil
 }
 
 // Find -> calls Entertainment Package repo find method

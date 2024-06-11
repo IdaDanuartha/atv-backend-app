@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/formatters"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
@@ -26,8 +27,17 @@ func (h *InstructorController) GetInstructors(ctx *gin.Context) {
 	var instructors models.Instructor
 
 	search := ctx.Query("search")
+	currentPage, err := strconv.Atoi(ctx.Query("current_page"))
+	if err != nil {
+		currentPage = 1
+	}
 
-	getInstructors, _, err := h.service.FindAll(instructors, search)
+	pageSize, err := strconv.Atoi(ctx.Query("page_size"))
+	if err != nil {
+		pageSize = 0
+	}
+
+	getInstructors, total, _, err := h.service.FindAll(instructors, search, currentPage, pageSize)
 
 	if err != nil {
 		response := utils.APIResponse("Failed to find instructor", http.StatusBadRequest, "error", err.Error())
@@ -35,8 +45,13 @@ func (h *InstructorController) GetInstructors(ctx *gin.Context) {
 		return
 	}
 
-	response := utils.APIResponse("instructor result set", http.StatusOK, "success", formatters.FormatInstructors(getInstructors))
-	ctx.JSON(http.StatusOK, response)
+	if pageSize > 0 {
+		response := utils.APIResponseWithPagination("Instructors result set", http.StatusOK, "success", total, currentPage, pageSize, formatters.FormatInstructors(getInstructors))
+		ctx.JSON(http.StatusOK, response)
+	} else {
+		response := utils.APIResponse("Instructors result set", http.StatusOK, "success", formatters.FormatInstructors(getInstructors))
+		ctx.JSON(http.StatusOK, response)
+	}
 }
 
 // GetInstructor : get instructor by id

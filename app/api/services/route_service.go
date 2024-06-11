@@ -7,7 +7,7 @@ import (
 )
 
 type RouteService interface {
-	FindAll(model models.Route, search string) ([]models.Route, int64, error)
+	FindAll(model models.Route, search string, currentPage int, pageSize int) ([]models.Route, int64, int, error)
 	Find(input inputs.GetRouteDetailInput) (models.Route, error)
 	Save(input inputs.RouteInput) (models.Route, error)
 	Update(inputID inputs.GetRouteDetailInput, input inputs.RouteInput) (models.Route, error)
@@ -25,13 +25,13 @@ func NewRouteService(repository repositories.RouteRepository) routeService {
 }
 
 // FindAll -> calls Route repo find all method
-func (s routeService) FindAll(model models.Route, search string) ([]models.Route, int64, error) {
-	routes, total, err := s.repository.FindAll(model, search)
+func (s routeService) FindAll(model models.Route, search string, currentPage int, pageSize int) ([]models.Route, int64, int, error) {
+	routes, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize)
 	if err != nil {
-		return routes, total, err
+		return routes, total, currentPage, err
 	}
 
-	return routes, total, nil
+	return routes, total, currentPage, nil
 }
 
 // Find -> calls Route repo find method

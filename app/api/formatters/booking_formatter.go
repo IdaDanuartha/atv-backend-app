@@ -7,7 +7,7 @@ import (
 func FormatBooking(booking models.Booking) models.Booking {
 	bookingFormatter := models.Booking{}
 	bookingFormatter.ID = booking.ID
-	bookingFormatter.CustomerID = booking.CustomerID
+	bookingFormatter.Code = booking.Code
 	bookingFormatter.Name = booking.Name
 	bookingFormatter.PhoneNumber = booking.PhoneNumber
 	bookingFormatter.PaymentMethod = booking.PaymentMethod
@@ -18,6 +18,22 @@ func FormatBooking(booking models.Booking) models.Booking {
 	bookingFormatter.CreatedAt = booking.CreatedAt
 	bookingFormatter.UpdatedAt = booking.UpdatedAt
 	bookingFormatter.DeletedAt = booking.DeletedAt
+
+	bookingFormatter.Customer.ID = booking.Customer.ID
+	bookingFormatter.Customer.Name = booking.Customer.Name
+	bookingFormatter.Customer.PhoneNumber = booking.Customer.PhoneNumber
+	bookingFormatter.Customer.CreatedAt = booking.Customer.CreatedAt
+	bookingFormatter.Customer.UpdatedAt = booking.Customer.UpdatedAt
+	bookingFormatter.Customer.DeletedAt = booking.Customer.DeletedAt
+
+	bookingFormatter.Customer.User.ID = booking.Customer.User.ID
+	bookingFormatter.Customer.User.Username = booking.Customer.User.Username
+	bookingFormatter.Customer.User.Email = booking.Customer.User.Email
+	bookingFormatter.Customer.User.Role = booking.Customer.User.Role
+	bookingFormatter.Customer.User.ProfilePath = booking.Customer.User.ProfilePath
+	bookingFormatter.Customer.User.CreatedAt = booking.Customer.User.CreatedAt
+	bookingFormatter.Customer.User.UpdatedAt = booking.Customer.User.UpdatedAt
+	bookingFormatter.Customer.User.DeletedAt = booking.Customer.User.DeletedAt
 
 	bookingDetails := make([]models.BookingDetail, 0)
 

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/formatters"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
@@ -26,8 +27,17 @@ func (h *FacilityController) GetFacilities(ctx *gin.Context) {
 	var facilities models.Facility
 
 	search := ctx.Query("search")
+	currentPage, err := strconv.Atoi(ctx.Query("current_page"))
+	if err != nil {
+		currentPage = 1
+	}
 
-	getFacilities, _, err := h.service.FindAll(facilities, search)
+	pageSize, err := strconv.Atoi(ctx.Query("page_size"))
+	if err != nil {
+		pageSize = 0
+	}
+
+	getFacilities, total, _, err := h.service.FindAll(facilities, search, currentPage, pageSize)
 
 	if err != nil {
 		response := utils.APIResponse("Failed to find facility", http.StatusBadRequest, "error", err.Error())
@@ -35,8 +45,13 @@ func (h *FacilityController) GetFacilities(ctx *gin.Context) {
 		return
 	}
 
-	response := utils.APIResponse("facilities result set", http.StatusOK, "success", formatters.FormatFacilities(getFacilities))
-	ctx.JSON(http.StatusOK, response)
+	if pageSize > 0 {
+		response := utils.APIResponseWithPagination("facilities result set", http.StatusOK, "success", total, currentPage, pageSize, formatters.FormatFacilities(getFacilities))
+		ctx.JSON(http.StatusOK, response)
+	} else {
+		response := utils.APIResponse("facilities result set", http.StatusOK, "success", formatters.FormatFacilities(getFacilities))
+		ctx.JSON(http.StatusOK, response)
+	}
 }
 
 // ExportToExcel : ExportToExcel controller

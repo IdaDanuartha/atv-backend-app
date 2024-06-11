@@ -6,7 +6,7 @@ import (
 )
 
 type RouteRepository interface {
-	FindAll(route models.Route, search string) ([]models.Route, int64, error)
+	FindAll(route models.Route, search string, currentPage int, pageSize int) ([]models.Route, int64, int, error)
 	Find(ID string) (models.Route, error)
 	Save(route models.Route) (models.Route, error)
 	Update(route models.Route) (models.Route, error)
@@ -23,24 +23,39 @@ func NewRouteRepository(db config.Database) routeRepository {
 }
 
 // FindAll -> Method for fetching all route from database
-func (r routeRepository) FindAll(route models.Route, search string) ([]models.Route, int64, error) {
+func (r routeRepository) FindAll(route models.Route, search string, currentPage int, pageSize int) ([]models.Route, int64, int, error) {
 	var routes []models.Route
 	var totalRows int64 = 0
 
-	queryBuider := r.db.DB.Order("created_at desc").Model(&models.Route{})
+	queryBuilder := r.db.DB.Order("created_at desc").Model(&models.Route{})
 
 	// Search parameter
 	if search != "" {
 		querySearch := "%" + search + "%"
-		queryBuider = queryBuider.Where(
+		queryBuilder = queryBuilder.Where(
 			r.db.DB.Where("routes.name LIKE ? ", querySearch))
 	}
 
-	err := queryBuider.
-		Where(route).
-		Find(&routes).
-		Count(&totalRows).Error
-	return routes, totalRows, err
+	if pageSize > 0 {
+		// count the total number of rows
+		err := queryBuilder.
+			Where(route).
+			Count(&totalRows).Error
+
+		// Apply offset and limit to fetch paginated results
+		err = queryBuilder.
+			Where(route).
+			Offset((currentPage - 1) * pageSize).
+			Limit(pageSize).
+			Find(&routes).Error
+		return routes, totalRows, currentPage, err
+	} else {
+		err := queryBuilder.
+			Where(route).
+			Find(&routes).
+			Count(&totalRows).Error
+		return routes, 0, 0, err
+	}
 }
 
 // Find -> Method for fetching route by id

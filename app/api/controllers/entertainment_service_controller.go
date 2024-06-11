@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/formatters"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
@@ -28,8 +29,17 @@ func (h *EntertainmentServiceController) GetEntertainmentServices(ctx *gin.Conte
 	var entertainment_services models.EntertainmentService
 
 	search := ctx.Query("search")
+	currentPage, err := strconv.Atoi(ctx.Query("current_page"))
+	if err != nil {
+		currentPage = 1
+	}
 
-	entertainmentServices, _, err := h.service.FindAll(entertainment_services, search)
+	pageSize, err := strconv.Atoi(ctx.Query("page_size"))
+	if err != nil {
+		pageSize = 0
+	}
+
+	entertainmentServices, total, _, err := h.service.FindAll(entertainment_services, search, currentPage, pageSize)
 
 	if err != nil {
 		response := utils.APIResponse("Failed to find entertainment service", http.StatusBadRequest, "error", err.Error())
@@ -37,8 +47,13 @@ func (h *EntertainmentServiceController) GetEntertainmentServices(ctx *gin.Conte
 		return
 	}
 
-	response := utils.APIResponse("Entertainment service result set", http.StatusOK, "success", formatters.FormatEntertainmentServices(entertainmentServices))
-	ctx.JSON(http.StatusOK, response)
+	if pageSize > 0 {
+		response := utils.APIResponseWithPagination("Entertainment services result set", http.StatusOK, "success", total, currentPage, pageSize, formatters.FormatEntertainmentServices(entertainmentServices))
+		ctx.JSON(http.StatusOK, response)
+	} else {
+		response := utils.APIResponse("Entertainment services result set", http.StatusOK, "success", formatters.FormatEntertainmentServices(entertainmentServices))
+		ctx.JSON(http.StatusOK, response)
+	}
 }
 
 // GetEntertainmentService : get entertainment service by id
@@ -73,7 +88,7 @@ func (h *EntertainmentServiceController) UploadImage(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
-	
+
 	file, err := ctx.FormFile("image")
 	if err != nil {
 		data := gin.H{"message": err.Error()}
@@ -84,16 +99,15 @@ func (h *EntertainmentServiceController) UploadImage(ctx *gin.Context) {
 	}
 
 	entertainmentService, err := h.service.Find(inputID)
-	if err!= nil {
+	if err != nil {
 		data := gin.H{"message": err.Error()}
-        response := utils.APIResponse("Failed to get entertainment service id", http.StatusBadRequest, "error", data)
+		response := utils.APIResponse("Failed to get entertainment service id", http.StatusBadRequest, "error", data)
 
-        ctx.JSON(http.StatusBadRequest, response)
-        return
-    }
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
 
 	ID := entertainmentService.ID
-
 
 	// Check if ImagePath is not nil before proceeding
 	if entertainmentService.ImagePath != nil {

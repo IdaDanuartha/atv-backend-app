@@ -1,14 +1,13 @@
 package services
 
 import (
-
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/repositories"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
 )
 
 type EntertainmentCategoryService interface {
-	FindAll(model models.EntertainmentCategory, search string) ([]models.EntertainmentCategory, int64, error)
+	FindAll(model models.EntertainmentCategory, search string, currentPage int, pageSize int) ([]models.EntertainmentCategory, int64, int, error)
 	Find(input inputs.GetEntertainmentCategoryDetailInput) (models.EntertainmentCategory, error)
 	Save(input inputs.EntertainmentCategoryInput) (models.EntertainmentCategory, error)
 	Update(inputID inputs.GetEntertainmentCategoryDetailInput, input inputs.EntertainmentCategoryInput) (models.EntertainmentCategory, error)
@@ -26,13 +25,13 @@ func NewEntertainmentCategoryService(repository repositories.EntertainmentCatego
 }
 
 // FindAll -> calls Entertainment Category repo find all method
-func (s entertainmentCategoryService) FindAll(model models.EntertainmentCategory, search string) ([]models.EntertainmentCategory, int64, error) {
-	entertainmentCategories, total, err := s.repository.FindAll(model, search)
+func (s entertainmentCategoryService) FindAll(model models.EntertainmentCategory, search string, currentPage int, pageSize int) ([]models.EntertainmentCategory, int64, int, error) {
+	entertainmentCategories, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize)
 	if err != nil {
-		return entertainmentCategories, total, err
+		return entertainmentCategories, total, currentPage, err
 	}
 
-	return entertainmentCategories, total, nil
+	return entertainmentCategories, total, currentPage, nil
 }
 
 // Find -> calls Entertainment Category repo find method

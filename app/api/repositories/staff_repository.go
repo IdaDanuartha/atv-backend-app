@@ -9,7 +9,7 @@ import (
 )
 
 type StaffRepository interface {
-	FindAll(staff models.Staff, search string) ([]models.Staff, int64, error)
+	FindAll(staff models.Staff, search string, currentPage int, pageSize int) ([]models.Staff, int64, int, error)
 	Find(ID string) (models.Staff, error)
 	Save(staff models.Staff) (models.Staff, error)
 	Update(staff models.Staff) (models.Staff, error)
@@ -26,25 +26,41 @@ func NewStaffRepository(db config.Database) staffRepository {
 }
 
 // FindAll -> Method for fetching all Staff from database
-func (r staffRepository) FindAll(staff models.Staff, search string) ([]models.Staff, int64, error) {
+func (r staffRepository) FindAll(staff models.Staff, search string, currentPage int, pageSize int) ([]models.Staff, int64, int, error) {
 	var staffs []models.Staff
 	var totalRows int64 = 0
 
-	queryBuider := r.db.DB.Order("created_at desc").Model(&models.Staff{})
+	queryBuilder := r.db.DB.Order("created_at desc").Model(&models.Staff{})
 
 	// Search parameter
 	if search != "" {
 		querySearch := "%" + search + "%"
-		queryBuider = queryBuider.Where(
+		queryBuilder = queryBuilder.Where(
 			r.db.DB.Where("staff.name LIKE ? ", querySearch))
 	}
 
-	err := queryBuider.
-		Preload("User").
-		Where(staff).
-		Find(&staffs).
-		Count(&totalRows).Error
-	return staffs, totalRows, err
+	if pageSize > 0 {
+		// count the total number of rows
+		err := queryBuilder.
+			Where(staff).
+			Count(&totalRows).Error
+
+		// Apply offset and limit to fetch paginated results
+		err = queryBuilder.
+			Preload("User").
+			Where(staff).
+			Offset((currentPage - 1) * pageSize).
+			Limit(pageSize).
+			Find(&staffs).Error
+		return staffs, totalRows, currentPage, err
+	} else {
+		err := queryBuilder.
+			Preload("User").
+			Where(staff).
+			Find(&staffs).
+			Count(&totalRows).Error
+		return staffs, 0, 0, err
+	}
 }
 
 // Find -> Method for fetching Staff by id

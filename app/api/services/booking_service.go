@@ -4,10 +4,11 @@ import (
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/repositories"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
+	"github.com/IdaDanuartha/atv-backend-app/app/utils"
 )
 
 type BookingService interface {
-	FindAll(model models.Booking, search string) ([]models.Booking, int64, error)
+	FindAll(model models.Booking, search string, currentPage int, pageSize int) ([]models.Booking, int64, int, error)
 	Find(input inputs.GetBookingDetailInput) (models.Booking, error)
 	Save(input inputs.BookingInput) (models.Booking, error)
 	Update(inputID inputs.GetBookingDetailInput, input inputs.BookingInput) (models.Booking, error)
@@ -25,13 +26,13 @@ func NewBookingService(repository repositories.BookingRepository) bookingService
 }
 
 // FindAll -> calls Booking repo find all method
-func (s bookingService) FindAll(model models.Booking, search string) ([]models.Booking, int64, error) {
-	bookings, total, err := s.repository.FindAll(model, search)
+func (s bookingService) FindAll(model models.Booking, search string, currentPage int, pageSize int) ([]models.Booking, int64, int, error) {
+	bookings, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize)
 	if err != nil {
-		return bookings, total, err
+		return bookings, total, currentPage, err
 	}
 
-	return bookings, total, nil
+	return bookings, total, currentPage, nil
 }
 
 // Find -> calls Booking repo find method
@@ -51,6 +52,7 @@ func (s bookingService) Save(input inputs.BookingInput) (models.Booking, error) 
 
 	booking.CustomerID = input.CustomerID
 	booking.Name = input.Name
+	booking.Code = utils.GenerateFormattedString()
 	booking.PhoneNumber = input.PhoneNumber
 	booking.PaymentMethod = input.PaymentMethod
 	booking.Date = input.Date

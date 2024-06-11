@@ -17,6 +17,6 @@ type BookingInput struct {
 	Date          time.Time              `json:"date" binding:"required"`
 	TotalPrice    int32                  `json:"total_price" binding:"required"`
 	TotalPay      int32                  `json:"total_pay" binding:"required"`
-	TotalChange   int32                  `json:"total_change" binding:"required"`
+	TotalChange   int32                  `json:"total_change"`
 	Details       []models.BookingDetail `json:"details" binding:"required"`
 }

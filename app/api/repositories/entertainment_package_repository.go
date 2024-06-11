@@ -6,7 +6,7 @@ import (
 )
 
 type EntertainmentPackageRepository interface {
-	FindAll(entertainmentPackage models.EntertainmentPackage, search string) ([]models.EntertainmentPackage, int64, error)
+	FindAll(entertainmentPackage models.EntertainmentPackage, search string, currentPage int, pageSize int) ([]models.EntertainmentPackage, int64, int, error)
 	Find(ID string) (models.EntertainmentPackage, error)
 	Save(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error)
 	Update(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error)
@@ -23,25 +23,41 @@ func NewEntertainmentPackageRepository(db config.Database) entertainmentPackageR
 }
 
 // FindAll -> Method for fetching all Entertainment Package from database
-func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.EntertainmentPackage, search string) ([]models.EntertainmentPackage, int64, error) {
+func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.EntertainmentPackage, search string, currentPage int, pageSize int) ([]models.EntertainmentPackage, int64, int, error) {
 	var entertainment_packages []models.EntertainmentPackage
 	var totalRows int64 = 0
 
-	queryBuider := r.db.DB.Order("created_at desc").Model(&models.EntertainmentPackage{})
+	queryBuilder := r.db.DB.Order("created_at desc").Model(&models.EntertainmentPackage{})
 
 	// Search parameter
 	if search != "" {
 		querySearch := "%" + search + "%"
-		queryBuider = queryBuider.Where(
+		queryBuilder = queryBuilder.Where(
 			r.db.DB.Where("entertainment_packages.name LIKE ? ", querySearch))
 	}
 
-	err := queryBuider.
-		Preload("EntertainmentPackageDetails.EntertainmentService").
-		Where(entertainmentPackage).
-		Find(&entertainment_packages).
-		Count(&totalRows).Error
-	return entertainment_packages, totalRows, err
+	if pageSize > 0 {
+		// count the total number of rows
+		err := queryBuilder.
+			Where(entertainmentPackage).
+			Count(&totalRows).Error
+
+		// Apply offset and limit to fetch paginated results
+		err = queryBuilder.
+			Preload("EntertainmentPackageDetails.EntertainmentService").
+			Where(entertainmentPackage).
+			Offset((currentPage - 1) * pageSize).
+			Limit(pageSize).
+			Find(&entertainment_packages).Error
+		return entertainment_packages, totalRows, currentPage, err
+	} else {
+		err := queryBuilder.
+			Preload("EntertainmentPackageDetails.EntertainmentService").
+			Where(entertainmentPackage).
+			Find(&entertainment_packages).
+			Count(&totalRows).Error
+		return entertainment_packages, 0, 0, err
+	}
 }
 
 // Find -> Method for fetching Entertainment Package by id

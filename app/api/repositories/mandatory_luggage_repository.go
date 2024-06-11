@@ -6,7 +6,7 @@ import (
 )
 
 type MandatoryLuggageRepository interface {
-	FindAll(mandatoryLuggage models.MandatoryLuggage, search string) ([]models.MandatoryLuggage, int64, error)
+	FindAll(mandatoryLuggage models.MandatoryLuggage, search string, currentPage int, pageSize int) ([]models.MandatoryLuggage, int64, int, error)
 	Find(ID string) (models.MandatoryLuggage, error)
 	Save(mandatoryLuggage models.MandatoryLuggage) (models.MandatoryLuggage, error)
 	Update(mandatoryLuggage models.MandatoryLuggage) (models.MandatoryLuggage, error)
@@ -23,24 +23,39 @@ func NewMandatoryLuggageRepository(db config.Database) mandatoryLuggageRepositor
 }
 
 // FindAll -> Method for fetching all Mandatory Luggage from database
-func (r mandatoryLuggageRepository) FindAll(mandatoryLuggage models.MandatoryLuggage, search string) ([]models.MandatoryLuggage, int64, error) {
+func (r mandatoryLuggageRepository) FindAll(mandatoryLuggage models.MandatoryLuggage, search string, currentPage int, pageSize int) ([]models.MandatoryLuggage, int64, int, error) {
 	var mandatory_luggages []models.MandatoryLuggage
 	var totalRows int64 = 0
 
-	queryBuider := r.db.DB.Order("created_at desc").Model(&models.MandatoryLuggage{})
+	queryBuilder := r.db.DB.Order("created_at desc").Model(&models.MandatoryLuggage{})
 
 	// Search parameter
 	if search != "" {
 		querySearch := "%" + search + "%"
-		queryBuider = queryBuider.Where(
+		queryBuilder = queryBuilder.Where(
 			r.db.DB.Where("mandatory_luggages.name LIKE ? ", querySearch))
 	}
 
-	err := queryBuider.
-		Where(mandatoryLuggage).
-		Find(&mandatory_luggages).
-		Count(&totalRows).Error
-	return mandatory_luggages, totalRows, err
+	if pageSize > 0 {
+		// count the total number of rows
+		err := queryBuilder.
+			Where(mandatoryLuggage).
+			Count(&totalRows).Error
+
+		// Apply offset and limit to fetch paginated results
+		err = queryBuilder.
+			Where(mandatoryLuggage).
+			Offset((currentPage - 1) * pageSize).
+			Limit(pageSize).
+			Find(&mandatory_luggages).Error
+		return mandatory_luggages, totalRows, currentPage, err
+	} else {
+		err := queryBuilder.
+			Where(mandatoryLuggage).
+			Find(&mandatory_luggages).
+			Count(&totalRows).Error
+		return mandatory_luggages, 0, 0, err
+	}
 }
 
 // Find -> Method for fetching Mandatory Luggage by id

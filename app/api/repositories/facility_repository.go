@@ -10,8 +10,8 @@ import (
 )
 
 type FacilityRepository interface {
-	FindAll(facility models.Facility, search string) ([]models.Facility, int64, error)
-	ExportToExcel(facility models.Facility, ctx *gin.Context) (error)
+	FindAll(facility models.Facility, search string, currentPage int, pageSize int) ([]models.Facility, int64, int, error)
+	ExportToExcel(facility models.Facility, ctx *gin.Context) error
 	Find(ID string) (models.Facility, error)
 	Save(facility models.Facility) (models.Facility, error)
 	Update(facility models.Facility) (models.Facility, error)
@@ -28,52 +28,69 @@ func NewFacilityRepository(db config.Database) facilityRepository {
 }
 
 // FindAll -> Method for fetching all Facility from database
-func (r facilityRepository) FindAll(facility models.Facility, search string) ([]models.Facility, int64, error) {
+func (r facilityRepository) FindAll(facility models.Facility, search string, currentPage int, pageSize int) ([]models.Facility, int64, int, error) {
 	var facilities []models.Facility
 	var totalRows int64 = 0
 
-	queryBuider := r.db.DB.Order("created_at desc").Model(&models.Facility{})
+	queryBuilder := r.db.DB.Order("created_at desc").Model(&models.Facility{})
 
 	// Search parameter
 	if search != "" {
 		querySearch := "%" + search + "%"
-		queryBuider = queryBuider.Where(
+		queryBuilder = queryBuilder.Where(
 			r.db.DB.Where("facilities.name LIKE ? ", querySearch))
 	}
 
-	err := queryBuider.
-		Where(facility).
-		Find(&facilities).
-		Count(&totalRows).Error
-	return facilities, totalRows, err
+	if pageSize > 0 {
+		// count the total number of rows
+		err := queryBuilder.
+			Where(facility).
+			Count(&totalRows).Error
+
+		// Apply offset and limit to fetch paginated results
+		err = queryBuilder.
+			Where(facility).
+			Offset((currentPage - 1) * pageSize).
+			Limit(pageSize).
+			Find(&facilities).Error
+
+		return facilities, totalRows, currentPage, err
+	} else {
+		err := queryBuilder.
+			Where(facility).
+			Find(&facilities).
+			Count(&totalRows).Error
+
+		return facilities, 0, 0, err
+	}
 }
 
 // ExportToExcel -> Method for exporting all data to excel file
-func(r facilityRepository) ExportToExcel(facility models.Facility, ctx *gin.Context) (error) {
+func (r facilityRepository) ExportToExcel(facility models.Facility, ctx *gin.Context) error {
 	var facilities []models.Facility
 
 	// Retrieve data from the database
-    rows := r.db.DB.Find(&facilities)
-	if rows.Error!= nil {
-        return rows.Error
-    }
+	rows := r.db.DB.Find(&facilities)
+	if rows.Error != nil {
+		return rows.Error
+	}
 
-    // Create an Excel file
-    xlsx := excelize.NewFile()
-    sheetName := "Facilities"
-    xlsx.SetSheetName("Facilities", sheetName)
+	// Create an Excel file
+	xlsx := excelize.NewFile()
+	sheetName := "Facilities"
+	xlsx.SetSheetName("Facilities", sheetName)
 
-    // Add headers
+	// Add headers
 	xlsx.SetCellValue(sheetName, "A1", "No")
-    xlsx.SetCellValue(sheetName, "B1", "Name")
+	xlsx.SetCellValue(sheetName, "B1", "Name")
 
-    // Fill data from the database into an Excel file
+	// Fill data from the database into an Excel file
 	rowIndex := 1
-    for _, facility := range facilities {		
+	for _, facility := range facilities {
 		xlsx.SetCellValue(sheetName, fmt.Sprintf("A%d", rowIndex), rowIndex)
-        xlsx.SetCellValue(sheetName, fmt.Sprintf("B%d", rowIndex), facility.Name)
-        rowIndex++
-    }
+		xlsx.SetCellValue(sheetName, fmt.Sprintf("B%d", rowIndex), facility.Name)
+		rowIndex++
+	}
 
 	// Save the file to a local path for debugging (optional)
 	err := xlsx.SaveAs("facilities_export.xlsx")
@@ -82,16 +99,16 @@ func(r facilityRepository) ExportToExcel(facility models.Facility, ctx *gin.Cont
 		return err
 	}
 
-    // Set header response
-    ctx.Header("Content-Transfer-Encoding", "binary")
-    ctx.Header("Content-Disposition", "attachment; filename=facilities_export.xlsx")
-    ctx.Header("Content-Type", "application/octet-stream")
+	// Set header response
+	ctx.Header("Content-Transfer-Encoding", "binary")
+	ctx.Header("Content-Disposition", "attachment; filename=facilities_export.xlsx")
+	ctx.Header("Content-Type", "application/octet-stream")
 
-    // Write the Excel file to the response
-    err = xlsx.Write(ctx.Writer)
-    if err != nil {
-        return err
-    }
+	// Write the Excel file to the response
+	err = xlsx.Write(ctx.Writer)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

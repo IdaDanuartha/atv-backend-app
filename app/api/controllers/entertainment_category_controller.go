@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/formatters"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
@@ -26,17 +27,30 @@ func (h *EntertainmentCategoryController) GetEntertainmentCategories(ctx *gin.Co
 	var entertainment_categories models.EntertainmentCategory
 
 	search := ctx.Query("search")
+	currentPage, err := strconv.Atoi(ctx.Query("current_page"))
+	if err != nil {
+		currentPage = 1
+	}
 
-	entertainmentCategories, _, err := h.service.FindAll(entertainment_categories, search)
+	pageSize, err := strconv.Atoi(ctx.Query("page_size"))
+	if err != nil {
+		pageSize = 0
+	}
+
+	entertainmentCategories, total, _, err := h.service.FindAll(entertainment_categories, search, currentPage, pageSize)
 
 	if err != nil {
 		response := utils.APIResponse("Failed to find entertainment category", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
-
-	response := utils.APIResponse("Entertainment category result set", http.StatusOK, "success", formatters.FormatEntertainmentCategories(entertainmentCategories))
-	ctx.JSON(http.StatusOK, response)
+	if pageSize > 0 {
+		response := utils.APIResponseWithPagination("Entertainment categories result set", http.StatusOK, "success", total, currentPage, pageSize, formatters.FormatEntertainmentCategories(entertainmentCategories))
+		ctx.JSON(http.StatusOK, response)
+	} else {
+		response := utils.APIResponse("Entertainment categories result set", http.StatusOK, "success", formatters.FormatEntertainmentCategories(entertainmentCategories))
+		ctx.JSON(http.StatusOK, response)
+	}
 }
 
 // GetEntertainmentCategory : get entertainment category by id

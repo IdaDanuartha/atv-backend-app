@@ -9,7 +9,7 @@ import (
 )
 
 type InstructorRepository interface {
-	FindAll(instructor models.Instructor, search string) ([]models.Instructor, int64, error)
+	FindAll(instructor models.Instructor, search string, currentPage int, pageSize int) ([]models.Instructor, int64, int, error)
 	Find(ID string) (models.Instructor, error)
 	FindByUserID(userID string) (models.Instructor, error)
 	Save(instructor models.Instructor) (models.Instructor, error)
@@ -27,25 +27,41 @@ func NewInstructorRepository(db config.Database) instructorRepository {
 }
 
 // FindAll -> Method for fetching all Instructor from database
-func (r instructorRepository) FindAll(instructor models.Instructor, search string) ([]models.Instructor, int64, error) {
+func (r instructorRepository) FindAll(instructor models.Instructor, search string, currentPage int, pageSize int) ([]models.Instructor, int64, int, error) {
 	var instructors []models.Instructor
 	var totalRows int64 = 0
 
-	queryBuider := r.db.DB.Order("created_at desc").Model(&models.Instructor{})
+	queryBuilder := r.db.DB.Order("created_at desc").Model(&models.Instructor{})
 
 	// Search parameter
 	if search != "" {
 		querySearch := "%" + search + "%"
-		queryBuider = queryBuider.Where(
+		queryBuilder = queryBuilder.Where(
 			r.db.DB.Where("instructors.name LIKE ? ", querySearch))
 	}
 
-	err := queryBuider.
-		Preload("User").
-		Where(instructor).
-		Find(&instructors).
-		Count(&totalRows).Error
-	return instructors, totalRows, err
+	if pageSize > 0 {
+		// count the total number of rows
+		err := queryBuilder.
+			Where(instructor).
+			Count(&totalRows).Error
+
+		// Apply offset and limit to fetch paginated results
+		err = queryBuilder.
+			Preload("User").
+			Where(instructor).
+			Offset((currentPage - 1) * pageSize).
+			Limit(pageSize).
+			Find(&instructors).Error
+		return instructors, totalRows, currentPage, err
+	} else {
+		err := queryBuilder.
+			Preload("User").
+			Where(instructor).
+			Find(&instructors).
+			Count(&totalRows).Error
+		return instructors, 0, 0, err
+	}
 }
 
 // Find -> Method for fetching Instructor by id

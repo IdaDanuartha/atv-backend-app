@@ -8,8 +8,8 @@ import (
 )
 
 type FacilityService interface {
-	FindAll(model models.Facility, search string) ([]models.Facility, int64, error)
-	ExportToExcel(model models.Facility, ctx *gin.Context) (error)
+	FindAll(model models.Facility, search string, currentPage int, pageSize int) ([]models.Facility, int64, int, error)
+	ExportToExcel(model models.Facility, ctx *gin.Context) error
 	Find(input inputs.GetFacilityDetailInput) (models.Facility, error)
 	Save(input inputs.FacilityInput) (models.Facility, error)
 	Update(inputID inputs.GetFacilityDetailInput, input inputs.FacilityInput) (models.Facility, error)
@@ -27,17 +27,17 @@ func NewFacilityService(repository repositories.FacilityRepository) facilityServ
 }
 
 // FindAll -> calls Facility repo find all method
-func (s facilityService) FindAll(model models.Facility, search string) ([]models.Facility, int64, error) {
-	facilities, total, err := s.repository.FindAll(model, search)
+func (s facilityService) FindAll(model models.Facility, search string, currentPage int, pageSize int) ([]models.Facility, int64, int, error) {
+	facilities, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize)
 	if err != nil {
-		return facilities, total, err
+		return facilities, total, currentPage, err
 	}
 
-	return facilities, total, nil
+	return facilities, total, currentPage, nil
 }
 
 // ExportToExcel -> calls Facility repo ExportToExcel method
-func (s facilityService) ExportToExcel(model models.Facility, ctx *gin.Context) (error) {
+func (s facilityService) ExportToExcel(model models.Facility, ctx *gin.Context) error {
 	err := s.repository.ExportToExcel(model, ctx)
 	if err != nil {
 		return err

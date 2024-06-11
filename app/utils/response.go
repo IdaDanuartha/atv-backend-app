@@ -8,9 +8,12 @@ type Response struct {
 }
 
 type Meta struct {
-	Message string `json:"message"`
-	Code    int    `json:"code"`
-	Status  string `json:"status"`
+	Message     string `json:"message"`
+	Code        int    `json:"code"`
+	Status      string `json:"status"`
+	Total       int64  `json:"total,omitempty"`
+	CurrentPage int    `json:"current_page,omitempty"`
+	PageSize    int    `json:"page_size,omitempty"`
 }
 
 func APIResponse(message string, code int, status string, data interface{}) Response {
@@ -18,6 +21,24 @@ func APIResponse(message string, code int, status string, data interface{}) Resp
 		Message: message,
 		Code:    code,
 		Status:  status,
+	}
+
+	jsonResponse := Response{
+		Meta: meta,
+		Data: data,
+	}
+
+	return jsonResponse
+}
+
+func APIResponseWithPagination(message string, code int, status string, total int64, currentPage int, pageSize int, data interface{}) Response {
+	meta := Meta{
+		Message:     message,
+		Code:        code,
+		Status:      status,
+		Total:       total,
+		CurrentPage: currentPage,
+		PageSize:    10,
 	}
 
 	jsonResponse := Response{

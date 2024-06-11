@@ -10,7 +10,7 @@ import (
 // Base Models
 type Base struct {
 	// ID           string     `gorm:"type:uuid;primary_key;" json:"id"`
-	ID        string         `gorm:"primaryKey;" json:"id"`
+	ID        string         `gorm:"type:varchar(100);primaryKey;" json:"id"`
 	CreatedAt time.Time      `json:"created_at,omitempty"`
 	UpdatedAt time.Time      `json:"updated_at,omitempty"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
@@ -47,7 +47,7 @@ func (b *EntertainmentPackage) BeforeCreate(tx *gorm.DB) (err error) {
 }
 func (b *EntertainmentPackageDetail) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = uuid.New().String()
-	return	
+	return
 }
 
 func (b *Facility) BeforeCreate(tx *gorm.DB) (err error) {
@@ -90,22 +90,26 @@ func (b *EntertainmentService) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = uuid.New().String()
 	return
 }
-// func (b *EntertainmentServiceRoute) BeforeCreate(tx *gorm.DB) (err error) {
-// 	b.ID = uuid.New().String()
-// 	return
-// }
-// func (b *EntertainmentServiceFacility) BeforeCreate(tx *gorm.DB) (err error) {
-// 	b.ID = uuid.New().String()
-// 	return
-// }
-// func (b *EntertainmentServiceInstructor) BeforeCreate(tx *gorm.DB) (err error) {
-// 	b.ID = uuid.New().String()
-// 	return
-// }
-// func (b *MandatoryLuggageEntertainmentService) BeforeCreate(tx *gorm.DB) (err error) {
-// 	b.ID = uuid.New().String()
-// 	return
-// }
+
+//	func (b *EntertainmentServiceRoute) BeforeCreate(tx *gorm.DB) (err error) {
+//		b.ID = uuid.New().String()
+//		return
+//	}
+//
+//	func (b *EntertainmentServiceFacility) BeforeCreate(tx *gorm.DB) (err error) {
+//		b.ID = uuid.New().String()
+//		return
+//	}
+//
+//	func (b *EntertainmentServiceInstructor) BeforeCreate(tx *gorm.DB) (err error) {
+//		b.ID = uuid.New().String()
+//		return
+//	}
+//
+//	func (b *MandatoryLuggageEntertainmentService) BeforeCreate(tx *gorm.DB) (err error) {
+//		b.ID = uuid.New().String()
+//		return
+//	}
 func (b *Booking) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = uuid.New().String()
 	return

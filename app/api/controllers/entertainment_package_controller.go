@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/formatters"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
@@ -28,8 +29,17 @@ func (h *EntertainmentPackageController) GetEntertainmentPackages(ctx *gin.Conte
 	var entertainment_packages models.EntertainmentPackage
 
 	search := ctx.Query("search")
+	currentPage, err := strconv.Atoi(ctx.Query("current_page"))
+	if err != nil {
+		currentPage = 1
+	}
 
-	entertainmentPackages, _, err := h.service.FindAll(entertainment_packages, search)
+	pageSize, err := strconv.Atoi(ctx.Query("page_size"))
+	if err != nil {
+		pageSize = 0
+	}
+
+	entertainmentPackages, total, _, err := h.service.FindAll(entertainment_packages, search, currentPage, pageSize)
 
 	if err != nil {
 		response := utils.APIResponse("Failed to find entertainment package", http.StatusBadRequest, "error", err.Error())
@@ -37,8 +47,14 @@ func (h *EntertainmentPackageController) GetEntertainmentPackages(ctx *gin.Conte
 		return
 	}
 
-	response := utils.APIResponse("Entertainment package result set", http.StatusOK, "success", formatters.FormatEntertainmentPackages(entertainmentPackages))
-	ctx.JSON(http.StatusOK, response)
+	if pageSize > 0 {
+		response := utils.APIResponseWithPagination("Entertainment packages result set", http.StatusOK, "success", total, currentPage, pageSize, formatters.FormatEntertainmentPackages(entertainmentPackages))
+		ctx.JSON(http.StatusOK, response)
+	} else {
+		response := utils.APIResponse("Entertainment packages result set", http.StatusOK, "success", formatters.FormatEntertainmentPackages(entertainmentPackages))
+		ctx.JSON(http.StatusOK, response)
+	}
+
 }
 
 // GetEntertainmentPackage : get entertainment package by id
@@ -73,7 +89,7 @@ func (h *EntertainmentPackageController) UploadImage(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
-	
+
 	file, err := ctx.FormFile("image")
 	if err != nil {
 		data := gin.H{"message": err.Error()}
@@ -84,16 +100,15 @@ func (h *EntertainmentPackageController) UploadImage(ctx *gin.Context) {
 	}
 
 	entertainmentPackage, err := h.service.Find(inputID)
-	if err!= nil {
+	if err != nil {
 		data := gin.H{"message": err.Error()}
-        response := utils.APIResponse("Failed to get entertainment package id", http.StatusBadRequest, "error", data)
+		response := utils.APIResponse("Failed to get entertainment package id", http.StatusBadRequest, "error", data)
 
-        ctx.JSON(http.StatusBadRequest, response)
-        return
-    }
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
 
 	ID := entertainmentPackage.ID
-
 
 	// Check if ImagePath is not nil before proceeding
 	if entertainmentPackage.ImagePath != nil {
@@ -153,7 +168,6 @@ func (h *EntertainmentPackageController) UploadImage(ctx *gin.Context) {
 func (h *EntertainmentPackageController) AddEntertainmentPackage(ctx *gin.Context) {
 	var input inputs.EntertainmentPackageInput
 	customizer := g.Validator(inputs.EntertainmentPackageInput{})
-
 
 	// Check if request body is empty or has no content type
 	if ctx.Request.Body == nil || ctx.Request.ContentLength == 0 || ctx.GetHeader("Content-Type") == "" {

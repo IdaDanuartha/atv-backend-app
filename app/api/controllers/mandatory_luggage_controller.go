@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/formatters"
 	"github.com/IdaDanuartha/atv-backend-app/app/api/inputs"
@@ -26,8 +27,17 @@ func (h *MandatoryLuggageController) GetMandatoryLuggages(ctx *gin.Context) {
 	var mandatory_luggages models.MandatoryLuggage
 
 	search := ctx.Query("search")
+	currentPage, err := strconv.Atoi(ctx.Query("current_page"))
+	if err != nil {
+		currentPage = 1
+	}
 
-	mandatoryLuggages, _, err := h.service.FindAll(mandatory_luggages, search)
+	pageSize, err := strconv.Atoi(ctx.Query("page_size"))
+	if err != nil {
+		pageSize = 0
+	}
+
+	mandatoryLuggages, total, _, err := h.service.FindAll(mandatory_luggages, search, currentPage, pageSize)
 
 	if err != nil {
 		response := utils.APIResponse("Failed to find mandatory luggage", http.StatusBadRequest, "error", err.Error())
@@ -35,8 +45,13 @@ func (h *MandatoryLuggageController) GetMandatoryLuggages(ctx *gin.Context) {
 		return
 	}
 
-	response := utils.APIResponse("Mandatory luggage result set", http.StatusOK, "success", formatters.FormatMandatoryLuggages(mandatoryLuggages))
-	ctx.JSON(http.StatusOK, response)
+	if pageSize > 0 {
+		response := utils.APIResponseWithPagination("Mandatory luggages result set", http.StatusOK, "success", total, currentPage, pageSize, formatters.FormatMandatoryLuggages(mandatoryLuggages))
+		ctx.JSON(http.StatusOK, response)
+	} else {
+		response := utils.APIResponse("Mandatory luggages result set", http.StatusOK, "success", formatters.FormatMandatoryLuggages(mandatoryLuggages))
+		ctx.JSON(http.StatusOK, response)
+	}
 }
 
 // GetMandatoryLuggage : get mandatory luggage by id

@@ -7,7 +7,7 @@ import (
 )
 
 type CustomerService interface {
-	FindAll(model models.Customer, search string) ([]models.Customer, int64, error)
+	FindAll(model models.Customer, search string, currentPage int, pageSize int) ([]models.Customer, int64, int, error)
 	Find(input inputs.GetCustomerDetailInput) (models.Customer, error)
 }
 
@@ -22,13 +22,13 @@ func NewCustomerService(repository repositories.CustomerRepository) customerServ
 }
 
 // FindAll -> calls Customer repo find all method
-func (s customerService) FindAll(model models.Customer, search string) ([]models.Customer, int64, error) {
-	customers, total, err := s.repository.FindAll(model, search)
+func (s customerService) FindAll(model models.Customer, search string, currentPage int, pageSize int) ([]models.Customer, int64, int, error) {
+	customers, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize)
 	if err != nil {
-		return customers, total, err
+		return customers, total, currentPage, err
 	}
 
-	return customers, total, nil
+	return customers, total, currentPage, nil
 }
 
 // Find -> calls Customer repo find method

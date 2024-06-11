@@ -6,7 +6,7 @@ import (
 )
 
 type BookingRepository interface {
-	FindAll(booking models.Booking, search string) ([]models.Booking, int64, error)
+	FindAll(booking models.Booking, search string, currentPage int, pageSize int) ([]models.Booking, int64, int, error)
 	Find(ID string) (models.Booking, error)
 	Save(booking models.Booking) (models.Booking, error)
 	Update(booking models.Booking) (models.Booking, error)
@@ -23,25 +23,44 @@ func NewBookingRepository(db config.Database) bookingRepository {
 }
 
 // FindAll -> Method for fetching all Entertainment Package from database
-func (r bookingRepository) FindAll(booking models.Booking, search string) ([]models.Booking, int64, error) {
+func (r bookingRepository) FindAll(booking models.Booking, search string, currentPage int, pageSize int) ([]models.Booking, int64, int, error) {
 	var bookings []models.Booking
 	var totalRows int64 = 0
 
-	queryBuider := r.db.DB.Order("created_at desc").Model(&models.Booking{})
+	queryBuilder := r.db.DB.Order("created_at desc").Model(&models.Booking{})
 
 	// Search parameter
 	if search != "" {
 		querySearch := "%" + search + "%"
-		queryBuider = queryBuider.Where(
+		queryBuilder = queryBuilder.Where(
 			r.db.DB.Where("bookings.name LIKE ? ", querySearch))
 	}
 
-	err := queryBuider.
-		Preload("BookingDetails.EntertainmentService").
-		Where(booking).
-		Find(&bookings).
-		Count(&totalRows).Error
-	return bookings, totalRows, err
+	if pageSize > 0 {
+		// count the total number of rows
+		err := queryBuilder.
+			Where(booking).
+			Count(&totalRows).Error
+
+		// Apply offset and limit to fetch paginated results
+		err = queryBuilder.
+			Preload("BookingDetails.EntertainmentService").
+			Preload("Customer.User").
+			Where(booking).
+			Offset((currentPage - 1) * pageSize).
+			Limit(pageSize).
+			Find(&bookings).Error
+		return bookings, totalRows, currentPage, err
+	} else {
+		err := queryBuilder.
+			Preload("BookingDetails.EntertainmentService").
+			Preload("Customer.User").
+			Where(booking).
+			Find(&bookings).
+			Count(&totalRows).Error
+
+		return bookings, 0, 0, err
+	}
 }
 
 // Find -> Method for fetching Entertainment Package by id
@@ -49,6 +68,7 @@ func (r bookingRepository) Find(ID string) (models.Booking, error) {
 	var bookings models.Booking
 	err := r.db.DB.
 		Preload("BookingDetails.EntertainmentService").
+		Preload("Customer.User").
 		Debug().
 		Model(&models.Booking{}).
 		Where("id = ?", ID).
@@ -60,6 +80,7 @@ func (r bookingRepository) Find(ID string) (models.Booking, error) {
 func (r bookingRepository) Save(booking models.Booking) (models.Booking, error) {
 	err := r.db.DB.
 		Preload("BookingDetails.EntertainmentService").
+		Preload("Customer.User").
 		Create(&booking).Error
 	if err != nil {
 		return booking, err
@@ -72,6 +93,7 @@ func (r bookingRepository) Save(booking models.Booking) (models.Booking, error) 
 func (r *bookingRepository) Update(booking models.Booking) (models.Booking, error) {
 	err := r.db.DB.
 		Preload("BookingDetails.EntertainmentService").
+		Preload("Customer.User").
 		Save(&booking).Error
 
 	if err != nil {
@@ -85,6 +107,7 @@ func (r *bookingRepository) Update(booking models.Booking) (models.Booking, erro
 func (r bookingRepository) Delete(booking models.Booking) (models.Booking, error) {
 	err := r.db.DB.
 		Preload("BookingDetails.EntertainmentService").
+		Preload("Customer.User").
 		Delete(&booking).Error
 
 	if err != nil {

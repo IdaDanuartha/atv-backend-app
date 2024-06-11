@@ -7,7 +7,7 @@ import (
 )
 
 type EntertainmentServiceService interface {
-	FindAll(model models.EntertainmentService, search string) ([]models.EntertainmentService, int64, error)
+	FindAll(model models.EntertainmentService, search string, currentPage int, pageSize int) ([]models.EntertainmentService, int64, int, error)
 	Find(input inputs.GetEntertainmentServiceDetailInput) (models.EntertainmentService, error)
 	SaveImage(ID string, fileLocation string) (models.EntertainmentService, error)
 	Save(input inputs.EntertainmentServiceInput) (models.EntertainmentService, error)
@@ -26,13 +26,13 @@ func NewEntertainmentServiceService(repository repositories.EntertainmentService
 }
 
 // FindAll -> calls Entertainment Service repo find all method
-func (s entertainmentServiceService) FindAll(model models.EntertainmentService, search string) ([]models.EntertainmentService, int64, error) {
-	entertainmentServices, total, err := s.repository.FindAll(model, search)
+func (s entertainmentServiceService) FindAll(model models.EntertainmentService, search string, currentPage int, pageSize int) ([]models.EntertainmentService, int64, int, error) {
+	entertainmentServices, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize)
 	if err != nil {
-		return entertainmentServices, total, err
+		return entertainmentServices, total, currentPage, err
 	}
 
-	return entertainmentServices, total, nil
+	return entertainmentServices, total, currentPage, nil
 }
 
 // Find -> calls Entertainment Service repo find method
