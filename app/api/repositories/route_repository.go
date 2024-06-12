@@ -33,7 +33,8 @@ func (r routeRepository) FindAll(route models.Route, search string, currentPage 
 	if search != "" {
 		querySearch := "%" + search + "%"
 		queryBuilder = queryBuilder.Where(
-			r.db.DB.Where("routes.name LIKE ? ", querySearch))
+			r.db.DB.Where("routes.name LIKE ? ", querySearch).
+				Or("routes.address LIKE ? ", querySearch))
 	}
 
 	if pageSize > 0 {

@@ -38,7 +38,7 @@ func APIResponseWithPagination(message string, code int, status string, total in
 		Status:      status,
 		Total:       total,
 		CurrentPage: currentPage,
-		PageSize:    10,
+		PageSize:    pageSize,
 	}
 
 	jsonResponse := Response{
