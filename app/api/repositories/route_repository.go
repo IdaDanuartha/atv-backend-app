@@ -36,7 +36,6 @@ func (r routeRepository) FindAll(route models.Route, search string, currentPage 
 			r.db.DB.Where("routes.name LIKE ? ", querySearch).
 				Or("routes.address LIKE ? ", querySearch))
 	}
-
 	if pageSize > 0 {
 		// count the total number of rows
 		err := queryBuilder.
