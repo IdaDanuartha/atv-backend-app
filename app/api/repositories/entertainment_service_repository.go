@@ -32,8 +32,10 @@ func (r entertainmentServiceRepository) FindAll(entertainmentService models.Ente
 	// Search parameter
 	if search != "" {
 		querySearch := "%" + search + "%"
-		queryBuilder = queryBuilder.Where(
-			r.db.DB.Where("entertainment_services.name LIKE ? ", querySearch))
+		queryBuilder = queryBuilder.Joins("JOIN entertainment_categories ON entertainment_categories.id = entertainment_services.entertainment_category_id").Where(
+			r.db.DB.Where("entertainment_services.name LIKE ? ", querySearch).
+				Or("entertainment_services.price LIKE ? ", querySearch).
+				Or("entertainment_categories.name LIKE ? ", querySearch))
 	}
 
 	if pageSize > 0 {

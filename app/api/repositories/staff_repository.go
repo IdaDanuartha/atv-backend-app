@@ -35,8 +35,11 @@ func (r staffRepository) FindAll(staff models.Staff, search string, currentPage 
 	// Search parameter
 	if search != "" {
 		querySearch := "%" + search + "%"
-		queryBuilder = queryBuilder.Where(
-			r.db.DB.Where("staff.name LIKE ? ", querySearch))
+		queryBuilder = queryBuilder.Joins("JOIN users ON users.id = staff.user_id").Where(
+			r.db.DB.Where("staff.name LIKE ? ", querySearch).
+				Or("staff.employee_code LIKE ? ", querySearch).
+				Or("users.username LIKE ? ", querySearch).
+				Or("users.email LIKE ? ", querySearch))
 	}
 
 	if pageSize > 0 {

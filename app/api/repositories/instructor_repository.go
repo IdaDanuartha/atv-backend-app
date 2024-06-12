@@ -36,8 +36,11 @@ func (r instructorRepository) FindAll(instructor models.Instructor, search strin
 	// Search parameter
 	if search != "" {
 		querySearch := "%" + search + "%"
-		queryBuilder = queryBuilder.Where(
-			r.db.DB.Where("instructors.name LIKE ? ", querySearch))
+		queryBuilder = queryBuilder.Joins("JOIN users ON users.id = instructors.user_id").Where(
+			r.db.DB.Where("instructors.name LIKE ? ", querySearch).
+				Or("instructors.employee_code LIKE ? ", querySearch).
+				Or("users.username LIKE ? ", querySearch).
+				Or("users.email LIKE ? ", querySearch))
 	}
 
 	if pageSize > 0 {

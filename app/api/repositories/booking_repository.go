@@ -33,7 +33,14 @@ func (r bookingRepository) FindAll(booking models.Booking, search string, curren
 	if search != "" {
 		querySearch := "%" + search + "%"
 		queryBuilder = queryBuilder.Where(
-			r.db.DB.Where("bookings.name LIKE ? ", querySearch))
+			r.db.DB.Where("bookings.name LIKE ? ", querySearch).
+				Or("bookings.code LIKE ? ", querySearch).
+				Or("bookings.phone_number LIKE ? ", querySearch).
+				Or("bookings.payment_method LIKE ? ", querySearch).
+				Or("bookings.date LIKE ? ", querySearch).
+				Or("bookings.total_price LIKE ? ", querySearch).
+				Or("bookings.total_pay LIKE ? ", querySearch).
+				Or("bookings.total_change LIKE ? ", querySearch))
 	}
 
 	if pageSize > 0 {

@@ -2,6 +2,8 @@ package config
 
 import (
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
+	"log"
 	"os"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
@@ -33,8 +35,35 @@ func NewDatabase() Database {
 
 	}
 
+	passwordHash, _ := bcrypt.GenerateFromPassword([]byte("123456"), bcrypt.MinCost)
+
 	db.AutoMigrate(&models.User{})
 	db.AutoMigrate(&models.Admin{})
+
+	var existingAdmin models.Admin
+	err = db.Debug().Where("name = ?", "Admin").First(&existingAdmin).Error
+
+	if err == gorm.ErrRecordNotFound {
+		// Admin not found, create a new user and admin
+		user := models.User{
+			Username: "admin1",
+			Email:    "admin1@gmail.com",
+			Password: string(passwordHash),
+			Role:     "admin",
+		}
+
+		admin := models.Admin{
+			Name: "Admin",
+			User: user,
+		}
+
+		// Save the user and admin in the database
+		result := db.Create(&admin)
+		if result.Error != nil {
+			log.Fatalf("Failed to create admin: %v", result.Error)
+		}
+	}
+
 	db.AutoMigrate(&models.Staff{})
 	db.AutoMigrate(&models.Instructor{})
 	db.AutoMigrate(&models.Customer{})

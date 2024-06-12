@@ -29,8 +29,11 @@ func (r customerRepository) FindAll(customer models.Customer, search string, cur
 	// Search parameter
 	if search != "" {
 		querySearch := "%" + search + "%"
-		queryBuilder = queryBuilder.Where(
-			r.db.DB.Where("customers.name LIKE ? ", querySearch))
+		queryBuilder = queryBuilder.Joins("JOIN users ON users.id = customers.user_id").Where(
+			r.db.DB.Where("customers.name LIKE ? ", querySearch).
+				Or("customers.phone_number LIKE ? ", querySearch).
+				Or("users.username LIKE ? ", querySearch).
+				Or("users.email LIKE ? ", querySearch))
 	}
 
 	if pageSize > 0 {

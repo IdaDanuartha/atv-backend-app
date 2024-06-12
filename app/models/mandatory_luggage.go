@@ -3,7 +3,7 @@ package models
 // Mandatory Luggage Model
 type MandatoryLuggage struct {
 	Base
-	Name string `gorm:"size:100" json:"name"`
+	Name string `gorm:"size:100;uniqueIndex" json:"name"`
 }
 
 // TableName method sets table name for Bus model

@@ -33,7 +33,10 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 	if search != "" {
 		querySearch := "%" + search + "%"
 		queryBuilder = queryBuilder.Where(
-			r.db.DB.Where("entertainment_packages.name LIKE ? ", querySearch))
+			r.db.DB.Where("entertainment_packages.name LIKE ? ", querySearch).
+				Or("entertainment_packages.description LIKE ? ", querySearch).
+				Or("entertainment_packages.price LIKE ? ", querySearch).
+				Or("entertainment_packages.expired_at LIKE ? ", querySearch))
 	}
 
 	if pageSize > 0 {
