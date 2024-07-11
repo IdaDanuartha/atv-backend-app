@@ -3,9 +3,9 @@ package models
 // Instructor Model
 type Instructor struct {
 	Base
-	Name         string `gorm:"size:100;uniqueIndex" json:"name"`
-	EmployeeCode string `gorm:"size:50;uniqueIndex" json:"employee_code"`
-	UserID       string `gorm:"type:varchar(100);primaryKey;foreignKey:UserID" json:"user_id,omitempty"`
+	Name         string `gorm:"size:100" json:"name"`
+	EmployeeCode string `gorm:"size:50" json:"employee_code"`
+	UserID       string `gorm:"type:varchar(100);foreignKey:UserID" json:"user_id,omitempty"`
 	User         User   `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user"`
 }
 

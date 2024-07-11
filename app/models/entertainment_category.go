@@ -3,7 +3,7 @@ package models
 // Entertainment Category Model
 type EntertainmentCategory struct {
 	Base
-	Name string `gorm:"size:100;uniqueIndex" json:"name"`
+	Name string `gorm:"size:100" json:"name"`
 }
 
 // TableName method sets table name for Bus model

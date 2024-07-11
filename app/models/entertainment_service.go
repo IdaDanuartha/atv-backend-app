@@ -3,7 +3,7 @@ package models
 // Entertainment Service Model
 type EntertainmentService struct {
 	Base
-	Name      string  `gorm:"size:100;uniqueIndex" json:"name"`
+	Name      string  `gorm:"size:100" json:"name"`
 	Price     int32   `json:"price"`
 	ImagePath *string `gorm:"size:150;" json:"image_path"`
 

@@ -3,7 +3,7 @@ package models
 // Route Model
 type Route struct {
 	Base
-	Name    string `gorm:"size:50;uniqueIndex" json:"name"`
+	Name    string `gorm:"size:50" json:"name"`
 	Address string `gorm:"size:100" json:"address"`
 	// StartingRoute string `gorm:"size:50" json:"starting_route"`
 	// FinalRoute string `gorm:"size:50" json:"final_route"`

@@ -125,8 +125,14 @@ func (r instructorRepository) Save(instructor models.Instructor) (models.Instruc
 
 // Update -> Method for updating Instructor
 func (r *instructorRepository) Update(instructor models.Instructor) (models.Instructor, error) {
-	err := r.db.DB.Preload("User").Save(&instructor).Error
+	var user models.User
 
+	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
+	if err != nil {
+		return instructor, err
+	}
+
+	err = r.db.DB.Preload("User").Save(&instructor).Error
 	if err != nil {
 		return instructor, err
 	}
@@ -136,8 +142,12 @@ func (r *instructorRepository) Update(instructor models.Instructor) (models.Inst
 
 // Delete -> Method for deleting Instructor
 func (r instructorRepository) Delete(instructor models.Instructor) (models.Instructor, error) {
-	err := r.db.DB.Preload("User").Delete(&instructor).Error
+	err := r.db.DB.Delete(&instructor.User).Error
+	if err != nil {
+		return instructor, err
+	}
 
+	err = r.db.DB.Delete(&instructor).Error
 	if err != nil {
 		return instructor, err
 	}

@@ -98,8 +98,6 @@ func (s instructorService) Update(inputID inputs.GetInstructorDetailInput, input
 	instructor.User.Username = input.Username
 	instructor.User.Email = input.Email
 	instructor.User.Password = input.Password
-
-	// instructor.User.Role = enums.Role(enums.Instructor)
 	instructor.User.Role = "instructor"
 
 	if input.Password != "" {

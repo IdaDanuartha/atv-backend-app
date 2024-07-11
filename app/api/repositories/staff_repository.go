@@ -112,8 +112,14 @@ func (r staffRepository) Save(staff models.Staff) (models.Staff, error) {
 
 // Update -> Method for updating Staff
 func (r *staffRepository) Update(staff models.Staff) (models.Staff, error) {
-	err := r.db.DB.Preload("User").Save(&staff).Error
+	var user models.User
 
+	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
+	if err != nil {
+		return staff, err
+	}
+
+	err = r.db.DB.Preload("User").Save(&staff).Error
 	if err != nil {
 		return staff, err
 	}
@@ -123,8 +129,12 @@ func (r *staffRepository) Update(staff models.Staff) (models.Staff, error) {
 
 // Delete -> Method for deleting Staff
 func (r staffRepository) Delete(staff models.Staff) (models.Staff, error) {
-	err := r.db.DB.Preload("User").Delete(&staff).Error
+	err := r.db.DB.Delete(&staff.User).Error
+	if err != nil {
+		return staff, err
+	}
 
+	err = r.db.DB.Preload("User").Delete(&staff).Error
 	if err != nil {
 		return staff, err
 	}
