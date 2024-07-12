@@ -141,7 +141,12 @@ func (r *userRepository) FindCustomerByUserID(ID string) (models.Customer, error
 }
 
 func (r *userRepository) Update(user models.User) (models.User, error) {
-	err := r.db.DB.Save(&user).Error
+	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
+	if err != nil {
+		return user, err
+	}
+
+	err = r.db.DB.Save(&user).Error
 
 	if err != nil {
 		return user, err
@@ -151,7 +156,14 @@ func (r *userRepository) Update(user models.User) (models.User, error) {
 }
 
 func (r *userRepository) UpdateAdmin(admin models.Admin) (models.Admin, error) {
-	err := r.db.DB.Save(&admin).Error
+	var user models.User
+
+	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
+	if err != nil {
+		return admin, err
+	}
+
+	err = r.db.DB.Save(&admin).Error
 
 	if err != nil {
 		return admin, err
@@ -161,7 +173,14 @@ func (r *userRepository) UpdateAdmin(admin models.Admin) (models.Admin, error) {
 }
 
 func (r *userRepository) UpdateStaff(staff models.Staff) (models.Staff, error) {
-	err := r.db.DB.Save(&staff).Error
+	var user models.User
+
+	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
+	if err != nil {
+		return staff, err
+	}
+
+	err = r.db.DB.Save(&staff).Error
 
 	if err != nil {
 		return staff, err
@@ -171,7 +190,14 @@ func (r *userRepository) UpdateStaff(staff models.Staff) (models.Staff, error) {
 }
 
 func (r *userRepository) UpdateInstructor(instructor models.Instructor) (models.Instructor, error) {
-	err := r.db.DB.Save(&instructor).Error
+	var user models.User
+
+	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
+	if err != nil {
+		return instructor, err
+	}
+
+	err = r.db.DB.Save(&instructor).Error
 
 	if err != nil {
 		return instructor, err
@@ -181,7 +207,14 @@ func (r *userRepository) UpdateInstructor(instructor models.Instructor) (models.
 }
 
 func (r *userRepository) UpdateCustomer(customer models.Customer) (models.Customer, error) {
-	err := r.db.DB.Save(&customer).Error
+	var user models.User
+
+	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
+	if err != nil {
+		return customer, err
+	}
+
+	err = r.db.DB.Save(&customer).Error
 
 	if err != nil {
 		return customer, err
