@@ -98,19 +98,20 @@ func (s instructorService) Update(inputID inputs.GetInstructorDetailInput, input
 	instructor.EmployeeCode = input.EmployeeCode
 
 	user, _ := s.userRepository.FindByID(instructor.UserID)
+	password := user.Password
 
 	user.Username = input.Username
 	user.Email = input.Email
-	user.Password = input.Password
+	user.Password = password
 	user.Role = "instructor"
 
 	if input.Password != "" {
-		passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
+		password, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
 		if err != nil {
 			return instructor, err
 		}
 
-		user.Password = string(passwordHash)
+		user.Password = string(password)
 	}
 
 	_, err = s.userRepository.Update(user)

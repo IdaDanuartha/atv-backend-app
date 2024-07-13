@@ -18,5 +18,5 @@ type UpdateProfileInput struct {
 	EmployeeCode string `json:"employee_code"`
 	Username     string `json:"username" binding:"required"`
 	Email        string `json:"email" binding:"required,email"`
-	//ProfilePath *string `json:"profile_path" binding:"omitempty"`
+	Password     string `json:"password"`
 }

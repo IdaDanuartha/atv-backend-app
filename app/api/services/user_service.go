@@ -201,8 +201,20 @@ func (s *userService) UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Conte
 		}
 	}
 
+	password := input.Password
+	
 	user.Username = input.Username
 	user.Email = input.Email
+	user.Password = password
+
+	if input.Password != "" {
+		password, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
+		if err != nil {
+			return user, err
+		}
+
+		user.Password = string(password)
+	}
 
 	updatedUser, err := s.repository.Update(user)
 	if err != nil {

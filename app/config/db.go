@@ -35,16 +35,24 @@ func NewDatabase() Database {
 
 	}
 
-	passwordHash, _ := bcrypt.GenerateFromPassword([]byte("123456"), bcrypt.MinCost)
-
 	db.AutoMigrate(&models.User{})
 	db.AutoMigrate(&models.Admin{})
 
-	var existingAdmin models.Admin
-	err = db.Debug().Where("name = ?", "Admin").First(&existingAdmin).Error
+	var adminCount int64
+	var admin models.Admin
+	err = db.Model(&models.Admin{}).Where(admin).Count(&adminCount).Error
 
-	if err == gorm.ErrRecordNotFound {
-		// Admin not found, create a new user and admin
+	if err != nil {
+		log.Fatalf("Failed to count admins: %v", err)
+	}
+
+	if adminCount == 0 {
+		// Admin count is 0, create a new user and admin
+		passwordHash, err := bcrypt.GenerateFromPassword([]byte("123456"), bcrypt.DefaultCost)
+		if err != nil {
+			log.Fatalf("Failed to hash password: %v", err)
+		}
+
 		user := models.User{
 			Username: "admin1",
 			Email:    "admin1@gmail.com",

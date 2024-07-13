@@ -86,19 +86,20 @@ func (s staffService) Update(inputID inputs.GetStaffDetailInput, input inputs.Ed
 	staff.EmployeeCode = input.EmployeeCode
 	
 	user, _ := s.userRepository.FindByID(staff.UserID)
+	password := user.Password
 
 	user.Username = input.Username
 	user.Email = input.Email
-	user.Password = input.Password
+	user.Password = password
 	user.Role = "staff"
 
 	if input.Password != "" {
-		passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
+		password, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
 		if err != nil {
 			return staff, err
 		}
 
-		user.Password = string(passwordHash)
+		user.Password = string(password)
 	}
 
 	_, err = s.userRepository.Update(user)
