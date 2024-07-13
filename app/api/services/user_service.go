@@ -89,7 +89,7 @@ func (s *userService) GetUserByID(ID string) (models.User, error) {
 }
 
 func (s *userService) GetAdminByUserID(ID string) (models.Admin, error) {
-	user, err := s.repository.FindAdminByUserID(ID)
+	user, err := s.repository.FindAdminByUserID(ID, true)
 	if err != nil {
 		return user, err
 	}
@@ -102,7 +102,7 @@ func (s *userService) GetAdminByUserID(ID string) (models.Admin, error) {
 }
 
 func (s *userService) GetStaffByUserID(ID string) (models.Staff, error) {
-	user, err := s.repository.FindStaffByUserID(ID)
+	user, err := s.repository.FindStaffByUserID(ID, true)
 	if err != nil {
 		return user, err
 	}
@@ -115,7 +115,7 @@ func (s *userService) GetStaffByUserID(ID string) (models.Staff, error) {
 }
 
 func (s *userService) GetInstructorByUserID(ID string) (models.Instructor, error) {
-	user, err := s.repository.FindInstructorByUserID(ID)
+	user, err := s.repository.FindInstructorByUserID(ID, true)
 	if err != nil {
 		return user, err
 	}
@@ -128,7 +128,7 @@ func (s *userService) GetInstructorByUserID(ID string) (models.Instructor, error
 }
 
 func (s *userService) GetCustomerByUserID(ID string) (models.Customer, error) {
-	user, err := s.repository.FindCustomerByUserID(ID)
+	user, err := s.repository.FindCustomerByUserID(ID, true)
 	if err != nil {
 		return user, err
 	}
@@ -165,7 +165,7 @@ func (s *userService) UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Conte
 	}
 
 	if user.Role == "admin" {
-		admin, _ := s.repository.FindAdminByUserID(userID)
+		admin, _ := s.repository.FindAdminByUserID(userID, false)
 		admin.Name = input.Name
 
 		_, err := s.repository.UpdateAdmin(admin)
@@ -173,7 +173,7 @@ func (s *userService) UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Conte
 			return user, err
 		}
 	} else if user.Role == "staff" {
-		staff, _ := s.repository.FindStaffByUserID(userID)
+		staff, _ := s.repository.FindStaffByUserID(userID, false)
 		staff.Name = input.Name
 		staff.EmployeeCode = input.EmployeeCode
 
@@ -182,7 +182,7 @@ func (s *userService) UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Conte
 			return user, err
 		}
 	} else if user.Role == "instructor" {
-		instructor, _ := s.repository.FindInstructorByUserID(userID)
+		instructor, _ := s.repository.FindInstructorByUserID(userID, false)
 		instructor.Name = input.Name
 		instructor.EmployeeCode = input.EmployeeCode
 
@@ -191,7 +191,7 @@ func (s *userService) UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Conte
 			return user, err
 		}
 	} else if user.Role == "customer" {
-		customer, _ := s.repository.FindCustomerByUserID(userID)
+		customer, _ := s.repository.FindCustomerByUserID(userID, false)
 		customer.Name = input.Name
 		customer.PhoneNumber = input.PhoneNumber
 

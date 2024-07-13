@@ -4,7 +4,7 @@ package models
 type Admin struct {
 	Base
 	Name   string `gorm:"size:100" json:"name"`
-	UserID string `gorm:"type:varchar(100);foreignKey:UserID" json:"user_id,omitempty"`
+	UserID string `gorm:"type:varchar(100);" json:"user_id,omitempty"`
 	User   User   `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user"`
 }
 

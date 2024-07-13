@@ -14,10 +14,10 @@ type UserRepository interface {
 	FindByEmail(email string) (models.User, error)
 	FindByUsername(username string) (models.User, error)
 	FindByID(ID string) (models.User, error)
-	FindAdminByUserID(ID string) (models.Admin, error)
-	FindStaffByUserID(ID string) (models.Staff, error)
-	FindInstructorByUserID(ID string) (models.Instructor, error)
-	FindCustomerByUserID(ID string) (models.Customer, error)
+	FindAdminByUserID(ID string, showUser bool) (models.Admin, error)
+	FindStaffByUserID(ID string, showUser bool) (models.Staff, error)
+	FindInstructorByUserID(ID string, showUser bool) (models.Instructor, error)
+	FindCustomerByUserID(ID string, showUser bool) (models.Customer, error)
 	Update(user models.User) (models.User, error)
 	UpdateAdmin(admin models.Admin) (models.Admin, error)
 	UpdateStaff(staff models.Staff) (models.Staff, error)
@@ -96,57 +96,85 @@ func (r *userRepository) FindByID(ID string) (models.User, error) {
 	return user, nil
 }
 
-func (r *userRepository) FindAdminByUserID(ID string) (models.Admin, error) {
+func (r *userRepository) FindAdminByUserID(ID string, showUser bool) (models.Admin, error) {
 	var user models.Admin
 
-	err := r.db.DB.Preload("User").Where("user_id = ?", ID).Find(&user).Error
-	if err != nil {
-		return user, err
+	if(showUser) {
+		err := r.db.DB.Preload("User").Where("user_id = ?", ID).Find(&user).Error
+		if err != nil {
+			return user, err
+		}
+	} else {
+		err := r.db.DB.Where("user_id = ?", ID).Find(&user).Error
+		if err != nil {
+			return user, err
+		}
 	}
 
 	return user, nil
 }
 
-func (r *userRepository) FindStaffByUserID(ID string) (models.Staff, error) {
+func (r *userRepository) FindStaffByUserID(ID string, showUser bool) (models.Staff, error) {
 	var user models.Staff
 
-	err := r.db.DB.Preload("User").Where("user_id = ?", ID).Find(&user).Error
-	if err != nil {
-		return user, err
+	if(showUser) {
+		err := r.db.DB.Preload("User").Where("user_id = ?", ID).Find(&user).Error
+		if err != nil {
+			return user, err
+		}
+	} else {
+		err := r.db.DB.Where("user_id = ?", ID).Find(&user).Error
+		if err != nil {
+			return user, err
+		}
 	}
 
 	return user, nil
 }
 
-func (r *userRepository) FindInstructorByUserID(ID string) (models.Instructor, error) {
+func (r *userRepository) FindInstructorByUserID(ID string, showUser bool) (models.Instructor, error) {
 	var user models.Instructor
 
-	err := r.db.DB.Preload("User").Where("user_id = ?", ID).Find(&user).Error
-	if err != nil {
-		return user, err
+	if(showUser) {
+		err := r.db.DB.Preload("User").Where("user_id = ?", ID).Find(&user).Error
+		if err != nil {
+			return user, err
+		}
+	} else {
+		err := r.db.DB.Where("user_id = ?", ID).Find(&user).Error
+		if err != nil {
+			return user, err
+		}
 	}
 
 	return user, nil
 }
 
-func (r *userRepository) FindCustomerByUserID(ID string) (models.Customer, error) {
+func (r *userRepository) FindCustomerByUserID(ID string, showUser bool) (models.Customer, error) {
 	var user models.Customer
 
-	err := r.db.DB.Preload("User").Where("user_id = ?", ID).Find(&user).Error
-	if err != nil {
-		return user, err
+	if(showUser) {
+		err := r.db.DB.Preload("User").Where("user_id = ?", ID).Find(&user).Error
+		if err != nil {
+			return user, err
+		}
+	} else {
+		err := r.db.DB.Where("user_id = ?", ID).Find(&user).Error
+		if err != nil {
+			return user, err
+		}
 	}
 
 	return user, nil
 }
 
 func (r *userRepository) Update(user models.User) (models.User, error) {
-	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
-	if err != nil {
-		return user, err
-	}
+	// err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
+	// if err != nil {
+	// 	return user, err
+	// }
 
-	err = r.db.DB.Save(&user).Error
+	err := r.db.DB.Save(&user).Error
 
 	if err != nil {
 		return user, err
@@ -156,14 +184,14 @@ func (r *userRepository) Update(user models.User) (models.User, error) {
 }
 
 func (r *userRepository) UpdateAdmin(admin models.Admin) (models.Admin, error) {
-	var user models.User
+	// var user models.User
 
-	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
-	if err != nil {
-		return admin, err
-	}
+	// err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
+	// if err != nil {
+	// 	return admin, err
+	// }
 
-	err = r.db.DB.Save(&admin).Error
+	err := r.db.DB.Save(&admin).Error
 
 	if err != nil {
 		return admin, err
@@ -173,14 +201,7 @@ func (r *userRepository) UpdateAdmin(admin models.Admin) (models.Admin, error) {
 }
 
 func (r *userRepository) UpdateStaff(staff models.Staff) (models.Staff, error) {
-	var user models.User
-
-	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
-	if err != nil {
-		return staff, err
-	}
-
-	err = r.db.DB.Save(&staff).Error
+	err := r.db.DB.Save(&staff).Error
 
 	if err != nil {
 		return staff, err
@@ -190,14 +211,7 @@ func (r *userRepository) UpdateStaff(staff models.Staff) (models.Staff, error) {
 }
 
 func (r *userRepository) UpdateInstructor(instructor models.Instructor) (models.Instructor, error) {
-	var user models.User
-
-	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
-	if err != nil {
-		return instructor, err
-	}
-
-	err = r.db.DB.Save(&instructor).Error
+	err := r.db.DB.Save(&instructor).Error
 
 	if err != nil {
 		return instructor, err
@@ -207,14 +221,7 @@ func (r *userRepository) UpdateInstructor(instructor models.Instructor) (models.
 }
 
 func (r *userRepository) UpdateCustomer(customer models.Customer) (models.Customer, error) {
-	var user models.User
-
-	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
-	if err != nil {
-		return customer, err
-	}
-
-	err = r.db.DB.Save(&customer).Error
+	err := r.db.DB.Save(&customer).Error
 
 	if err != nil {
 		return customer, err
