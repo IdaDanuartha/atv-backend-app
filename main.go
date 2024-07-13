@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 	"os"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/api/controllers"
@@ -95,7 +97,37 @@ func main() {
     bookingRoute := routes.NewBookingRoute(*bookingController, router)
     bookingRoute.Setup(authMiddleware)
 
-	router.Gin.Run(":" + os.Getenv("APP_PORT"))
+	// router.Gin.Run(":" + os.Getenv("APP_PORT"))
+
+	enchancedRouter := enableCORS(jsonContentTypeMiddleware(router.Gin))
 
 	fmt.Println("App running in port: ", os.Getenv("APP_PORT"))
+	log.Fatal(http.ListenAndServe(":" + os.Getenv("APP_PORT"), enchancedRouter))
+}
+
+func enableCORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Set CORS headers
+		w.Header().Set("Access-Control-Allow-Origin", "*") // Allow any origin
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		// Check if the request is for CORS preflight
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		// Pass down the request to the next middleware (or final handler)
+		next.ServeHTTP(w, r)
+	})
+
+}
+
+func jsonContentTypeMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Set JSON Content-Type
+		w.Header().Set("Content-Type", "application/json")
+		next.ServeHTTP(w, r)
+	})
 }
