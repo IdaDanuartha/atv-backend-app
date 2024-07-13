@@ -19,11 +19,12 @@ type StaffService interface {
 // StaffService StaffService struct
 type staffService struct {
 	repository repositories.StaffRepository
+	userRepository repositories.UserRepository
 }
 
 // NewStaffService : returns the StaffService struct instance
-func NewStaffService(repository repositories.StaffRepository) staffService {
-	return staffService{repository}
+func NewStaffService(repository repositories.StaffRepository, userRepository repositories.UserRepository) staffService {
+	return staffService{repository, userRepository}
 }
 
 // FindAll -> calls Staff repo find all method
@@ -38,7 +39,7 @@ func (s staffService) FindAll(model models.Staff, search string, currentPage int
 
 // Find -> calls Staff repo find method
 func (s staffService) Find(input inputs.GetStaffDetailInput) (models.Staff, error) {
-	staff, err := s.repository.Find(input.ID)
+	staff, err := s.repository.Find(input.ID, true)
 
 	if err != nil {
 		return staff, err
@@ -76,19 +77,20 @@ func (s staffService) Save(input inputs.StaffInput) (models.Staff, error) {
 
 // Update -> calls Staff repo update method
 func (s staffService) Update(inputID inputs.GetStaffDetailInput, input inputs.EditStaffInput) (models.Staff, error) {
-	staff, err := s.repository.Find(inputID.ID)
+	staff, err := s.repository.Find(inputID.ID, false)
 	if err != nil {
 		return staff, err
 	}
 
 	staff.Name = input.Name
 	staff.EmployeeCode = input.EmployeeCode
-	staff.User.Username = input.Username
-	staff.User.Email = input.Email
-	staff.User.Password = input.Password
+	
+	user, _ := s.userRepository.FindByID(staff.UserID)
 
-	// staff.User.Role = enums.Role(enums.Staff)
-	staff.User.Role = "staff"
+	user.Username = input.Username
+	user.Email = input.Email
+	user.Password = input.Password
+	user.Role = "staff"
 
 	if input.Password != "" {
 		passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
@@ -96,7 +98,12 @@ func (s staffService) Update(inputID inputs.GetStaffDetailInput, input inputs.Ed
 			return staff, err
 		}
 
-		staff.User.Password = string(passwordHash)
+		user.Password = string(passwordHash)
+	}
+
+	_, err = s.userRepository.Update(user)
+	if err != nil {
+		return staff, err
 	}
 
 	updatedStaff, err := s.repository.Update(staff)
@@ -109,7 +116,7 @@ func (s staffService) Update(inputID inputs.GetStaffDetailInput, input inputs.Ed
 
 // Delete -> calls Staff repo delete method
 func (s staffService) Delete(inputID inputs.GetStaffDetailInput) (models.Staff, error) {
-	staff, err := s.repository.Find(inputID.ID)
+	staff, err := s.repository.Find(inputID.ID, false)
 	if err != nil {
 		return staff, err
 	}

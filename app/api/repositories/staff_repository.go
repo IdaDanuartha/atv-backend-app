@@ -10,7 +10,7 @@ import (
 
 type StaffRepository interface {
 	FindAll(staff models.Staff, search string, currentPage int, pageSize int) ([]models.Staff, int64, int, error)
-	Find(ID string) (models.Staff, error)
+	Find(ID string, showRelations bool) (models.Staff, error)
 	Save(staff models.Staff) (models.Staff, error)
 	Update(staff models.Staff) (models.Staff, error)
 	Delete(staff models.Staff) (models.Staff, error)
@@ -47,7 +47,10 @@ func (r staffRepository) FindAll(staff models.Staff, search string, currentPage 
 		err := queryBuilder.
 			Where(staff).
 			Count(&totalRows).Error
-
+		if err != nil {
+			return nil, 0, 0, err
+		}
+			
 		// Apply offset and limit to fetch paginated results
 		err = queryBuilder.
 			Preload("User").
@@ -67,15 +70,25 @@ func (r staffRepository) FindAll(staff models.Staff, search string, currentPage 
 }
 
 // Find -> Method for fetching Staff by id
-func (r staffRepository) Find(ID string) (models.Staff, error) {
+func (r staffRepository) Find(ID string, showRelations bool) (models.Staff, error) {
 	var staffs models.Staff
-	err := r.db.DB.
-		Preload("User").
-		Debug().
-		Model(&models.Staff{}).
-		Where("id = ?", ID).
-		Find(&staffs).Error
-	return staffs, err
+	
+	if(showRelations) {
+		err := r.db.DB.
+			Preload("User").
+			Debug().
+			Model(&models.Staff{}).
+			Where("id = ?", ID).
+			Find(&staffs).Error
+		return staffs, err
+	} else {
+		err := r.db.DB.
+			Debug().
+			Model(&models.Staff{}).
+			Where("id = ?", ID).
+			Find(&staffs).Error
+		return staffs, err
+	}
 }
 
 // Save -> Method for saving Staff to database
@@ -112,14 +125,7 @@ func (r staffRepository) Save(staff models.Staff) (models.Staff, error) {
 
 // Update -> Method for updating Staff
 func (r *staffRepository) Update(staff models.Staff) (models.Staff, error) {
-	var user models.User
-
-	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
-	if err != nil {
-		return staff, err
-	}
-
-	err = r.db.DB.Preload("User").Save(&staff).Error
+	err := r.db.DB.Save(&staff).Error
 	if err != nil {
 		return staff, err
 	}

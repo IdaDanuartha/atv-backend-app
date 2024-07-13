@@ -71,13 +71,13 @@ func main() {
 
 	// User Management
 	instructorRepository := repositories.NewInstructorRepository(db)
-    instructorService := services.NewInstructorService(&instructorRepository)
+    instructorService := services.NewInstructorService(&instructorRepository, userRepository)
     instructorController := controllers.NewInstructorController(instructorService)
     instructorRoute := routes.NewInstructorRoute(*instructorController, router)
     instructorRoute.Setup(authMiddleware)
 
 	staffRepository := repositories.NewStaffRepository(db)
-	staffService := services.NewStaffService(&staffRepository)
+	staffService := services.NewStaffService(&staffRepository, userRepository)
 	staffController := controllers.NewStaffController(staffService)
 	staffRoute := routes.NewStaffRoute(*staffController, router)
 	staffRoute.Setup(authMiddleware)

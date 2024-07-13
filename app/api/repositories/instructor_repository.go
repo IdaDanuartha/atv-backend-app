@@ -10,7 +10,7 @@ import (
 
 type InstructorRepository interface {
 	FindAll(instructor models.Instructor, search string, currentPage int, pageSize int) ([]models.Instructor, int64, int, error)
-	Find(ID string) (models.Instructor, error)
+	Find(ID string, showRelations bool) (models.Instructor, error)
 	FindByUserID(userID string) (models.Instructor, error)
 	Save(instructor models.Instructor) (models.Instructor, error)
 	Update(instructor models.Instructor) (models.Instructor, error)
@@ -48,6 +48,9 @@ func (r instructorRepository) FindAll(instructor models.Instructor, search strin
 		err := queryBuilder.
 			Where(instructor).
 			Count(&totalRows).Error
+		if err != nil {
+			return nil, 0, 0, err
+		}
 
 		// Apply offset and limit to fetch paginated results
 		err = queryBuilder.
@@ -68,15 +71,27 @@ func (r instructorRepository) FindAll(instructor models.Instructor, search strin
 }
 
 // Find -> Method for fetching Instructor by id
-func (r instructorRepository) Find(ID string) (models.Instructor, error) {
+func (r instructorRepository) Find(ID string, showRelations bool) (models.Instructor, error) {
 	var instructors models.Instructor
-	err := r.db.DB.
+	
+	if(showRelations) {
+		err := r.db.DB.
 		Preload("User").
 		Debug().
 		Model(&models.Instructor{}).
 		Where("id = ?", ID).
 		Find(&instructors).Error
-	return instructors, err
+
+		return instructors, err
+	} else {
+		err := r.db.DB.
+		Debug().
+		Model(&models.Instructor{}).
+		Where("id = ?", ID).
+		Find(&instructors).Error
+
+		return instructors, err
+	}
 }
 
 // FindByUserID -> Method for fetching Instructor by user id
@@ -125,14 +140,7 @@ func (r instructorRepository) Save(instructor models.Instructor) (models.Instruc
 
 // Update -> Method for updating Instructor
 func (r *instructorRepository) Update(instructor models.Instructor) (models.Instructor, error) {
-	var user models.User
-
-	err := r.db.DB.Order("created_at desc").First(&user).Unscoped().Delete(&user).Error
-	if err != nil {
-		return instructor, err
-	}
-
-	err = r.db.DB.Preload("User").Save(&instructor).Error
+	err := r.db.DB.Save(&instructor).Error
 	if err != nil {
 		return instructor, err
 	}

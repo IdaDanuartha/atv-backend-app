@@ -20,11 +20,12 @@ type InstructorService interface {
 // InstructorService InstructorService struct
 type instructorService struct {
 	repository repositories.InstructorRepository
+	userRepository repositories.UserRepository
 }
 
 // NewInstructorService : returns the InstructorService struct instance
-func NewInstructorService(repository repositories.InstructorRepository) instructorService {
-	return instructorService{repository}
+func NewInstructorService(repository repositories.InstructorRepository, userRepository repositories.UserRepository) instructorService {
+	return instructorService{repository, userRepository}
 }
 
 // FindAll -> calls Instructor repo find all method
@@ -39,7 +40,7 @@ func (s instructorService) FindAll(model models.Instructor, search string, curre
 
 // Find -> calls Instructor repo find method
 func (s instructorService) Find(input inputs.GetInstructorDetailInput) (models.Instructor, error) {
-	instructor, err := s.repository.Find(input.ID)
+	instructor, err := s.repository.Find(input.ID, true)
 
 	if err != nil {
 		return instructor, err
@@ -50,7 +51,7 @@ func (s instructorService) Find(input inputs.GetInstructorDetailInput) (models.I
 
 // FindByUserID -> calls Instructor repo find method
 func (s instructorService) FindByUserID(input inputs.GetInstructorDetailInput) (models.Instructor, error) {
-	instructor, err := s.repository.Find(input.ID)
+	instructor, err := s.repository.Find(input.ID, true)
 
 	if err != nil {
 		return instructor, err
@@ -88,17 +89,20 @@ func (s instructorService) Save(input inputs.InstructorInput) (models.Instructor
 
 // Update -> calls Instructor repo update method
 func (s instructorService) Update(inputID inputs.GetInstructorDetailInput, input inputs.EditInstructorInput) (models.Instructor, error) {
-	instructor, err := s.repository.Find(inputID.ID)
+	instructor, err := s.repository.Find(inputID.ID, false)
 	if err != nil {
 		return instructor, err
 	}
 
 	instructor.Name = input.Name
 	instructor.EmployeeCode = input.EmployeeCode
-	instructor.User.Username = input.Username
-	instructor.User.Email = input.Email
-	instructor.User.Password = input.Password
-	instructor.User.Role = "instructor"
+
+	user, _ := s.userRepository.FindByID(instructor.UserID)
+
+	user.Username = input.Username
+	user.Email = input.Email
+	user.Password = input.Password
+	user.Role = "instructor"
 
 	if input.Password != "" {
 		passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
@@ -106,9 +110,14 @@ func (s instructorService) Update(inputID inputs.GetInstructorDetailInput, input
 			return instructor, err
 		}
 
-		instructor.User.Password = string(passwordHash)
+		user.Password = string(passwordHash)
 	}
 
+	_, err = s.userRepository.Update(user)
+	if err != nil {
+		return instructor, err
+	}
+	
 	updatedInstructor, err := s.repository.Update(instructor)
 	if err != nil {
 		return updatedInstructor, err
@@ -119,7 +128,7 @@ func (s instructorService) Update(inputID inputs.GetInstructorDetailInput, input
 
 // Delete -> calls Instructor repo delete method
 func (s instructorService) Delete(inputID inputs.GetInstructorDetailInput) (models.Instructor, error) {
-	instructor, err := s.repository.Find(inputID.ID)
+	instructor, err := s.repository.Find(inputID.ID, false)
 	if err != nil {
 		return instructor, err
 	}
