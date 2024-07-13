@@ -6,7 +6,7 @@ import "time"
 type Booking struct {
 	Base
 	Customer       Customer        `gorm:"foreignKey:CustomerID" json:"customer"`
-	CustomerID     string          `gorm:"type:varchar(100);foreignKey:CustomerID" json:"customer_id,omitempty"`
+	CustomerID     string          `gorm:"type:varchar(100);" json:"customer_id,omitempty"`
 	Code           string          `gorm:"size:100" json:"code"`
 	Name           string          `gorm:"size:100" json:"name"`
 	PhoneNumber    string          `gorm:"size:15" json:"phone_number"`

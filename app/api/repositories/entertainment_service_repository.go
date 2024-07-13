@@ -7,7 +7,7 @@ import (
 
 type EntertainmentServiceRepository interface {
 	FindAll(entertainmentService models.EntertainmentService, search string, currentPage int, pageSize int) ([]models.EntertainmentService, int64, int, error)
-	Find(ID string) (models.EntertainmentService, error)
+	Find(ID string, showRelations bool) (models.EntertainmentService, error)
 	Save(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
 	Update(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
 	Delete(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
@@ -71,19 +71,29 @@ func (r entertainmentServiceRepository) FindAll(entertainmentService models.Ente
 }
 
 // Find -> Method for fetching Entertainment Service by id
-func (r entertainmentServiceRepository) Find(ID string) (models.EntertainmentService, error) {
+func (r entertainmentServiceRepository) Find(ID string, showRelations bool) (models.EntertainmentService, error) {
 	var entertainment_services models.EntertainmentService
-	err := r.db.DB.
-		Preload("EntertainmentCategory").
-		Preload("Routes.Route").
-		Preload("Facilities.Facility").
-		Preload("Instructors.Instructor.User").
-		Preload("MandatoryLuggages.MandatoryLuggage").
-		Debug().
-		Model(&models.EntertainmentService{}).
-		Where("id = ?", ID).
-		Find(&entertainment_services).Error
-	return entertainment_services, err
+	
+	if(showRelations) {
+		err := r.db.DB.
+			Preload("EntertainmentCategory").
+			Preload("Routes.Route").
+			Preload("Facilities.Facility").
+			Preload("Instructors.Instructor.User").
+			Preload("MandatoryLuggages.MandatoryLuggage").
+			Debug().
+			Model(&models.EntertainmentService{}).
+			Where("id = ?", ID).
+			Find(&entertainment_services).Error
+		return entertainment_services, err
+	} else {
+		err := r.db.DB.
+			Debug().
+			Model(&models.EntertainmentService{}).
+			Where("id = ?", ID).
+			Find(&entertainment_services).Error
+		return entertainment_services, err
+	}
 }
 
 // Save -> Method for saving Entertainment Service to database
@@ -102,17 +112,6 @@ func (r entertainmentServiceRepository) Save(entertainmentService models.Enterta
 
 	return entertainmentService, nil
 }
-
-// Delete -> Method for deleting Entertainment Service Route
-//func (r entertainmentServiceRepository) DeleteRoute(entertainmentServiceRoute models.EntertainmentServiceRoute) (error) {
-//	err := r.db.DB.Delete(&entertainmentServiceRoute).Error
-//
-//	if err != nil {
-//		return err
-//	}
-//
-//	return nil
-//}
 
 // Update -> Method for updating Entertainment Service
 func (r *entertainmentServiceRepository) Update(entertainmentService models.EntertainmentService) (models.EntertainmentService, error) {
@@ -149,11 +148,11 @@ func (r *entertainmentServiceRepository) Update(entertainmentService models.Ente
 	}
 
 	err = r.db.DB.
-		Preload("EntertainmentCategory").
-		Preload("Routes.Route").
-		Preload("Facilities.Facility").
-		Preload("Instructors.Instructor.User").
-		Preload("MandatoryLuggages.MandatoryLuggage").
+		// Preload("EntertainmentCategory").
+		// Preload("Routes.Route").
+		// Preload("Facilities.Facility").
+		// Preload("Instructors.Instructor.User").
+		// Preload("MandatoryLuggages.MandatoryLuggage").
 		Save(&entertainmentService).Error
 
 	if err != nil {
