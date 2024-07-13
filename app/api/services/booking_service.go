@@ -37,7 +37,7 @@ func (s bookingService) FindAll(model models.Booking, search string, currentPage
 
 // Find -> calls Booking repo find method
 func (s bookingService) Find(input inputs.GetBookingDetailInput) (models.Booking, error) {
-	booking, err := s.repository.Find(input.ID)
+	booking, err := s.repository.Find(input.ID, true)
 
 	if err != nil {
 		return booking, err
@@ -71,7 +71,7 @@ func (s bookingService) Save(input inputs.BookingInput) (models.Booking, error) 
 
 // Update -> calls Booking repo update method
 func (s bookingService) Update(inputID inputs.GetBookingDetailInput, input inputs.BookingInput) (models.Booking, error) {
-	booking, err := s.repository.Find(inputID.ID)
+	booking, err := s.repository.Find(inputID.ID, false)
 	if err != nil {
 		return booking, err
 	}
@@ -95,7 +95,7 @@ func (s bookingService) Update(inputID inputs.GetBookingDetailInput, input input
 
 // Delete -> calls Booking repo delete method
 func (s bookingService) Delete(inputID inputs.GetBookingDetailInput) (models.Booking, error) {
-	booking, err := s.repository.Find(inputID.ID)
+	booking, err := s.repository.Find(inputID.ID, true)
 	if err != nil {
 		return booking, err
 	}

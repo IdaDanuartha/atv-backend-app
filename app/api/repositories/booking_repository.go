@@ -7,7 +7,7 @@ import (
 
 type BookingRepository interface {
 	FindAll(booking models.Booking, search string, currentPage int, pageSize int) ([]models.Booking, int64, int, error)
-	Find(ID string) (models.Booking, error)
+	Find(ID string, showRelations bool) (models.Booking, error)
 	Save(booking models.Booking) (models.Booking, error)
 	Update(booking models.Booking) (models.Booking, error)
 	Delete(booking models.Booking) (models.Booking, error)
@@ -71,16 +71,26 @@ func (r bookingRepository) FindAll(booking models.Booking, search string, curren
 }
 
 // Find -> Method for fetching Entertainment Package by id
-func (r bookingRepository) Find(ID string) (models.Booking, error) {
+func (r bookingRepository) Find(ID string, showRelations bool) (models.Booking, error) {
 	var bookings models.Booking
-	err := r.db.DB.
-		Preload("BookingDetails.EntertainmentService").
-		Preload("Customer.User").
-		Debug().
-		Model(&models.Booking{}).
-		Where("id = ?", ID).
-		Find(&bookings).Error
-	return bookings, err
+	
+	if(showRelations) {
+		err := r.db.DB.
+			Preload("BookingDetails.EntertainmentService").
+			Preload("Customer.User").
+			Debug().
+			Model(&models.Booking{}).
+			Where("id = ?", ID).
+			Find(&bookings).Error
+		return bookings, err
+	} else {
+		err := r.db.DB.
+			Debug().
+			Model(&models.Booking{}).
+			Where("id = ?", ID).
+			Find(&bookings).Error
+		return bookings, err
+	}
 }
 
 // Save -> Method for saving Entertainment Package to database
@@ -98,10 +108,7 @@ func (r bookingRepository) Save(booking models.Booking) (models.Booking, error) 
 
 // Update -> Method for updating Entertainment Package
 func (r *bookingRepository) Update(booking models.Booking) (models.Booking, error) {
-	err := r.db.DB.
-		Preload("BookingDetails.EntertainmentService").
-		Preload("Customer.User").
-		Save(&booking).Error
+	err := r.db.DB.Save(&booking).Error
 
 	if err != nil {
 		return booking, err
