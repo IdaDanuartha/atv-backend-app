@@ -35,6 +35,8 @@ Adjust the .env configuration according to your settings
   DB_HOST=localhost
   DB_PORT=3306
   DB_DATABASE=atv_system
+
+  SECRET_KEY=atv_system_s3cr3T_k3Y
 ```
 
 Install golang
