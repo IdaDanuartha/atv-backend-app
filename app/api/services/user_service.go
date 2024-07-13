@@ -201,7 +201,7 @@ func (s *userService) UpdateUser(input inputs.UpdateProfileInput, ctx *gin.Conte
 		}
 	}
 
-	password := input.Password
+	password := user.Password
 	
 	user.Username = input.Username
 	user.Email = input.Email
