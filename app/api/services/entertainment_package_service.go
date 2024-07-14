@@ -37,7 +37,7 @@ func (s entertainmentPackageService) FindAll(model models.EntertainmentPackage, 
 
 // Find -> calls Entertainment Package repo find method
 func (s entertainmentPackageService) Find(input inputs.GetEntertainmentPackageDetailInput) (models.EntertainmentPackage, error) {
-	entertainmentPackage, err := s.repository.Find(input.ID)
+	entertainmentPackage, err := s.repository.Find(input.ID, true)
 
 	if err != nil {
 		return entertainmentPackage, err
@@ -47,7 +47,7 @@ func (s entertainmentPackageService) Find(input inputs.GetEntertainmentPackageDe
 }
 
 func (s entertainmentPackageService) SaveImage(ID string, fileLocation string) (models.EntertainmentPackage, error) {
-	entertainment_package, err := s.repository.Find(ID)
+	entertainment_package, err := s.repository.Find(ID, false)
 	if err != nil {
 		return entertainment_package, err
 	}
@@ -82,7 +82,7 @@ func (s entertainmentPackageService) Save(input inputs.EntertainmentPackageInput
 
 // Update -> calls Entertainment Package repo update method
 func (s entertainmentPackageService) Update(inputID inputs.GetEntertainmentPackageDetailInput, input inputs.EntertainmentPackageInput) (models.EntertainmentPackage, error) {
-	entertainmentPackage, err := s.repository.Find(inputID.ID)
+	entertainmentPackage, err := s.repository.Find(inputID.ID, false)
 	if err != nil {
 		return entertainmentPackage, err
 	}
@@ -103,7 +103,7 @@ func (s entertainmentPackageService) Update(inputID inputs.GetEntertainmentPacka
 
 // Delete -> calls Entertainment Package repo delete method
 func (s entertainmentPackageService) Delete(inputID inputs.GetEntertainmentPackageDetailInput) (models.EntertainmentPackage, error) {
-	entertainmentPackage, err := s.repository.Find(inputID.ID)
+	entertainmentPackage, err := s.repository.Find(inputID.ID, true)
 	if err != nil {
 		return entertainmentPackage, err
 	}

@@ -7,7 +7,7 @@ import (
 
 type EntertainmentPackageRepository interface {
 	FindAll(entertainmentPackage models.EntertainmentPackage, search string, currentPage int, pageSize int) ([]models.EntertainmentPackage, int64, int, error)
-	Find(ID string) (models.EntertainmentPackage, error)
+	Find(ID string, showRelations bool) (models.EntertainmentPackage, error)
 	Save(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error)
 	Update(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error)
 	Delete(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error)
@@ -47,7 +47,7 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 
 		// Apply offset and limit to fetch paginated results
 		err = queryBuilder.
-			Preload("EntertainmentPackageDetails.EntertainmentService").
+			Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
 			Where(entertainmentPackage).
 			Offset((currentPage - 1) * pageSize).
 			Limit(pageSize).
@@ -55,7 +55,7 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 		return entertainment_packages, totalRows, currentPage, err
 	} else {
 		err := queryBuilder.
-			Preload("EntertainmentPackageDetails.EntertainmentService").
+			Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
 			Where(entertainmentPackage).
 			Find(&entertainment_packages).
 			Count(&totalRows).Error
@@ -64,21 +64,31 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 }
 
 // Find -> Method for fetching Entertainment Package by id
-func (r entertainmentPackageRepository) Find(ID string) (models.EntertainmentPackage, error) {
+func (r entertainmentPackageRepository) Find(ID string, showRelations bool) (models.EntertainmentPackage, error) {
 	var entertainment_packages models.EntertainmentPackage
-	err := r.db.DB.
-		Preload("EntertainmentPackageDetails.EntertainmentService").
-		Debug().
-		Model(&models.EntertainmentPackage{}).
-		Where("id = ?", ID).
-		Find(&entertainment_packages).Error
-	return entertainment_packages, err
+	
+	if(showRelations) {
+		err := r.db.DB.
+			Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
+			Debug().
+			Model(&models.EntertainmentPackage{}).
+			Where("id = ?", ID).
+			Find(&entertainment_packages).Error
+		return entertainment_packages, err
+	} else {
+		err := r.db.DB.
+			Debug().
+			Model(&models.EntertainmentPackage{}).
+			Where("id = ?", ID).
+			Find(&entertainment_packages).Error
+		return entertainment_packages, err
+	}
 }
 
 // Save -> Method for saving Entertainment Package to database
 func (r entertainmentPackageRepository) Save(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error) {
 	err := r.db.DB.
-		Preload("EntertainmentPackageDetails.EntertainmentService").
+		Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
 		Create(&entertainmentPackage).Error
 	if err != nil {
 		return entertainmentPackage, err
@@ -90,7 +100,7 @@ func (r entertainmentPackageRepository) Save(entertainmentPackage models.Enterta
 // Update -> Method for updating Entertainment Package
 func (r *entertainmentPackageRepository) Update(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error) {
 	err := r.db.DB.
-		Preload("EntertainmentPackageDetails.EntertainmentService").
+		Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
 		Save(&entertainmentPackage).Error
 
 	if err != nil {
@@ -103,7 +113,7 @@ func (r *entertainmentPackageRepository) Update(entertainmentPackage models.Ente
 // Delete -> Method for deleting Entertainment Package
 func (r entertainmentPackageRepository) Delete(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error) {
 	err := r.db.DB.
-		Preload("EntertainmentPackageDetails.EntertainmentService").
+		Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
 		Delete(&entertainmentPackage).Error
 
 	if err != nil {

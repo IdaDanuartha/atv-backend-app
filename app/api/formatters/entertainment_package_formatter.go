@@ -33,6 +33,12 @@ func FormatEntertainmentPackage(entertainmentPackage models.EntertainmentPackage
 		newPackageDetail.EntertainmentService.UpdatedAt = packageDetail.EntertainmentService.UpdatedAt
 		newPackageDetail.EntertainmentService.DeletedAt = packageDetail.EntertainmentService.DeletedAt
 
+		newPackageDetail.EntertainmentService.EntertainmentCategory.ID = packageDetail.EntertainmentService.EntertainmentCategory.ID
+		newPackageDetail.EntertainmentService.EntertainmentCategory.Name = packageDetail.EntertainmentService.EntertainmentCategory.Name
+		newPackageDetail.EntertainmentService.EntertainmentCategory.CreatedAt = packageDetail.EntertainmentService.EntertainmentCategory.CreatedAt
+		newPackageDetail.EntertainmentService.EntertainmentCategory.UpdatedAt = packageDetail.EntertainmentService.EntertainmentCategory.UpdatedAt
+		newPackageDetail.EntertainmentService.EntertainmentCategory.DeletedAt = packageDetail.EntertainmentService.EntertainmentCategory.DeletedAt
+
 		packageDetails = append(packageDetails, newPackageDetail)
 	}
 	entertainmentPackageFormatter.EntertainmentPackageDetails = packageDetails
