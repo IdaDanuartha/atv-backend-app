@@ -165,8 +165,8 @@ func (h *EntertainmentServiceController) UploadImage(ctx *gin.Context) {
 
 // AddEntertainmentService : AddEntertainmentService controller
 func (h *EntertainmentServiceController) AddEntertainmentService(ctx *gin.Context) {
-	var input inputs.CreateEntertainmentServiceInput
-	customizer := g.Validator(inputs.CreateEntertainmentServiceInput{})
+	var input inputs.EntertainmentServiceInput
+	customizer := g.Validator(inputs.EntertainmentServiceInput{})
 
 	// Check if request body is empty or has no content type
 	if ctx.Request.Body == nil || ctx.Request.ContentLength == 0 || ctx.GetHeader("Content-Type") == "" {
