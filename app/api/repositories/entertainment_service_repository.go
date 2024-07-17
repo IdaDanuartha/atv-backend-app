@@ -10,6 +10,7 @@ type EntertainmentServiceRepository interface {
 	Find(ID string, showRelations bool) (models.EntertainmentService, error)
 	Save(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
 	Update(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
+	UpdateImagePath(ID string, fileLocation string) error
 	Delete(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
 }
 
@@ -148,11 +149,6 @@ func (r *entertainmentServiceRepository) Update(entertainmentService models.Ente
 	}
 
 	err = r.db.DB.
-		// Preload("EntertainmentCategory").
-		// Preload("Routes.Route").
-		// Preload("Facilities.Facility").
-		// Preload("Instructors.Instructor.User").
-		// Preload("MandatoryLuggages.MandatoryLuggage").
 		Save(&entertainmentService).Error
 
 	if err != nil {
@@ -160,6 +156,11 @@ func (r *entertainmentServiceRepository) Update(entertainmentService models.Ente
 	}
 
 	return entertainmentService, nil
+}
+
+// UpdateImagePath -> Method for updating only the image path
+func (r *entertainmentServiceRepository) UpdateImagePath(ID string, fileLocation string) error {
+	return r.db.DB.Model(&models.EntertainmentService{}).Where("id = ?", ID).Update("image_path", fileLocation).Error
 }
 
 // Delete -> Method for deleting Entertainment Service

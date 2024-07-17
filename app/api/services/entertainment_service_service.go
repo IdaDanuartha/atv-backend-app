@@ -47,14 +47,20 @@ func (s entertainmentServiceService) Find(input inputs.GetEntertainmentServiceDe
 }
 
 func (s entertainmentServiceService) SaveImage(ID string, fileLocation string) (models.EntertainmentService, error) {
+	// Find the existing entertainment service by ID
 	entertainment_service, err := s.repository.Find(ID, false)
 	if err != nil {
 		return entertainment_service, err
 	}
 
-	entertainment_service.ImagePath = &fileLocation
+	// Update only the ImagePath field
+	err = s.repository.UpdateImagePath(ID, fileLocation)
+	if err != nil {
+		return entertainment_service, err
+	}
 
-	updatedEntertainmentService, err := s.repository.Update(entertainment_service)
+	// Fetch the updated entertainment service to return it
+	updatedEntertainmentService, err := s.repository.Find(ID, false)
 	if err != nil {
 		return updatedEntertainmentService, err
 	}

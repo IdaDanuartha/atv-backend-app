@@ -158,7 +158,7 @@ func (h *EntertainmentServiceController) UploadImage(ctx *gin.Context) {
 	}
 
 	data := gin.H{"is_uploaded": true}
-	response := utils.APIResponse("Image successfuly uploaded", http.StatusOK, "success", data)
+	response := utils.APIResponse("Image successfully uploaded", http.StatusOK, "success", data)
 
 	ctx.JSON(http.StatusOK, response)
 }
