@@ -100,6 +100,14 @@ func (r entertainmentPackageRepository) Save(entertainmentPackage models.Enterta
 // Update -> Method for updating Entertainment Package
 func (r *entertainmentPackageRepository) Update(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error) {
 	err := r.db.DB.
+		Where("entertainment_package_id = ?", entertainmentPackage.ID).
+		Delete(&models.EntertainmentPackageDetail{}).Error
+
+	if err != nil {
+		return entertainmentPackage, err
+	}
+
+	err = r.db.DB.
 		Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
 		Save(&entertainmentPackage).Error
 
