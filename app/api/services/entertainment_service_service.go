@@ -10,7 +10,7 @@ type EntertainmentServiceService interface {
 	FindAll(model models.EntertainmentService, search string, currentPage int, pageSize int) ([]models.EntertainmentService, int64, int, error)
 	Find(input inputs.GetEntertainmentServiceDetailInput) (models.EntertainmentService, error)
 	SaveImage(ID string, fileLocation string) (models.EntertainmentService, error)
-	Save(input inputs.CreateEntertainmentServiceInput) (models.EntertainmentService, error)
+	Save(input inputs.EntertainmentServiceInput) (models.EntertainmentService, error)
 	Update(inputID inputs.GetEntertainmentServiceDetailInput, input inputs.EntertainmentServiceInput) (models.EntertainmentService, error)
 	Delete(inputID inputs.GetEntertainmentServiceDetailInput) (models.EntertainmentService, error)
 }
@@ -47,14 +47,20 @@ func (s entertainmentServiceService) Find(input inputs.GetEntertainmentServiceDe
 }
 
 func (s entertainmentServiceService) SaveImage(ID string, fileLocation string) (models.EntertainmentService, error) {
+	// Find the existing entertainment service by ID
 	entertainment_service, err := s.repository.Find(ID, false)
 	if err != nil {
 		return entertainment_service, err
 	}
 
-	entertainment_service.ImagePath = &fileLocation
+	// Update only the ImagePath field
+	err = s.repository.UpdateImagePath(ID, fileLocation)
+	if err != nil {
+		return entertainment_service, err
+	}
 
-	updatedEntertainmentService, err := s.repository.Update(entertainment_service)
+	// Fetch the updated entertainment service to return it
+	updatedEntertainmentService, err := s.repository.Find(ID, false)
 	if err != nil {
 		return updatedEntertainmentService, err
 	}
@@ -63,16 +69,16 @@ func (s entertainmentServiceService) SaveImage(ID string, fileLocation string) (
 }
 
 // Save -> calls Entertainment Service repository save method
-func (s entertainmentServiceService) Save(input inputs.CreateEntertainmentServiceInput) (models.EntertainmentService, error) {
+func (s entertainmentServiceService) Save(input inputs.EntertainmentServiceInput) (models.EntertainmentService, error) {
 	entertainmentService := models.EntertainmentService{}
 
 	entertainmentService.Name = input.Name
 	entertainmentService.Price = input.Price
 	entertainmentService.EntertainmentCategoryID = input.EntertainmentCategoryID
-	// entertainmentService.Routes = input.Routes
-	// entertainmentService.Facilities = input.Facilities
-	// entertainmentService.Instructors = input.Instructors
-	// entertainmentService.MandatoryLuggages = input.MandatoryLuggages
+	entertainmentService.Routes = input.Routes
+	entertainmentService.Facilities = input.Facilities
+	entertainmentService.Instructors = input.Instructors
+	entertainmentService.MandatoryLuggages = input.MandatoryLuggages
 
 	newEntertainmentService, err := s.repository.Save(entertainmentService)
 	if err != nil {

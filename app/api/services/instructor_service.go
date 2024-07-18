@@ -129,7 +129,7 @@ func (s instructorService) Update(inputID inputs.GetInstructorDetailInput, input
 
 // Delete -> calls Instructor repo delete method
 func (s instructorService) Delete(inputID inputs.GetInstructorDetailInput) (models.Instructor, error) {
-	instructor, err := s.repository.Find(inputID.ID, false)
+	instructor, err := s.repository.Find(inputID.ID, true)
 	if err != nil {
 		return instructor, err
 	}

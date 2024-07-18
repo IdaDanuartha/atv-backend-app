@@ -87,9 +87,7 @@ func (r entertainmentPackageRepository) Find(ID string, showRelations bool) (mod
 
 // Save -> Method for saving Entertainment Package to database
 func (r entertainmentPackageRepository) Save(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error) {
-	err := r.db.DB.
-		Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
-		Create(&entertainmentPackage).Error
+	err := r.db.DB.Create(&entertainmentPackage).Error
 	if err != nil {
 		return entertainmentPackage, err
 	}
@@ -120,9 +118,7 @@ func (r *entertainmentPackageRepository) Update(entertainmentPackage models.Ente
 
 // Delete -> Method for deleting Entertainment Package
 func (r entertainmentPackageRepository) Delete(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error) {
-	err := r.db.DB.
-		Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
-		Delete(&entertainmentPackage).Error
+	err := r.db.DB.Delete(&entertainmentPackage).Error
 
 	if err != nil {
 		return entertainmentPackage, err
