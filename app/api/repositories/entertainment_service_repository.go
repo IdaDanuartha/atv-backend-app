@@ -74,8 +74,8 @@ func (r entertainmentServiceRepository) FindAll(entertainmentService models.Ente
 // Find -> Method for fetching Entertainment Service by id
 func (r entertainmentServiceRepository) Find(ID string, showRelations bool) (models.EntertainmentService, error) {
 	var entertainment_services models.EntertainmentService
-	
-	if(showRelations) {
+
+	if showRelations {
 		err := r.db.DB.
 			Preload("EntertainmentCategory").
 			Preload("Routes.Route").

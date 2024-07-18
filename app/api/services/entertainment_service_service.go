@@ -54,18 +54,25 @@ func (s entertainmentServiceService) SaveImage(ID string, fileLocation string) (
 	}
 
 	// Update only the ImagePath field
-	err = s.repository.UpdateImagePath(ID, fileLocation)
-	if err != nil {
-		return entertainment_service, err
-	}
+	// err = s.repository.UpdateImagePath(ID, fileLocation)
+	// if err != nil {
+	// 	return entertainment_service, err
+	// }
 
 	// Fetch the updated entertainment service to return it
-	updatedEntertainmentService, err := s.repository.Find(ID, false)
+	// updatedEntertainmentService, err := s.repository.Find(ID, false)
+	// if err != nil {
+	// 	return updatedEntertainmentService, err
+	// }
+
+	entertainment_service.ImagePath = &fileLocation
+
+	updatedEntertainmentService, err := s.repository.Update(entertainment_service)
 	if err != nil {
 		return updatedEntertainmentService, err
 	}
 
-	return updatedEntertainmentService, nil
+	return entertainment_service, nil
 }
 
 // Save -> calls Entertainment Service repository save method
