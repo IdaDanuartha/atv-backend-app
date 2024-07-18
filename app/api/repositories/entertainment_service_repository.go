@@ -99,13 +99,7 @@ func (r entertainmentServiceRepository) Find(ID string, showRelations bool) (mod
 
 // Save -> Method for saving Entertainment Service to database
 func (r entertainmentServiceRepository) Save(entertainmentService models.EntertainmentService) (models.EntertainmentService, error) {
-	err := r.db.DB.
-		Preload("EntertainmentCategory").
-		Preload("Routes.Route").
-		Preload("Facilities.Facility").
-		Preload("Instructors.Instructor.User").
-		Preload("MandatoryLuggages.MandatoryLuggage").
-		Create(&entertainmentService).Error
+	err := r.db.DB.Create(&entertainmentService).Error
 
 	if err != nil {
 		return entertainmentService, err
@@ -165,13 +159,7 @@ func (r *entertainmentServiceRepository) UpdateImagePath(ID string, fileLocation
 
 // Delete -> Method for deleting Entertainment Service
 func (r entertainmentServiceRepository) Delete(entertainmentService models.EntertainmentService) (models.EntertainmentService, error) {
-	err := r.db.DB.
-		Preload("EntertainmentCategory").
-		Preload("Routes.Route").
-		Preload("Facilities.Facility").
-		Preload("Instructors.Instructor.User").
-		Preload("MandatoryLuggages.MandatoryLuggage").
-		Delete(&entertainmentService).Error
+	err := r.db.DB.Delete(&entertainmentService).Error
 
 	if err != nil {
 		return entertainmentService, err

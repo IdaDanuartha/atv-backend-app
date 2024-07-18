@@ -117,9 +117,9 @@ func (s staffService) Update(inputID inputs.GetStaffDetailInput, input inputs.Ed
 
 // Delete -> calls Staff repo delete method
 func (s staffService) Delete(inputID inputs.GetStaffDetailInput) (models.Staff, error) {
-	staff, err := s.repository.Find(inputID.ID, false)
+	staff, err := s.repository.Find(inputID.ID, true)
 	if err != nil {
-		return staff, err
+	return staff, err
 	}
 
 	deletedStaff, err := s.repository.Delete(staff)
