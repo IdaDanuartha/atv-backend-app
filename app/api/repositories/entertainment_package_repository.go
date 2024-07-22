@@ -48,6 +48,10 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 		// Apply offset and limit to fetch paginated results
 		err = queryBuilder.
 			Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
+			Preload("EntertainmentPackageDetails.EntertainmentService.Routes.Route").
+			Preload("EntertainmentPackageDetails.EntertainmentService.Facilities.Facility").
+			Preload("EntertainmentPackageDetails.EntertainmentService.Instructors.Instructor.User").
+			Preload("EntertainmentPackageDetails.EntertainmentService.MandatoryLuggages.MandatoryLuggage").
 			Where(entertainmentPackage).
 			Offset((currentPage - 1) * pageSize).
 			Limit(pageSize).
@@ -56,6 +60,10 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 	} else {
 		err := queryBuilder.
 			Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
+			Preload("EntertainmentPackageDetails.EntertainmentService.Routes.Route").
+			Preload("EntertainmentPackageDetails.EntertainmentService.Facilities.Facility").
+			Preload("EntertainmentPackageDetails.EntertainmentService.Instructors.Instructor.User").
+			Preload("EntertainmentPackageDetails.EntertainmentService.MandatoryLuggages.MandatoryLuggage").
 			Where(entertainmentPackage).
 			Find(&entertainment_packages).
 			Count(&totalRows).Error
@@ -70,6 +78,10 @@ func (r entertainmentPackageRepository) Find(ID string, showRelations bool) (mod
 	if(showRelations) {
 		err := r.db.DB.
 			Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
+			Preload("EntertainmentPackageDetails.EntertainmentService.Routes.Route").
+			Preload("EntertainmentPackageDetails.EntertainmentService.Facilities.Facility").
+			Preload("EntertainmentPackageDetails.EntertainmentService.Instructors.Instructor.User").
+			Preload("EntertainmentPackageDetails.EntertainmentService.MandatoryLuggages.MandatoryLuggage").
 			Debug().
 			Model(&models.EntertainmentPackage{}).
 			Where("id = ?", ID).
@@ -105,9 +117,7 @@ func (r *entertainmentPackageRepository) Update(entertainmentPackage models.Ente
 		return entertainmentPackage, err
 	}
 
-	err = r.db.DB.
-		Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
-		Save(&entertainmentPackage).Error
+	err = r.db.DB.Save(&entertainmentPackage).Error
 
 	if err != nil {
 		return entertainmentPackage, err

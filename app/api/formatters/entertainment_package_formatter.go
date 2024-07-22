@@ -40,6 +40,21 @@ func FormatEntertainmentPackage(entertainmentPackage models.EntertainmentPackage
 		newPackageDetail.EntertainmentService.EntertainmentCategory.DeletedAt = packageDetail.EntertainmentService.EntertainmentCategory.DeletedAt
 
 		packageDetails = append(packageDetails, newPackageDetail)
+
+		entertainmentRoutes := make([]models.EntertainmentServiceRoute, 0)
+		for _, route := range packageDetail.EntertainmentService.Routes {
+			newRoutes := models.EntertainmentServiceRoute{}
+
+			newRoutes.Route.Name = route.Route.Name
+			newRoutes.Route.Address = route.Route.Address
+			newRoutes.Route.CreatedAt = route.Route.CreatedAt
+			newRoutes.Route.UpdatedAt = route.Route.UpdatedAt
+			newRoutes.Route.DeletedAt = route.Route.DeletedAt
+
+			entertainmentRoutes = append(entertainmentRoutes, newRoutes)
+		}
+		newPackageDetail.EntertainmentService.Routes = entertainmentRoutes
+
 	}
 	entertainmentPackageFormatter.EntertainmentPackageDetails = packageDetails
 

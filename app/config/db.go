@@ -2,9 +2,10 @@ package config
 
 import (
 	"fmt"
-	"golang.org/x/crypto/bcrypt"
 	"log"
 	"os"
+
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
 	"gorm.io/driver/mysql"
@@ -26,7 +27,6 @@ func NewDatabase() Database {
 
 	URL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", USER, PASS,
 		HOST, PORT, DBNAME)
-	fmt.Println(URL)
 
 	db, err := gorm.Open(mysql.Open(URL))
 
