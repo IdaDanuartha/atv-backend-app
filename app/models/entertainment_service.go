@@ -5,6 +5,7 @@ type EntertainmentService struct {
 	Base
 	Name      string  `gorm:"size:100" json:"name"`
 	Price     int32   `json:"price"`
+	Duration  int32   `json:"duration"` // minutes
 	ImagePath *string `gorm:"size:150;" json:"image_path"`
 
 	EntertainmentCategoryID string                `gorm:"type:varchar(100);constraint:OnUpdate:CASCADE,OnDelete:NULL;" json:"entertainment_category_id,omitempty"`

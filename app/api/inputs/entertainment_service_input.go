@@ -9,6 +9,7 @@ type GetEntertainmentServiceDetailInput struct {
 type EntertainmentServiceInput struct {
 	Name                    string                                        `json:"name" binding:"required"`
 	Price                   int32                                         `json:"price" binding:"required"`
+	Duration                int32                                         `json:"duration" binding:"required"`
 	EntertainmentCategoryID string                                        `json:"entertainment_category_id" binding:"required"`
 	Routes                  []models.EntertainmentServiceRoute            `json:"routes" binding:"required"`
 	Facilities              []models.EntertainmentServiceFacility         `json:"facilities" binding:"required"`

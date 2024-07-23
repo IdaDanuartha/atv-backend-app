@@ -10,6 +10,7 @@ func FormatEntertainmentPackage(entertainmentPackage models.EntertainmentPackage
 	entertainmentPackageFormatter.Name = entertainmentPackage.Name
 	entertainmentPackageFormatter.Description = entertainmentPackage.Description
 	entertainmentPackageFormatter.Price = entertainmentPackage.Price
+	entertainmentPackageFormatter.Duration = entertainmentPackage.Duration
 	entertainmentPackageFormatter.ImagePath = entertainmentPackage.ImagePath
 	entertainmentPackageFormatter.ExpiredAt = entertainmentPackage.ExpiredAt
 	entertainmentPackageFormatter.CreatedAt = entertainmentPackage.CreatedAt

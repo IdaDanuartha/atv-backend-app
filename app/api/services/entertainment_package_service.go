@@ -68,6 +68,7 @@ func (s entertainmentPackageService) Save(input inputs.EntertainmentPackageInput
 
 	entertainmentPackage.Name = input.Name
 	entertainmentPackage.Description = input.Description
+	entertainmentPackage.Duration = input.Duration
 	entertainmentPackage.Price = input.Price
 	entertainmentPackage.ExpiredAt = input.ExpiredAt
 	entertainmentPackage.EntertainmentPackageDetails = input.Services
@@ -89,6 +90,7 @@ func (s entertainmentPackageService) Update(inputID inputs.GetEntertainmentPacka
 
 	entertainmentPackage.Name = input.Name
 	entertainmentPackage.Description = input.Description
+	entertainmentPackage.Duration = input.Duration
 	entertainmentPackage.Price = input.Price
 	entertainmentPackage.ExpiredAt = input.ExpiredAt
 	entertainmentPackage.EntertainmentPackageDetails = input.Services
