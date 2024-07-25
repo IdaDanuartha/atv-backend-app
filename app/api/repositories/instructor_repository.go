@@ -55,6 +55,7 @@ func (r instructorRepository) FindAll(instructor models.Instructor, search strin
 		// Apply offset and limit to fetch paginated results
 		err = queryBuilder.
 			Preload("User").
+			Preload("Services.EntertainmentService.EntertainmentCategory").
 			Where(instructor).
 			Offset((currentPage - 1) * pageSize).
 			Limit(pageSize).
@@ -63,6 +64,7 @@ func (r instructorRepository) FindAll(instructor models.Instructor, search strin
 	} else {
 		err := queryBuilder.
 			Preload("User").
+			Preload("Services.EntertainmentService.EntertainmentCategory").
 			Where(instructor).
 			Find(&instructors).
 			Count(&totalRows).Error
@@ -77,6 +79,7 @@ func (r instructorRepository) Find(ID string, showRelations bool) (models.Instru
 	if(showRelations) {
 		err := r.db.DB.
 		Preload("User").
+		Preload("Services.EntertainmentService.EntertainmentCategory").
 		Debug().
 		Model(&models.Instructor{}).
 		Where("id = ?", ID).
@@ -99,6 +102,7 @@ func (r instructorRepository) FindByUserID(userID string) (models.Instructor, er
 	var instructors models.Instructor
 	err := r.db.DB.
 		Preload("User").
+		Preload("Services.EntertainmentService.EntertainmentCategory").
 		Debug().
 		Model(&models.Instructor{}).
 		Where("user_id = ?", userID).
@@ -130,7 +134,7 @@ func (r instructorRepository) Save(instructor models.Instructor) (models.Instruc
 		return instructor, errors.New("username already exists") // Return error if username exists
 	}
 
-	err = r.db.DB.Preload("User").Create(&instructor).Error
+	err = r.db.DB.Create(&instructor).Error
 	if err != nil {
 		return instructor, err
 	}

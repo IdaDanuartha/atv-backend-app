@@ -3,7 +3,7 @@ package inputs
 import (
 	"time"
 
-	"github.com/IdaDanuartha/atv-backend-app/app/models"
+	// "github.com/IdaDanuartha/atv-backend-app/app/models"
 )
 
 type GetEntertainmentPackageDetailInput struct {
@@ -16,5 +16,5 @@ type EntertainmentPackageInput struct {
 	Price       int32                               `json:"price" binding:"required"`
 	Duration    int32                               `json:"duration" binding:"required"`
 	ExpiredAt   time.Time                           `json:"expired_at" binding:"required"`
-	Services    []models.EntertainmentPackageDetail `json:"services" binding:"required"`
+	// Services    []models.EntertainmentPackageDetail `json:"services" binding:"required"`
 }

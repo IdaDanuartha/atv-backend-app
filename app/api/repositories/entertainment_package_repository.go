@@ -47,11 +47,11 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 
 		// Apply offset and limit to fetch paginated results
 		err = queryBuilder.
-			Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
-			Preload("EntertainmentPackageDetails.EntertainmentService.Routes.Route").
-			Preload("EntertainmentPackageDetails.EntertainmentService.Facilities.Facility").
-			Preload("EntertainmentPackageDetails.EntertainmentService.Instructors.Instructor.User").
-			Preload("EntertainmentPackageDetails.EntertainmentService.MandatoryLuggages.MandatoryLuggage").
+			Preload("Services.EntertainmentService.EntertainmentCategory").
+			Preload("Services.EntertainmentService.Routes.Route").
+			Preload("Services.EntertainmentService.Facilities.Facility").
+			Preload("Services.EntertainmentService.Instructors.Instructor.User").
+			Preload("Services.EntertainmentService.MandatoryLuggages.MandatoryLuggage").
 			Where(entertainmentPackage).
 			Offset((currentPage - 1) * pageSize).
 			Limit(pageSize).
@@ -59,11 +59,11 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 		return entertainment_packages, totalRows, currentPage, err
 	} else {
 		err := queryBuilder.
-			Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
-			Preload("EntertainmentPackageDetails.EntertainmentService.Routes.Route").
-			Preload("EntertainmentPackageDetails.EntertainmentService.Facilities.Facility").
-			Preload("EntertainmentPackageDetails.EntertainmentService.Instructors.Instructor.User").
-			Preload("EntertainmentPackageDetails.EntertainmentService.MandatoryLuggages.MandatoryLuggage").
+			Preload("Services.EntertainmentService.EntertainmentCategory").
+			Preload("Services.EntertainmentService.Routes.Route").
+			Preload("Services.EntertainmentService.Facilities.Facility").
+			Preload("Services.EntertainmentService.Instructors.Instructor.User").
+			Preload("Services.EntertainmentService.MandatoryLuggages.MandatoryLuggage").
 			Where(entertainmentPackage).
 			Find(&entertainment_packages).
 			Count(&totalRows).Error
@@ -77,11 +77,11 @@ func (r entertainmentPackageRepository) Find(ID string, showRelations bool) (mod
 	
 	if(showRelations) {
 		err := r.db.DB.
-			Preload("EntertainmentPackageDetails.EntertainmentService.EntertainmentCategory").
-			Preload("EntertainmentPackageDetails.EntertainmentService.Routes.Route").
-			Preload("EntertainmentPackageDetails.EntertainmentService.Facilities.Facility").
-			Preload("EntertainmentPackageDetails.EntertainmentService.Instructors.Instructor.User").
-			Preload("EntertainmentPackageDetails.EntertainmentService.MandatoryLuggages.MandatoryLuggage").
+			Preload("Services.EntertainmentService.EntertainmentCategory").
+			Preload("Services.EntertainmentService.Routes.Route").
+			Preload("Services.EntertainmentService.Facilities.Facility").
+			Preload("Services.EntertainmentService.Instructors.Instructor.User").
+			Preload("Services.EntertainmentService.MandatoryLuggages.MandatoryLuggage").
 			Debug().
 			Model(&models.EntertainmentPackage{}).
 			Where("id = ?", ID).

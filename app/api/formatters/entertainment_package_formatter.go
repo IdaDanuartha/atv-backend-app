@@ -1,6 +1,8 @@
 package formatters
 
 import (
+	"fmt"
+
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
 )
 
@@ -19,7 +21,8 @@ func FormatEntertainmentPackage(entertainmentPackage models.EntertainmentPackage
 
 	packageDetails := make([]models.EntertainmentPackageDetail, 0)
 
-	for _, packageDetail := range entertainmentPackage.EntertainmentPackageDetails {
+	for _, packageDetail := range entertainmentPackage.Services {
+		fmt.Println(packageDetail.EntertainmentService.Instructors)
 		newPackageDetail := models.EntertainmentPackageDetail{}
 
 		newPackageDetail.ID = packageDetail.ID
@@ -30,6 +33,8 @@ func FormatEntertainmentPackage(entertainmentPackage models.EntertainmentPackage
 		newPackageDetail.EntertainmentService.ID = packageDetail.EntertainmentService.ID
 		newPackageDetail.EntertainmentService.Name = packageDetail.EntertainmentService.Name
 		newPackageDetail.EntertainmentService.Price = packageDetail.EntertainmentService.Price
+		newPackageDetail.EntertainmentService.Duration = packageDetail.EntertainmentService.Duration
+		newPackageDetail.EntertainmentService.Description = packageDetail.EntertainmentService.Description
 		newPackageDetail.EntertainmentService.CreatedAt = packageDetail.EntertainmentService.CreatedAt
 		newPackageDetail.EntertainmentService.UpdatedAt = packageDetail.EntertainmentService.UpdatedAt
 		newPackageDetail.EntertainmentService.DeletedAt = packageDetail.EntertainmentService.DeletedAt
@@ -42,22 +47,21 @@ func FormatEntertainmentPackage(entertainmentPackage models.EntertainmentPackage
 
 		packageDetails = append(packageDetails, newPackageDetail)
 
-		entertainmentRoutes := make([]models.EntertainmentServiceRoute, 0)
-		for _, route := range packageDetail.EntertainmentService.Routes {
-			newRoutes := models.EntertainmentServiceRoute{}
+		entertainmentInstructors := []models.EntertainmentServiceInstructor{}
+		for _, instructor := range packageDetail.EntertainmentService.Instructors {
+			newInstructors := models.EntertainmentServiceInstructor{}
 
-			newRoutes.Route.Name = route.Route.Name
-			newRoutes.Route.Address = route.Route.Address
-			newRoutes.Route.CreatedAt = route.Route.CreatedAt
-			newRoutes.Route.UpdatedAt = route.Route.UpdatedAt
-			newRoutes.Route.DeletedAt = route.Route.DeletedAt
+			newInstructors.Instructor.Name = instructor.Instructor.Name
+			newInstructors.Instructor.CreatedAt = instructor.Instructor.CreatedAt
+			newInstructors.Instructor.UpdatedAt = instructor.Instructor.UpdatedAt
+			newInstructors.Instructor.DeletedAt = instructor.Instructor.DeletedAt
 
-			entertainmentRoutes = append(entertainmentRoutes, newRoutes)
+			entertainmentInstructors = append(entertainmentInstructors, newInstructors)
 		}
-		newPackageDetail.EntertainmentService.Routes = entertainmentRoutes
+		newPackageDetail.EntertainmentService.Instructors = entertainmentInstructors
 
 	}
-	entertainmentPackageFormatter.EntertainmentPackageDetails = packageDetails
+	entertainmentPackageFormatter.Services = packageDetails
 
 	return entertainmentPackageFormatter
 }

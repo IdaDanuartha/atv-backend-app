@@ -11,7 +11,7 @@ type EntertainmentPackage struct {
 	Duration                    int32                        `json:"duration"`
 	ExpiredAt                   time.Time                    `json:"expired_at"`
 	ImagePath                   *string                      `gorm:"size:150;" json:"image_path"`
-	EntertainmentPackageDetails []EntertainmentPackageDetail `gorm:"foreignKey:EntertainmentPackageID" json:"services"`
+	Services []EntertainmentPackageDetail `gorm:"foreignKey:EntertainmentPackageID" json:"services"`
 }
 
 // TableName method sets table name for Bus model
