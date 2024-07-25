@@ -42,22 +42,18 @@ func NewDatabase() Database {
 	seeders.SeedStaff(db)
 	seeders.SeedInstructor(db)
 	seeders.SeedCustomer(db)
-
 	// master data
 	seeders.SeedFacility(db)
 	seeders.SeedMandatoryLuggage(db)
 	seeders.SeedRoute(db)
 	seeders.SeedEntertainmentCategory(db)
 	seeders.SeedEntertainmentService(db)
-
 	// package
 	seeders.SeedEntertainmentPackage(db)
-
 	// booking
 	seeders.SeedBooking(db)
-
 	// blog
-	db.AutoMigrate(&models.Blog{})
+	seeders.SeedBlog(db)
 
 	fmt.Println("Database connection established")
 	return Database{
