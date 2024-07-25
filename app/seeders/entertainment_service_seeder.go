@@ -15,14 +15,76 @@ func SeedEntertainmentService(db *gorm.DB) {
 	db.AutoMigrate(&models.EntertainmentServiceInstructor{})
 	db.AutoMigrate(&models.MandatoryLuggageEntertainmentService{})
 
+	var category models.EntertainmentCategory
+	db.First(&category)
+
+	var route models.Route
+	db.First(&route)
+
+	var facility models.Facility
+	db.First(&facility)
+
+	var instructor models.Instructor
+	db.First(&instructor)
+
+	var mandatoryLuggage models.MandatoryLuggage
+	db.First(&mandatoryLuggage)
+
 	// Seed data into the Entertainment Service table
 	entertainmentServices := []models.EntertainmentService{
 		{
-			Name:                    "",
-			Price:                   0,
-			Duration:                0,
-			Description:             "",
-			EntertainmentCategoryID: "",
+			Name:                    "ATV Adventure",
+			Price:                   400000,
+			Duration:                120,
+			Description:             "Description of the ATV Adventure",
+			EntertainmentCategoryID: category.ID,
+			Routes: []models.EntertainmentServiceRoute{
+				{
+					RouteID: route.ID,
+				},
+			},
+			Facilities: []models.EntertainmentServiceFacility{
+				{
+					FacilityID: facility.ID,
+				},
+			},
+			Instructors: []models.EntertainmentServiceInstructor{
+				{
+					InstructorID: instructor.ID,
+				},
+			},
+			MandatoryLuggages: []models.MandatoryLuggageEntertainmentService{
+				{
+					MandatoryLuggageID: mandatoryLuggage.ID,
+				},
+			},
+		},
+		{
+			Name:                    "ATV Extreme",
+			Price:                   500000,
+			Duration:                120,
+			Description:             "Description of the ATV Extreme",
+			EntertainmentCategoryID: category.ID,
+			Routes: []models.EntertainmentServiceRoute{
+				{
+					RouteID: route.ID,
+				},
+			},
+			Facilities: []models.EntertainmentServiceFacility{
+				{
+					FacilityID: facility.ID,
+				},
+			},
+			Instructors: []models.EntertainmentServiceInstructor{
+				{
+					InstructorID: instructor.ID,
+				},
+			},
+			MandatoryLuggages: []models.MandatoryLuggageEntertainmentService{
+				{
+					MandatoryLuggageID: mandatoryLuggage.ID,
+				},
+			},
 		},
 	}
 

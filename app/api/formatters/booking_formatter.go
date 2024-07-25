@@ -37,7 +37,7 @@ func FormatBooking(booking models.Booking) models.Booking {
 
 	bookingDetails := make([]models.BookingDetail, 0)
 
-	for _, packageDetail := range booking.BookingDetails {
+	for _, packageDetail := range booking.Details {
 		newBookingDetail := models.BookingDetail{}
 
 		newBookingDetail.ID = packageDetail.ID
@@ -56,7 +56,7 @@ func FormatBooking(booking models.Booking) models.Booking {
 
 		bookingDetails = append(bookingDetails, newBookingDetail)
 	}
-	bookingFormatter.BookingDetails = bookingDetails
+	bookingFormatter.Details = bookingDetails
 
 	return bookingFormatter
 }

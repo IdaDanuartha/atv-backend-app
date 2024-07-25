@@ -48,17 +48,13 @@ func NewDatabase() Database {
 	seeders.SeedMandatoryLuggage(db)
 	seeders.SeedRoute(db)
 	seeders.SeedEntertainmentCategory(db)
-	db.AutoMigrate(&models.EntertainmentService{})
-	db.AutoMigrate(&models.EntertainmentServiceRoute{})
-	db.AutoMigrate(&models.EntertainmentServiceFacility{})
-	db.AutoMigrate(&models.EntertainmentServiceInstructor{})
-	db.AutoMigrate(&models.MandatoryLuggageEntertainmentService{})
-	db.AutoMigrate(&models.EntertainmentPackage{})
-	db.AutoMigrate(&models.EntertainmentPackageDetail{})
+	seeders.SeedEntertainmentService(db)
+
+	// package
+	seeders.SeedEntertainmentPackage(db)
 
 	// booking
-	db.AutoMigrate(&models.Booking{})
-	db.AutoMigrate(&models.BookingDetail{})
+	seeders.SeedBooking(db)
 
 	// blog
 	db.AutoMigrate(&models.Blog{})

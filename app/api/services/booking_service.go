@@ -59,7 +59,7 @@ func (s bookingService) Save(input inputs.BookingInput) (models.Booking, error) 
 	booking.TotalPrice = input.TotalPrice
 	booking.TotalPay = input.TotalPay
 	booking.TotalChange = input.TotalChange
-	booking.BookingDetails = input.Details
+	booking.Details = input.Details
 
 	newBooking, err := s.repository.Save(booking)
 	if err != nil {
@@ -83,7 +83,7 @@ func (s bookingService) Update(inputID inputs.GetBookingDetailInput, input input
 	booking.TotalPrice = input.TotalPrice
 	booking.TotalPay = input.TotalPay
 	booking.TotalChange = input.TotalChange
-	booking.BookingDetails = input.Details
+	booking.Details = input.Details
 
 	updatedBooking, err := s.repository.Update(booking)
 	if err != nil {
