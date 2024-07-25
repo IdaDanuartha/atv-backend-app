@@ -38,9 +38,8 @@ func NewDatabase() Database {
 
 	db.AutoMigrate(&models.User{})
 	seeders.SeedAdmin(db)
-
-	db.AutoMigrate(&models.Staff{})
-	db.AutoMigrate(&models.Instructor{})
+	seeders.SeedStaff(db)
+	seeders.SeedInstructor(db)
 	db.AutoMigrate(&models.Customer{})
 	seeders.SeedFacility(db)
 	db.AutoMigrate(&models.MandatoryLuggage{})
