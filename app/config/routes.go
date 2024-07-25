@@ -20,7 +20,7 @@ type GinRouter struct {
 func NewGinRouter() GinRouter {
 
     httpRouter := gin.Default()
-    gin.SetMode(gin.DebugMode)
+    gin.SetMode(gin.ReleaseMode)
     
     // Apply CORS middleware
     config := cors.DefaultConfig()
