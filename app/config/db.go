@@ -88,6 +88,7 @@ func NewDatabase() Database {
 	db.AutoMigrate(&models.EntertainmentPackageDetail{})
 	db.AutoMigrate(&models.Booking{})
 	db.AutoMigrate(&models.BookingDetail{})
+	db.AutoMigrate(&models.Blog{})
 
 	fmt.Println("Database connection established")
 	return Database{

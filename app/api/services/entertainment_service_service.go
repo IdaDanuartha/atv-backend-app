@@ -77,10 +77,10 @@ func (s entertainmentServiceService) Save(input inputs.EntertainmentServiceInput
 	entertainmentService.Duration = input.Duration
 	entertainmentService.Description = input.Description
 	entertainmentService.EntertainmentCategoryID = input.EntertainmentCategoryID
-	// entertainmentService.Routes = input.Routes
-	// entertainmentService.Facilities = input.Facilities
-	// entertainmentService.Instructors = input.Instructors
-	// entertainmentService.MandatoryLuggages = input.MandatoryLuggages
+	entertainmentService.Routes = input.Routes
+	entertainmentService.Facilities = input.Facilities
+	entertainmentService.Instructors = input.Instructors
+	entertainmentService.MandatoryLuggages = input.MandatoryLuggages
 
 	newEntertainmentService, err := s.repository.Save(entertainmentService)
 	if err != nil {
@@ -102,10 +102,10 @@ func (s entertainmentServiceService) Update(inputID inputs.GetEntertainmentServi
 	entertainmentService.Duration = input.Duration
 	entertainmentService.Description = input.Description
 	entertainmentService.EntertainmentCategoryID = input.EntertainmentCategoryID
-	// entertainmentService.Routes = input.Routes
-	// entertainmentService.Facilities = input.Facilities
-	// entertainmentService.Instructors = input.Instructors
-	// entertainmentService.MandatoryLuggages = input.MandatoryLuggages
+	entertainmentService.Routes = input.Routes
+	entertainmentService.Facilities = input.Facilities
+	entertainmentService.Instructors = input.Instructors
+	entertainmentService.MandatoryLuggages = input.MandatoryLuggages
 
 	updatedEntertainmentService, err := s.repository.Update(entertainmentService)
 	if err != nil {

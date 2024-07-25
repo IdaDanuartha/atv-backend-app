@@ -98,3 +98,7 @@ func (b *BookingDetail) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = uuid.New().String()
 	return
 }
+func (b *Blog) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}

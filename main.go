@@ -70,6 +70,12 @@ func main() {
 	entertainmentServiceController := controllers.NewEntertainmentServiceController(entertainmentServiceService)
 	entertainmentServiceRoute := routes.NewEntertainmentServiceRoute(*entertainmentServiceController, router)
 	entertainmentServiceRoute.Setup(authMiddleware)
+	
+	blogRepository := repositories.NewBlogRepository(db)
+	blogService := services.NewBlogService(&blogRepository)
+	blogController := controllers.NewBlogController(blogService)
+	blogRoute := routes.NewBlogRoute(*blogController, router)
+	blogRoute.Setup(authMiddleware)
 
 	// User Management
 	instructorRepository := repositories.NewInstructorRepository(db)
