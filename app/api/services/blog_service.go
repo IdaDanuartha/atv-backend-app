@@ -8,7 +8,7 @@ import (
 )
 
 type BlogService interface {
-	FindAll(model models.Blog, search string, currentPage int, pageSize int) ([]models.Blog, int64, int, error)
+	FindAll(model models.Blog, search string, currentPage int, pageSize int, exceptID string) ([]models.Blog, int64, int, error)
 	Find(input inputs.GetBlogDetailInput) (models.Blog, error)
 	SaveImage(ID string, fileLocation string) (models.Blog, error)
 	Save(input inputs.BlogInput) (models.Blog, error)
@@ -27,8 +27,8 @@ func NewBlogService(repository repositories.BlogRepository) blogService {
 }
 
 // FindAll -> calls Blog repo find all method
-func (s blogService) FindAll(model models.Blog, search string, currentPage int, pageSize int) ([]models.Blog, int64, int, error) {
-	blogs, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize)
+func (s blogService) FindAll(model models.Blog, search string, currentPage int, pageSize int, exceptID string) ([]models.Blog, int64, int, error) {
+	blogs, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize, exceptID)
 	if err != nil {
 		return blogs, total, currentPage, err
 	}

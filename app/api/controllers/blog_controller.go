@@ -39,7 +39,9 @@ func (h *BlogController) GetBlogs(ctx *gin.Context) {
 		pageSize = 0
 	}
 
-	getBlogs, total, _, err := h.service.FindAll(blogs, search, currentPage, pageSize)
+	exceptID := ctx.Query("except_id")
+
+	getBlogs, total, _, err := h.service.FindAll(blogs, search, currentPage, pageSize, exceptID)
 
 	if err != nil {
 		response := utils.APIResponse("Failed to find blog", http.StatusBadRequest, "error", err.Error())

@@ -6,7 +6,7 @@ import (
 )
 
 type BlogRepository interface {
-	FindAll(blog models.Blog, search string, currentPage int, pageSize int) ([]models.Blog, int64, int, error)
+	FindAll(blog models.Blog, search string, currentPage int, pageSize int, exceptID string) ([]models.Blog, int64, int, error)
 	Find(ID string) (models.Blog, error)
 	Save(blog models.Blog) (models.Blog, error)
 	Update(blog models.Blog) (models.Blog, error)
@@ -23,7 +23,7 @@ func NewBlogRepository(db config.Database) blogRepository {
 }
 
 // FindAll -> Method for fetching all Blog from database
-func (r blogRepository) FindAll(blog models.Blog, search string, currentPage int, pageSize int) ([]models.Blog, int64, int, error) {
+func (r blogRepository) FindAll(blog models.Blog, search string, currentPage int, pageSize int, exceptID string) ([]models.Blog, int64, int, error) {
 	var blogs []models.Blog
 	var totalRows int64 = 0
 
@@ -37,6 +37,10 @@ func (r blogRepository) FindAll(blog models.Blog, search string, currentPage int
 				Or("blogs.description LIKE ? ", querySearch).
 				Or("blogs.content LIKE ? ", querySearch))
 	}
+
+	if exceptID != "" {
+        queryBuilder.Not("id = ?", exceptID)
+    }
 
 	if pageSize > 0 {
 		// count the total number of rows
