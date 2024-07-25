@@ -12,9 +12,11 @@ func SeedFacility(db *gorm.DB) {
 
 	// Seed data into the Facility table
 	facilities := []models.Facility{
-		{Name: "Fasilitas 1"},
-		{Name: "Fasilitas 2"},
-		{Name: "Fasilitas 3"},
+		{Name: "Latest ATVs with Well-Maintained Physical Conditions"},
+		{Name: "High-quality mountain bikes"},
+		{Name: "Restrooms, rest areas, and picnic spots"},
+		{Name: "Snacks and Drinks: Refreshments to keep you energized"},
+		{Name: "Comprehensive and Reliable Safety Gear"},
 	}
 
 	for _, facility := range facilities {

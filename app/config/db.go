@@ -36,13 +36,16 @@ func NewDatabase() Database {
 
 	}
 
+	// users
 	db.AutoMigrate(&models.User{})
 	seeders.SeedAdmin(db)
 	seeders.SeedStaff(db)
 	seeders.SeedInstructor(db)
-	db.AutoMigrate(&models.Customer{})
+	seeders.SeedCustomer(db)
+
+	// master data
 	seeders.SeedFacility(db)
-	db.AutoMigrate(&models.MandatoryLuggage{})
+	seeders.SeedMandatoryLuggage(db)
 	db.AutoMigrate(&models.Route{})
 	db.AutoMigrate(&models.EntertainmentCategory{})
 	db.AutoMigrate(&models.EntertainmentService{})
@@ -52,8 +55,12 @@ func NewDatabase() Database {
 	db.AutoMigrate(&models.MandatoryLuggageEntertainmentService{})
 	db.AutoMigrate(&models.EntertainmentPackage{})
 	db.AutoMigrate(&models.EntertainmentPackageDetail{})
+
+	// booking
 	db.AutoMigrate(&models.Booking{})
 	db.AutoMigrate(&models.BookingDetail{})
+
+	// blog
 	db.AutoMigrate(&models.Blog{})
 
 	fmt.Println("Database connection established")

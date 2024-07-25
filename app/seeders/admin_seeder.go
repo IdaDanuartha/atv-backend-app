@@ -11,6 +11,7 @@ import (
 func SeedAdmin(db *gorm.DB) {
 	// AutoMigrate the Admin model
 	db.AutoMigrate(&models.Admin{})
+	// Change the admin password after seeding the database
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte("123456"), bcrypt.DefaultCost)
 	if err != nil {
 		log.Fatalf("Failed to hash password: %v", err)
