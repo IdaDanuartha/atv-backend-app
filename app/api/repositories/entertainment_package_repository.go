@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"time"
+
 	"github.com/IdaDanuartha/atv-backend-app/app/config"
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
 )
@@ -38,6 +40,9 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 				Or("entertainment_packages.price LIKE ? ", querySearch).
 				Or("entertainment_packages.expired_at LIKE ? ", querySearch))
 	}
+	
+	// show only data which the expired_at is not expired
+	queryBuilder.Where("expired_at >= ?", time.Now())
 
 	if pageSize > 0 {
 		// count the total number of rows
@@ -48,10 +53,6 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 		// Apply offset and limit to fetch paginated results
 		err = queryBuilder.
 			Preload("Services.EntertainmentService.EntertainmentCategory").
-			Preload("Services.EntertainmentService.Routes.Route").
-			Preload("Services.EntertainmentService.Facilities.Facility").
-			Preload("Services.EntertainmentService.Instructors.Instructor.User").
-			Preload("Services.EntertainmentService.MandatoryLuggages.MandatoryLuggage").
 			Where(entertainmentPackage).
 			Offset((currentPage - 1) * pageSize).
 			Limit(pageSize).
@@ -60,10 +61,6 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 	} else {
 		err := queryBuilder.
 			Preload("Services.EntertainmentService.EntertainmentCategory").
-			Preload("Services.EntertainmentService.Routes.Route").
-			Preload("Services.EntertainmentService.Facilities.Facility").
-			Preload("Services.EntertainmentService.Instructors.Instructor.User").
-			Preload("Services.EntertainmentService.MandatoryLuggages.MandatoryLuggage").
 			Where(entertainmentPackage).
 			Find(&entertainment_packages).
 			Count(&totalRows).Error
@@ -78,10 +75,6 @@ func (r entertainmentPackageRepository) Find(ID string, showRelations bool) (mod
 	if(showRelations) {
 		err := r.db.DB.
 			Preload("Services.EntertainmentService.EntertainmentCategory").
-			Preload("Services.EntertainmentService.Routes.Route").
-			Preload("Services.EntertainmentService.Facilities.Facility").
-			Preload("Services.EntertainmentService.Instructors.Instructor.User").
-			Preload("Services.EntertainmentService.MandatoryLuggages.MandatoryLuggage").
 			Debug().
 			Model(&models.EntertainmentPackage{}).
 			Where("id = ?", ID).

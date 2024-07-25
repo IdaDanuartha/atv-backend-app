@@ -46,8 +46,8 @@ func NewDatabase() Database {
 	// master data
 	seeders.SeedFacility(db)
 	seeders.SeedMandatoryLuggage(db)
-	db.AutoMigrate(&models.Route{})
-	db.AutoMigrate(&models.EntertainmentCategory{})
+	seeders.SeedRoute(db)
+	seeders.SeedEntertainmentCategory(db)
 	db.AutoMigrate(&models.EntertainmentService{})
 	db.AutoMigrate(&models.EntertainmentServiceRoute{})
 	db.AutoMigrate(&models.EntertainmentServiceFacility{})
