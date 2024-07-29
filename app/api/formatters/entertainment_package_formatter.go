@@ -47,18 +47,18 @@ func FormatEntertainmentPackage(entertainmentPackage models.EntertainmentPackage
 
 		packageDetails = append(packageDetails, newPackageDetail)
 
-		entertainmentInstructors := []models.EntertainmentServiceInstructor{}
-		for _, instructor := range packageDetail.EntertainmentService.Instructors {
-			newInstructors := models.EntertainmentServiceInstructor{}
+		// entertainmentInstructors := []models.EntertainmentServiceInstructor{}
+		// for _, instructor := range packageDetail.EntertainmentService.Instructors {
+		// 	newInstructors := models.EntertainmentServiceInstructor{}
 
-			newInstructors.Instructor.Name = instructor.Instructor.Name
-			newInstructors.Instructor.CreatedAt = instructor.Instructor.CreatedAt
-			newInstructors.Instructor.UpdatedAt = instructor.Instructor.UpdatedAt
-			newInstructors.Instructor.DeletedAt = instructor.Instructor.DeletedAt
+		// 	newInstructors.Instructor.Name = instructor.Instructor.Name
+		// 	newInstructors.Instructor.CreatedAt = instructor.Instructor.CreatedAt
+		// 	newInstructors.Instructor.UpdatedAt = instructor.Instructor.UpdatedAt
+		// 	newInstructors.Instructor.DeletedAt = instructor.Instructor.DeletedAt
 
-			entertainmentInstructors = append(entertainmentInstructors, newInstructors)
-		}
-		newPackageDetail.EntertainmentService.Instructors = entertainmentInstructors
+		// 	entertainmentInstructors = append(entertainmentInstructors, newInstructors)
+		// }
+		// newPackageDetail.EntertainmentService.Instructors = entertainmentInstructors
 
 	}
 	entertainmentPackageFormatter.Services = packageDetails

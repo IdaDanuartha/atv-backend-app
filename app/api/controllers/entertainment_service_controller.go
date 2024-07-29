@@ -39,7 +39,9 @@ func (h *EntertainmentServiceController) GetEntertainmentServices(ctx *gin.Conte
 		pageSize = 0
 	}
 
-	entertainmentServices, total, _, err := h.service.FindAll(entertainment_services, search, currentPage, pageSize)
+	instructorID := ctx.Query("instructor_id")
+
+	entertainmentServices, total, _, err := h.service.FindAll(entertainment_services, search, currentPage, pageSize, instructorID)
 
 	if err != nil {
 		response := utils.APIResponse("Failed to find entertainment service", http.StatusBadRequest, "error", err.Error())

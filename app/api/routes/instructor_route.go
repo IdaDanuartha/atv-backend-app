@@ -33,13 +33,13 @@ func (p InstructorRoute) Setup(authMiddleware gin.HandlerFunc) {
 	instructor := p.Handler.Gin.Group(apiPrefix + "/instructors") //Router group
 
 	// Apply AuthMiddleware to the instructor route group
-	instructor.Use(authMiddleware)
+	// instructor.Use(authMiddleware)
 
 	{
 		instructor.GET("/", p.Controller.GetInstructors)
 		instructor.GET("/:id", p.Controller.GetInstructor)
-		instructor.POST("/", p.Controller.AddInstructor)
-		instructor.PATCH("/:id", p.Controller.UpdateInstructor)
-		instructor.DELETE("/:id", p.Controller.DeleteInstructor)
+		instructor.POST("/", authMiddleware, p.Controller.AddInstructor)
+		instructor.PATCH("/:id", authMiddleware, p.Controller.UpdateInstructor)
+		instructor.DELETE("/:id", authMiddleware, p.Controller.DeleteInstructor)
 	}
 }

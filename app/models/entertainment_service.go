@@ -14,7 +14,7 @@ type EntertainmentService struct {
 
 	Routes            []EntertainmentServiceRoute            `gorm:"foreignKey:EntertainmentServiceID;" json:"routes"`
 	Facilities        []EntertainmentServiceFacility         `gorm:"foreignKey:EntertainmentServiceID" json:"facilities"`
-	Instructors       []EntertainmentServiceInstructor       `gorm:"foreignKey:EntertainmentServiceID" json:"instructors"`
+	Instructors       []EntertainmentServiceInstructor       `gorm:"foreignKey:EntertainmentServiceID;" json:"instructors"`
 	MandatoryLuggages []MandatoryLuggageEntertainmentService `gorm:"foreignKey:EntertainmentServiceID" json:"mandatory_luggages"`
 }
 

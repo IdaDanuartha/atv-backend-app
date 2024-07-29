@@ -3,9 +3,8 @@ package models
 // Entertainment Service Route Model
 type EntertainmentServiceRoute struct {
 	EntertainmentServiceID string               `gorm:"type:varchar(100);constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"entertainment_service_id,omitempty"`
-	EntertainmentService   EntertainmentService `gorm:"foreignKey:EntertainmentServiceID" json:"entertainment_service"`
 	Route                  Route                `gorm:"foreignKey:RouteID" json:"route"`
-	RouteID                string               `gorm:"type:varchar(100);" json:"route_id,omitempty"`
+	RouteID                string               `gorm:"type:varchar(100);constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"route_id,omitempty"`
 }
 
 // TableName method sets table name for Entertainment Service Instructor model

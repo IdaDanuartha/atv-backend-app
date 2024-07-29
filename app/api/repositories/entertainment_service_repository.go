@@ -6,7 +6,7 @@ import (
 )
 
 type EntertainmentServiceRepository interface {
-	FindAll(entertainmentService models.EntertainmentService, search string, currentPage int, pageSize int) ([]models.EntertainmentService, int64, int, error)
+	FindAll(entertainmentService models.EntertainmentService, search string, currentPage int, pageSize int, instructorID string) ([]models.EntertainmentService, int64, int, error)
 	Find(ID string, showRelations bool) (models.EntertainmentService, error)
 	Save(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
 	Update(entertainmentService models.EntertainmentService) (models.EntertainmentService, error)
@@ -24,7 +24,7 @@ func NewEntertainmentServiceRepository(db config.Database) entertainmentServiceR
 }
 
 // FindAll -> Method for fetching all Entertainment Service from database
-func (r entertainmentServiceRepository) FindAll(entertainmentService models.EntertainmentService, search string, currentPage int, pageSize int) ([]models.EntertainmentService, int64, int, error) {
+func (r entertainmentServiceRepository) FindAll(entertainmentService models.EntertainmentService, search string, currentPage int, pageSize int, instructorID string) ([]models.EntertainmentService, int64, int, error) {
 	var entertainment_services []models.EntertainmentService
 	var totalRows int64 = 0
 
@@ -37,6 +37,11 @@ func (r entertainmentServiceRepository) FindAll(entertainmentService models.Ente
 			r.db.DB.Where("entertainment_services.name LIKE ? ", querySearch).
 				Or("entertainment_services.price LIKE ? ", querySearch).
 				Or("entertainment_categories.name LIKE ? ", querySearch))
+	}
+
+	if instructorID != "" {
+		queryBuilder = queryBuilder.Joins("JOIN entertainment_service_instructors ON entertainment_service_instructors.entertainment_service_id = entertainment_services.id").
+			Where("entertainment_service_instructors.instructor_id = ?", instructorID)
 	}
 
 	if pageSize > 0 {
@@ -99,13 +104,7 @@ func (r entertainmentServiceRepository) Find(ID string, showRelations bool) (mod
 
 // Save -> Method for saving Entertainment Service to database
 func (r entertainmentServiceRepository) Save(entertainmentService models.EntertainmentService) (models.EntertainmentService, error) {
-	err := r.db.DB.
-		Preload("EntertainmentCategory").
-		Preload("Routes.Route").
-		Preload("Facilities.Facility").
-		Preload("Instructors.Instructor.User").
-		Preload("MandatoryLuggages.MandatoryLuggage").
-		Create(&entertainmentService).Error
+	err := r.db.DB.Create(&entertainmentService).Error
 
 	if err != nil {
 		return entertainmentService, err
@@ -165,13 +164,7 @@ func (r *entertainmentServiceRepository) UpdateImagePath(ID string, fileLocation
 
 // Delete -> Method for deleting Entertainment Service
 func (r entertainmentServiceRepository) Delete(entertainmentService models.EntertainmentService) (models.EntertainmentService, error) {
-	err := r.db.DB.
-		Preload("EntertainmentCategory").
-		Preload("Routes.Route").
-		Preload("Facilities.Facility").
-		Preload("Instructors.Instructor.User").
-		Preload("MandatoryLuggages.MandatoryLuggage").
-		Delete(&entertainmentService).Error
+	err := r.db.DB.Delete(&entertainmentService).Error
 
 	if err != nil {
 		return entertainmentService, err

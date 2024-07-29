@@ -3,9 +3,8 @@ package models
 // Entertainment Service Facility Model
 type EntertainmentServiceFacility struct {
 	EntertainmentServiceID string               `gorm:"type:varchar(100);constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"entertainment_service_id,omitempty"`
-	EntertainmentService   EntertainmentService `gorm:"foreignKey:EntertainmentServiceID" json:"entertainment_service"`
 	Facility               Facility             `gorm:"foreignKey:FacilityID" json:"facility"`
-	FacilityID             string               `gorm:"type:varchar(100);" json:"facility_id,omitempty"`
+	FacilityID             string               `gorm:"type:varchar(100);constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"facility_id,omitempty"`
 }
 
 // TableName method sets table name for Entertainment Service Facility model
