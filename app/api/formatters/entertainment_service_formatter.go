@@ -10,6 +10,7 @@ func FormatEntertainmentService(entertainmentService models.EntertainmentService
 	entertainmentServiceFormatter.Name = entertainmentService.Name
 	entertainmentServiceFormatter.Price = entertainmentService.Price
 	entertainmentServiceFormatter.Duration = entertainmentService.Duration
+	entertainmentServiceFormatter.Description = entertainmentService.Description
 	entertainmentServiceFormatter.ImagePath = entertainmentService.ImagePath
 	entertainmentServiceFormatter.CreatedAt = entertainmentService.CreatedAt
 	entertainmentServiceFormatter.UpdatedAt = entertainmentService.UpdatedAt

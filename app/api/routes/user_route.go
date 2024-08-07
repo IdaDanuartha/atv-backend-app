@@ -19,7 +19,7 @@ func NewUserRoute(
 	controller *controllers.UserController,
 	handler config.GinRouter,
 
-) UserRoute {
+) UserRoute { 
 	return UserRoute{
 		Controller: *controller,
 		Handler:    handler,
