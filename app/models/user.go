@@ -13,7 +13,7 @@ type User struct {
 	ProfilePath *string `gorm:"size:100;" json:"profile_path"`
 }
 
-// TableName method sets table name for Bus model
+// TableName method sets table name for User model
 func (User *User) TableName() string {
 	return "users"
 }

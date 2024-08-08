@@ -7,7 +7,7 @@ import (
 )
 
 type EntertainmentPackageService interface {
-	FindAll(model models.EntertainmentPackage, search string, currentPage int, pageSize int) ([]models.EntertainmentPackage, int64, int, error)
+	FindAll(model models.EntertainmentPackage, search string, currentPage int, pageSize int, isNotExpired bool) ([]models.EntertainmentPackage, int64, int, error)
 	Find(input inputs.GetEntertainmentPackageDetailInput) (models.EntertainmentPackage, error)
 	SaveImage(ID string, fileLocation string) (models.EntertainmentPackage, error)
 	Save(input inputs.EntertainmentPackageInput) (models.EntertainmentPackage, error)
@@ -26,8 +26,8 @@ func NewEntertainmentPackageService(repository repositories.EntertainmentPackage
 }
 
 // FindAll -> calls Entertainment Package repo find all method
-func (s entertainmentPackageService) FindAll(model models.EntertainmentPackage, search string, currentPage int, pageSize int) ([]models.EntertainmentPackage, int64, int, error) {
-	entertainmentPackages, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize)
+func (s entertainmentPackageService) FindAll(model models.EntertainmentPackage, search string, currentPage int, pageSize int, isNotExpired bool) ([]models.EntertainmentPackage, int64, int, error) {
+	entertainmentPackages, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize, isNotExpired)
 	if err != nil {
 		return entertainmentPackages, total, currentPage, err
 	}

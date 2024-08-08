@@ -8,7 +8,7 @@ import (
 )
 
 type EntertainmentPackageRepository interface {
-	FindAll(entertainmentPackage models.EntertainmentPackage, search string, currentPage int, pageSize int) ([]models.EntertainmentPackage, int64, int, error)
+	FindAll(entertainmentPackage models.EntertainmentPackage, search string, currentPage int, pageSize int, isNotExpired bool) ([]models.EntertainmentPackage, int64, int, error)
 	Find(ID string, showRelations bool) (models.EntertainmentPackage, error)
 	Save(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error)
 	Update(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error)
@@ -25,7 +25,7 @@ func NewEntertainmentPackageRepository(db config.Database) entertainmentPackageR
 }
 
 // FindAll -> Method for fetching all Entertainment Package from database
-func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.EntertainmentPackage, search string, currentPage int, pageSize int) ([]models.EntertainmentPackage, int64, int, error) {
+func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.EntertainmentPackage, search string, currentPage int, pageSize int, isNotExpired bool) ([]models.EntertainmentPackage, int64, int, error) {
 	var entertainment_packages []models.EntertainmentPackage
 	var totalRows int64 = 0
 
@@ -42,7 +42,9 @@ func (r entertainmentPackageRepository) FindAll(entertainmentPackage models.Ente
 	}
 	
 	// show only data which the expired_at is not expired
-	queryBuilder.Where("expired_at >= ?", time.Now())
+	if(isNotExpired) {
+		queryBuilder.Where("expired_at >= ?", time.Now())
+	}
 
 	if pageSize > 0 {
 		// count the total number of rows

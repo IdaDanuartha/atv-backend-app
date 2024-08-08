@@ -35,6 +35,7 @@ func FormatEntertainmentPackage(entertainmentPackage models.EntertainmentPackage
 		newPackageDetail.EntertainmentService.Price = packageDetail.EntertainmentService.Price
 		newPackageDetail.EntertainmentService.Duration = packageDetail.EntertainmentService.Duration
 		newPackageDetail.EntertainmentService.Description = packageDetail.EntertainmentService.Description
+		newPackageDetail.EntertainmentService.ImagePath = packageDetail.EntertainmentService.ImagePath
 		newPackageDetail.EntertainmentService.CreatedAt = packageDetail.EntertainmentService.CreatedAt
 		newPackageDetail.EntertainmentService.UpdatedAt = packageDetail.EntertainmentService.UpdatedAt
 		newPackageDetail.EntertainmentService.DeletedAt = packageDetail.EntertainmentService.DeletedAt

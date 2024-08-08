@@ -39,7 +39,12 @@ func (h *EntertainmentPackageController) GetEntertainmentPackages(ctx *gin.Conte
 		pageSize = 0
 	}
 
-	entertainmentPackages, total, _, err := h.service.FindAll(entertainment_packages, search, currentPage, pageSize)
+	isNotExpired, err := strconv.ParseBool(ctx.Query("is_not_expired"))
+	if err != nil {
+		isNotExpired = false
+	}
+
+	entertainmentPackages, total, _, err := h.service.FindAll(entertainment_packages, search, currentPage, pageSize, isNotExpired)
 
 	if err != nil {
 		response := utils.APIResponse("Failed to find entertainment package", http.StatusBadRequest, "error", err.Error())
