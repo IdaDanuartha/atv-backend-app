@@ -34,7 +34,7 @@ func (h *CustomerController) GetCustomers(ctx *gin.Context) {
 
 	pageSize, err := strconv.Atoi(ctx.Query("page_size"))
 	if err != nil {
-		pageSize = 1
+		pageSize = 0
 	}
 
 	getCustomer, total, _, err := h.service.FindAll(customers, search, currentPage, pageSize)
