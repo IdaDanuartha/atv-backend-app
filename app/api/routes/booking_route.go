@@ -38,6 +38,7 @@ func (p BookingRoute) Setup(authMiddleware gin.HandlerFunc) {
 	{
 		booking.GET("/", authMiddleware, p.Controller.GetBookings)
 		booking.GET("/:id", authMiddleware, p.Controller.GetBooking)
+		booking.GET("/export/excel", authMiddleware, p.Controller.ExportToExcel)
 		booking.POST("/", authMiddleware, p.Controller.AddBooking)
 		// booking.PATCH("/:id", authMiddleware, p.Controller.UpdateBooking)
 		booking.DELETE("/:id", authMiddleware, p.Controller.DeleteBooking)

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/IdaDanuartha/atv-backend-app/app/models"
 	"github.com/IdaDanuartha/atv-backend-app/app/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/xuri/excelize/v2"
 )
 
 // BookingController -> BookingController
@@ -168,4 +170,52 @@ func (h *BookingController) DeleteBooking(ctx *gin.Context) {
 
 	response := utils.APIResponse("Success to delete booking", http.StatusOK, "success", formatters.FormatBooking(deletedBooking))
 	ctx.JSON(http.StatusOK, response)
+}
+
+func (h *BookingController) ExportToExcel(ctx *gin.Context) {
+	var booking models.Booking
+
+	bookings, _, _, err := h.service.FindAll(booking, "", 1, 0, "")
+	if err != nil {
+		response := utils.APIResponse("Failed to find booking", http.StatusBadRequest, "error", err.Error())
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	// Create a new Excel file
+	file := excelize.NewFile()
+	sheetName := "Sheet1"
+
+	// Set the header row
+	headers := []string{"ID", "Code", "Name", "Phone Number", "Total Price", "Total Pay", "Total Change", "Payment Method"}
+	for i, header := range headers {
+		cell, _ := excelize.CoordinatesToCellName(i+1, 1)
+		file.SetCellValue(sheetName, cell, header)
+	}
+
+	// Fill the Excel file with data
+	for i, booking := range bookings {
+		file.SetCellValue(sheetName, fmt.Sprintf("A%d", i+2), i+1)
+		file.SetCellValue(sheetName, fmt.Sprintf("B%d", i+2), booking.Code)
+		file.SetCellValue(sheetName, fmt.Sprintf("C%d", i+2), booking.Name)
+		file.SetCellValue(sheetName, fmt.Sprintf("D%d", i+2), booking.PhoneNumber)
+		file.SetCellValue(sheetName, fmt.Sprintf("E%d", i+2), utils.FormatRupiah(int64(booking.TotalPrice)))
+		file.SetCellValue(sheetName, fmt.Sprintf("F%d", i+2), utils.FormatRupiah(int64(booking.TotalPay)))
+		file.SetCellValue(sheetName, fmt.Sprintf("G%d", i+2), utils.FormatRupiah(int64(booking.TotalChange)))
+		file.SetCellValue(sheetName, fmt.Sprintf("H%d", i+2), booking.PaymentMethod)
+	}
+
+	// Write the file to a temporary buffer
+	buffer, err := file.WriteToBuffer()
+	if err != nil {
+		response := utils.APIResponse("Could not create the Excel file", http.StatusBadRequest, "error", err.Error())
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	// Set the appropriate headers and return the file
+	ctx.Header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	ctx.Header("Content-Disposition", "attachment; filename=bookings.xlsx")
+
+	ctx.DataFromReader(http.StatusOK, int64(buffer.Len()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", buffer, nil)
 }
