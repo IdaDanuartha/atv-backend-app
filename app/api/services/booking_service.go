@@ -8,7 +8,7 @@ import (
 )
 
 type BookingService interface {
-	FindAll(model models.Booking, search string, currentPage int, pageSize int) ([]models.Booking, int64, int, error)
+	FindAll(model models.Booking, search string, currentPage int, pageSize int, instructorID string) ([]models.Booking, int64, int, error)
 	Find(input inputs.GetBookingDetailInput) (models.Booking, error)
 	Save(input inputs.BookingInput) (models.Booking, error)
 	Update(inputID inputs.GetBookingDetailInput, input inputs.BookingInput) (models.Booking, error)
@@ -26,8 +26,8 @@ func NewBookingService(repository repositories.BookingRepository) bookingService
 }
 
 // FindAll -> calls Booking repo find all method
-func (s bookingService) FindAll(model models.Booking, search string, currentPage int, pageSize int) ([]models.Booking, int64, int, error) {
-	bookings, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize)
+func (s bookingService) FindAll(model models.Booking, search string, currentPage int, pageSize int, instructorID string) ([]models.Booking, int64, int, error) {
+	bookings, total, currentPage, err := s.repository.FindAll(model, search, currentPage, pageSize, instructorID)
 	if err != nil {
 		return bookings, total, currentPage, err
 	}

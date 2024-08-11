@@ -6,7 +6,7 @@ import (
 )
 
 type BookingRepository interface {
-	FindAll(booking models.Booking, search string, currentPage int, pageSize int) ([]models.Booking, int64, int, error)
+	FindAll(booking models.Booking, search string, currentPage int, pageSize int, instructorID string) ([]models.Booking, int64, int, error)
 	Find(ID string, showRelations bool) (models.Booking, error)
 	Save(booking models.Booking) (models.Booking, error)
 	Update(booking models.Booking) (models.Booking, error)
@@ -23,7 +23,7 @@ func NewBookingRepository(db config.Database) bookingRepository {
 }
 
 // FindAll -> Method for fetching all Entertainment Package from database
-func (r bookingRepository) FindAll(booking models.Booking, search string, currentPage int, pageSize int) ([]models.Booking, int64, int, error) {
+func (r bookingRepository) FindAll(booking models.Booking, search string, currentPage int, pageSize int, instructorID string) ([]models.Booking, int64, int, error) {
 	var bookings []models.Booking
 	var totalRows int64 = 0
 
@@ -43,11 +43,21 @@ func (r bookingRepository) FindAll(booking models.Booking, search string, curren
 				Or("bookings.total_change LIKE ? ", querySearch))
 	}
 
+	if instructorID != "" {
+		queryBuilder = queryBuilder.Joins("JOIN booking_details ON booking_details.booking_id = bookings.id").
+			Joins("JOIN entertainment_services ON entertainment_services.id = booking_details.entertainment_service_id").
+			Joins("JOIN entertainment_service_instructors ON entertainment_service_instructors.entertainment_service_id = entertainment_services.id").
+			Where("entertainment_service_instructors.instructor_id = ?", instructorID)
+	}
+
 	if pageSize > 0 {
 		// count the total number of rows
 		err := queryBuilder.
 			Where(booking).
 			Count(&totalRows).Error
+		if err != nil {
+			return bookings, totalRows, currentPage, err
+		}
 
 		// Apply offset and limit to fetch paginated results
 		err = queryBuilder.

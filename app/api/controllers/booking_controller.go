@@ -37,7 +37,9 @@ func (h *BookingController) GetBookings(ctx *gin.Context) {
 		pageSize = 0
 	}
 
-	booking, total, _, err := h.service.FindAll(bookings, search, currentPage, pageSize)
+	instructorID := ctx.Query("instructor_id")
+
+	booking, total, _, err := h.service.FindAll(bookings, search, currentPage, pageSize, instructorID)
 
 	if err != nil {
 		response := utils.APIResponse("Failed to find booking", http.StatusBadRequest, "error", err.Error())
