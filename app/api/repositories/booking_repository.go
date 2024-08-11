@@ -51,7 +51,7 @@ func (r bookingRepository) FindAll(booking models.Booking, search string, curren
 
 		// Apply offset and limit to fetch paginated results
 		err = queryBuilder.
-			Preload("Details.EntertainmentService").
+			Preload("Details.EntertainmentService.EntertainmentCategory").
 			Preload("Customer.User").
 			Where(booking).
 			Offset((currentPage - 1) * pageSize).
@@ -60,7 +60,7 @@ func (r bookingRepository) FindAll(booking models.Booking, search string, curren
 		return bookings, totalRows, currentPage, err
 	} else {
 		err := queryBuilder.
-			Preload("Details.EntertainmentService").
+			Preload("Details.EntertainmentService.EntertainmentCategory").
 			Preload("Customer.User").
 			Where(booking).
 			Find(&bookings).
@@ -76,7 +76,7 @@ func (r bookingRepository) Find(ID string, showRelations bool) (models.Booking, 
 	
 	if(showRelations) {
 		err := r.db.DB.
-			Preload("Details.EntertainmentService").
+			Preload("Details.EntertainmentService.EntertainmentCategory").
 			Preload("Customer.User").
 			Debug().
 			Model(&models.Booking{}).
@@ -96,7 +96,7 @@ func (r bookingRepository) Find(ID string, showRelations bool) (models.Booking, 
 // Save -> Method for saving Entertainment Package to database
 func (r bookingRepository) Save(booking models.Booking) (models.Booking, error) {
 	err := r.db.DB.
-		Preload("Details.EntertainmentService").
+		Preload("Details.EntertainmentService.EntertainmentCategory").
 		Preload("Customer.User").
 		Create(&booking).Error
 	if err != nil {
@@ -120,7 +120,7 @@ func (r *bookingRepository) Update(booking models.Booking) (models.Booking, erro
 // Delete -> Method for deleting Entertainment Package
 func (r bookingRepository) Delete(booking models.Booking) (models.Booking, error) {
 	err := r.db.DB.
-		Preload("Details.EntertainmentService").
+		Preload("Details.EntertainmentService.EntertainmentCategory").
 		Preload("Customer.User").
 		Delete(&booking).Error
 

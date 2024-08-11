@@ -50,9 +50,17 @@ func FormatBooking(booking models.Booking) models.Booking {
 		newBookingDetail.EntertainmentService.ID = packageDetail.EntertainmentService.ID
 		newBookingDetail.EntertainmentService.Name = packageDetail.EntertainmentService.Name
 		newBookingDetail.EntertainmentService.Price = packageDetail.EntertainmentService.Price
+		newBookingDetail.EntertainmentService.Description = packageDetail.EntertainmentService.Description
+		newBookingDetail.EntertainmentService.ImagePath = packageDetail.EntertainmentService.ImagePath
 		newBookingDetail.EntertainmentService.CreatedAt = packageDetail.EntertainmentService.CreatedAt
 		newBookingDetail.EntertainmentService.UpdatedAt = packageDetail.EntertainmentService.UpdatedAt
 		newBookingDetail.EntertainmentService.DeletedAt = packageDetail.EntertainmentService.DeletedAt
+
+		newBookingDetail.EntertainmentService.EntertainmentCategory.ID = packageDetail.EntertainmentService.EntertainmentCategory.ID
+		newBookingDetail.EntertainmentService.EntertainmentCategory.Name = packageDetail.EntertainmentService.EntertainmentCategory.Name
+		newBookingDetail.EntertainmentService.EntertainmentCategory.CreatedAt = packageDetail.EntertainmentService.EntertainmentCategory.CreatedAt
+		newBookingDetail.EntertainmentService.EntertainmentCategory.UpdatedAt = packageDetail.EntertainmentService.EntertainmentCategory.UpdatedAt
+		newBookingDetail.EntertainmentService.EntertainmentCategory.DeletedAt = packageDetail.EntertainmentService.EntertainmentCategory.DeletedAt
 
 		bookingDetails = append(bookingDetails, newBookingDetail)
 	}
