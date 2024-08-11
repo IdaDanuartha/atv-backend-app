@@ -40,8 +40,9 @@ func (h *BookingController) GetBookings(ctx *gin.Context) {
 	}
 
 	instructorID := ctx.Query("instructor_id")
+	customerID := ctx.Query("customer_id")
 
-	booking, total, _, err := h.service.FindAll(bookings, search, currentPage, pageSize, instructorID)
+	booking, total, _, err := h.service.FindAll(bookings, search, currentPage, pageSize, instructorID, customerID)
 
 	if err != nil {
 		response := utils.APIResponse("Failed to find booking", http.StatusBadRequest, "error", err.Error())
@@ -175,7 +176,7 @@ func (h *BookingController) DeleteBooking(ctx *gin.Context) {
 func (h *BookingController) ExportToExcel(ctx *gin.Context) {
 	var booking models.Booking
 
-	bookings, _, _, err := h.service.FindAll(booking, "", 1, 0, "")
+	bookings, _, _, err := h.service.FindAll(booking, "", 1, 0, "", "")
 	if err != nil {
 		response := utils.APIResponse("Failed to find booking", http.StatusBadRequest, "error", err.Error())
 		ctx.JSON(http.StatusBadRequest, response)
