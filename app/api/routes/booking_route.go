@@ -33,14 +33,14 @@ func (p BookingRoute) Setup(authMiddleware gin.HandlerFunc) {
 	booking := p.Handler.Gin.Group(apiPrefix + "/bookings") //Router group
 
 	// Apply AuthMiddleware to the booking route group
-	// booking.Use(authMiddleware)
+	booking.Use(authMiddleware)
 
 	{
-		booking.GET("/", authMiddleware, p.Controller.GetBookings)
-		booking.GET("/:id", authMiddleware, p.Controller.GetBooking)
-		booking.GET("/export/excel", authMiddleware, p.Controller.ExportToExcel)
-		booking.POST("/", authMiddleware, p.Controller.AddBooking)
-		// booking.PATCH("/:id", authMiddleware, p.Controller.UpdateBooking)
-		booking.DELETE("/:id", authMiddleware, p.Controller.DeleteBooking)
+		booking.GET("/", p.Controller.GetBookings)
+		booking.GET("/:id", p.Controller.GetBooking)
+		booking.GET("/export/excel", p.Controller.ExportToExcel)
+		booking.POST("/", p.Controller.AddBooking)
+		// booking.PATCH("/:id", p.Controller.UpdateBooking)
+		booking.DELETE("/:id", p.Controller.DeleteBooking)
 	}
 }
