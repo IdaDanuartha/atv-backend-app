@@ -11,6 +11,7 @@ type EntertainmentPackageService interface {
 	Find(input inputs.GetEntertainmentPackageDetailInput) (models.EntertainmentPackage, error)
 	SaveImage(ID string, fileLocation string) (models.EntertainmentPackage, error)
 	Save(input inputs.EntertainmentPackageInput) (models.EntertainmentPackage, error)
+	SavePackageDetail(input inputs.EntertainmentPackageDetailInput) (models.EntertainmentPackageDetail, error)
 	Update(inputID inputs.GetEntertainmentPackageDetailInput, input inputs.EntertainmentPackageInput) (models.EntertainmentPackage, error)
 	Delete(inputID inputs.GetEntertainmentPackageDetailInput) (models.EntertainmentPackage, error)
 }
@@ -79,6 +80,21 @@ func (s entertainmentPackageService) Save(input inputs.EntertainmentPackageInput
 	}
 
 	return newEntertainmentPackage, nil
+}
+
+// Save -> calls Entertainment Package repository save method
+func (s entertainmentPackageService) SavePackageDetail(input inputs.EntertainmentPackageDetailInput) (models.EntertainmentPackageDetail, error) {
+	entertainmentPackageDetail := models.EntertainmentPackageDetail{}
+
+	entertainmentPackageDetail.EntertainmentPackageID = input.EntertainmentPackageID
+	entertainmentPackageDetail.EntertainmentServiceID = input.EntertainmentServiceID
+
+	newEntertainmentPackageDetail, err := s.repository.SavePackageDetail(entertainmentPackageDetail)
+	if err != nil {
+		return newEntertainmentPackageDetail, err
+	}
+
+	return newEntertainmentPackageDetail, nil
 }
 
 // Update -> calls Entertainment Package repo update method

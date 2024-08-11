@@ -11,6 +11,7 @@ type EntertainmentPackageRepository interface {
 	FindAll(entertainmentPackage models.EntertainmentPackage, search string, currentPage int, pageSize int, isNotExpired bool) ([]models.EntertainmentPackage, int64, int, error)
 	Find(ID string, showRelations bool) (models.EntertainmentPackage, error)
 	Save(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error)
+	SavePackageDetail(entertainmentPackageDetail models.EntertainmentPackageDetail) (models.EntertainmentPackageDetail, error)
 	Update(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error)
 	Delete(entertainmentPackage models.EntertainmentPackage) (models.EntertainmentPackage, error)
 }
@@ -100,6 +101,16 @@ func (r entertainmentPackageRepository) Save(entertainmentPackage models.Enterta
 	}
 
 	return entertainmentPackage, nil
+}
+
+// Save -> Method for saving Entertainment Package Detail to database
+func (r entertainmentPackageRepository) SavePackageDetail(entertainmentPackageDetail models.EntertainmentPackageDetail) (models.EntertainmentPackageDetail, error) {
+	err := r.db.DB.Create(&entertainmentPackageDetail).Error
+	if err != nil {
+		return entertainmentPackageDetail, err
+	}
+
+	return entertainmentPackageDetail, nil
 }
 
 // Update -> Method for updating Entertainment Package

@@ -203,6 +203,40 @@ func (h *EntertainmentPackageController) AddEntertainmentPackage(ctx *gin.Contex
 	ctx.JSON(http.StatusCreated, response)
 }
 
+// AddEntertainmentPackageDetail : AddEntertainmentPackageDetail controller
+func (h *EntertainmentPackageController) AddEntertainmentPackageDetail(ctx *gin.Context) {
+	var input inputs.EntertainmentPackageDetailInput
+	customizer := g.Validator(inputs.EntertainmentPackageDetailInput{})
+
+	// Check if request body is empty or has no content type
+	if ctx.Request.Body == nil || ctx.Request.ContentLength == 0 || ctx.GetHeader("Content-Type") == "" {
+		errorMessage := gin.H{"errors": "No fields sent"}
+		response := utils.APIResponse("No fields sent", http.StatusBadRequest, "error", errorMessage)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	err := ctx.ShouldBindJSON(&input)
+	if err != nil {
+		// errors := utils.FormatValidationError(err)
+		errorMessage := gin.H{"errors": customizer.DecryptErrors(err)}
+
+		response := utils.APIResponse("Failed to store entertainment package detail", http.StatusUnprocessableEntity, "error", errorMessage)
+		ctx.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	newEntertainmentPackageDetail, err := h.service.SavePackageDetail(input)
+	if err != nil {
+		response := utils.APIResponse("Failed to store entertainment package detail", http.StatusBadRequest, "error", err.Error())
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := utils.APIResponse("Success to store entertainment package detail", http.StatusCreated, "success", formatters.FormatEntertainmentPackageDetail(newEntertainmentPackageDetail))
+	ctx.JSON(http.StatusCreated, response)
+}
+
 // UpdateEntertainmentPackage : get update by id
 func (h *EntertainmentPackageController) UpdateEntertainmentPackage(ctx *gin.Context) {
 	var inputID inputs.GetEntertainmentPackageDetailInput

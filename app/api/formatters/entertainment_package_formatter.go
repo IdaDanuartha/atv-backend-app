@@ -77,3 +77,15 @@ func FormatEntertainmentPackages(entertainmentPackages []models.EntertainmentPac
 
 	return entertainmentPackagesFormatter
 }
+
+func FormatEntertainmentPackageDetail(entertainmentPackageDetail models.EntertainmentPackageDetail) models.EntertainmentPackageDetail {
+	entertainmentPackageFormatterDetail := models.EntertainmentPackageDetail{}
+	entertainmentPackageFormatterDetail.ID = entertainmentPackageDetail.ID
+	entertainmentPackageFormatterDetail.EntertainmentPackageID = entertainmentPackageDetail.EntertainmentPackageID
+	entertainmentPackageFormatterDetail.EntertainmentServiceID = entertainmentPackageDetail.EntertainmentServiceID
+	entertainmentPackageFormatterDetail.CreatedAt = entertainmentPackageDetail.CreatedAt
+	entertainmentPackageFormatterDetail.UpdatedAt = entertainmentPackageDetail.UpdatedAt
+	entertainmentPackageFormatterDetail.DeletedAt = entertainmentPackageDetail.DeletedAt
+
+	return entertainmentPackageFormatterDetail
+}
