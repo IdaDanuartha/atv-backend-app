@@ -72,7 +72,7 @@ func (s entertainmentPackageService) Save(input inputs.EntertainmentPackageInput
 	entertainmentPackage.Duration = input.Duration
 	entertainmentPackage.Price = input.Price
 	entertainmentPackage.ExpiredAt = input.ExpiredAt
-	entertainmentPackage.Services = input.Services
+	// entertainmentPackage.Services = input.Services
 
 	newEntertainmentPackage, err := s.repository.Save(entertainmentPackage)
 	if err != nil {
